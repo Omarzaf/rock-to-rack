@@ -329,8 +329,8 @@
         },
         "portraitColor": "#f8d45c",
         "text": {
-          "kid": "Every chip starts with stuff from the ground. Today, you run the mine.",
-          "nerd": "The semiconductor chain begins upstream, with mineral inputs that later become wafers, conductors, batteries, and specialty components."
+          "kid": "The clinic's Nova rack is dark, and the rescue starts underground. Get the materials moving.",
+          "nerd": "Nova is offline. The recovery begins upstream, with mineral inputs that later become wafers, conductors, batteries, and specialty components."
         }
       },
       {
@@ -341,8 +341,8 @@
         },
         "portraitColor": "#60d394",
         "text": {
-          "kid": "Click a gem cluster to place a miner. You only have four slots, so choose carefully.",
-          "nerd": "Each extraction rig consumes capital and a slot. Deeper deposits can be richer, but they add energy load."
+          "kid": "Fast is tempting, Sam. Four miner slots means every shortcut also creates a bottleneck.",
+          "nerd": "Speed matters, but each extraction rig consumes capital and a slot. Deeper deposits can be richer, but they add energy load."
         }
       },
       {
@@ -353,8 +353,8 @@
         },
         "portraitColor": "#f8d45c",
         "text": {
-          "kid": "Fill the goal basket before the deposits run dry.",
-          "nerd": "The checklist is the Chapter 1 production target. Resources carry into the refinery."
+          "kid": "Then I am filling the basket before the city loses another hour.",
+          "nerd": "Then I am treating the basket as the production target. Resources carry into the refinery."
         }
       },
       {
@@ -365,8 +365,8 @@
         },
         "portraitColor": "#60d394",
         "text": {
-          "kid": "When you mine a new mineral, I will show you why it matters in the real world.",
-          "nerd": "First extraction of each mineral unlocks a dual-register fact card tied to actual supply-chain context."
+          "kid": "And I will flag what is real and what is simplified, because a rescue still needs truth.",
+          "nerd": "First extraction of each mineral unlocks a source-backed fact card, because urgency does not remove the need for honest abstractions."
         }
       }
     ],
@@ -633,8 +633,8 @@
         },
         "portraitColor": "#f8d45c",
         "text": {
-          "kid": "The rocks are here, but they are still messy. Chips need cleaner stuff.",
-          "nerd": "Mined feedstocks are not ready for semiconductor use. Refining converts rough inputs into controlled materials."
+          "kid": "The rocks arrived. Can we just rush them into the chip line?",
+          "nerd": "Mined feedstocks arrived. Can Nova recovery tolerate rough inputs, or do we lose reliability downstream?"
         }
       },
       {
@@ -645,8 +645,8 @@
         },
         "portraitColor": "#2dd4bf",
         "text": {
-          "kid": "Place machines in the right order. A clean chain makes the purity meter climb.",
-          "nerd": "Build ordered processing chains. A lane runs only when the required modules are connected in sequence."
+          "kid": "Only if you want bad chips. Place machines in order: speed has to answer to purity.",
+          "nerd": "Build ordered processing chains. A lane runs only when the required modules are connected in sequence, so throughput has to answer to purity."
         }
       },
       {
@@ -657,8 +657,8 @@
         },
         "portraitColor": "#f8d45c",
         "text": {
-          "kid": "The machines use energy and water, and they leave waste behind.",
-          "nerd": "Purification is constrained by utility inputs and waste handling. Slag management is part of the system."
+          "kid": "Fine, but every clean step burns power and water the city also needs.",
+          "nerd": "Purification is constrained by utility inputs and waste handling. The rescue consumes the same infrastructure it is trying to support."
         }
       },
       {
@@ -669,8 +669,8 @@
         },
         "portraitColor": "#2dd4bf",
         "text": {
-          "kid": "Your big goal is nine nines. That means almost perfectly pure silicon.",
-          "nerd": "The silicon target is 9N purity, shorthand for 99.9999999 percent pure material."
+          "kid": "That is the tradeoff. Push toward nine nines, but watch the waste you create.",
+          "nerd": "That is the tradeoff. The game target uses 9N purity shorthand, but the system cost is energy, water, and waste."
         }
       }
     ],
@@ -863,8 +863,8 @@
         },
         "portraitColor": "#38bdf8",
         "text": {
-          "kid": "The refinery made clean silicon. Now it has to become one smooth crystal.",
-          "nerd": "Purified feedstock is melted and recrystallized so the wafer has a controlled atomic structure."
+          "kid": "The clean silicon is ready. If the crystal works, Nova gets a real foundation.",
+          "nerd": "Purified feedstock is melted and recrystallized so Nova's wafer has a controlled atomic structure."
         }
       },
       {
@@ -875,7 +875,7 @@
         },
         "portraitColor": "#a78bfa",
         "text": {
-          "kid": "Hold to pull the seed from the glowing melt. Keep the heat in the green zone.",
+          "kid": "Do not yank it. Hold steady: a fast pull can ruin what the refinery saved.",
           "nerd": "The Czochralski method pulls a seed crystal from molten silicon while thermal stability controls crystal quality."
         }
       },
@@ -887,8 +887,8 @@
         },
         "portraitColor": "#38bdf8",
         "text": {
-          "kid": "Then we slice the crystal like a shiny log?",
-          "nerd": "The cylindrical ingot is wafered into thin disks for later fabrication."
+          "kid": "So I slow down now so the city can move faster later.",
+          "nerd": "So the time spent controlling the ingot becomes fewer failures during later fabrication."
         }
       }
     ],
@@ -1113,8 +1113,8 @@
         },
         "portraitColor": "#7dd3fc",
         "text": {
-          "kid": "The wafers are ready. Now the fab prints tiny circuit patterns on them.",
-          "nerd": "Fabrication turns blank wafers into patterned dies through coating, lithography, etching, and doping."
+          "kid": "The wafers are ready. Nova needs working dies, not a perfect-looking trophy.",
+          "nerd": "Fabrication turns blank wafers into patterned dies through coating, lithography, etching, and doping; Nova needs usable yield, not just nominal precision."
         }
       },
       {
@@ -1125,7 +1125,7 @@
         },
         "portraitColor": "#f0abfc",
         "text": {
-          "kid": "Keep the wafer clean and line up each step. Tiny mistakes can break tiny circuits.",
+          "kid": "Then keep the wafer clean and line up each step. Yield is how many chances survive.",
           "nerd": "Yield depends on process control: particle limits, alignment, dwell timing, and implant accuracy."
         }
       },
@@ -1137,7 +1137,7 @@
         },
         "portraitColor": "#7dd3fc",
         "text": {
-          "kid": "Each wafer uses a tougher node label: 90 nm, then 28 nm, then 7 nm.",
+          "kid": "I want the strongest chips for the clinic, but pushing smaller labels makes each mistake hurt more.",
           "nerd": "Node names are generation labels, not exact transistor measurements; smaller labels still tighten process control in this game."
         }
       }
@@ -1371,8 +1371,8 @@
         },
         "portraitColor": "#7dd3fc",
         "text": {
-          "kid": "The wafer has lots of tiny chips on it. Are they ready now?",
-          "nerd": "The wafer holds many fabricated dies. Are they shippable after fabrication?"
+          "kid": "The wafer has lots of tiny chips on it. Which ones can we trust for Nova?",
+          "nerd": "The wafer holds many fabricated dies. Which ones are reliable enough for the Nova recovery?"
         }
       },
       {
@@ -1383,7 +1383,7 @@
         },
         "portraitColor": "#f0abfc",
         "text": {
-          "kid": "Not yet. We cut them apart, package them, and test how fast each one can run.",
+          "kid": "Not yet. We cut, package, and test them. Cheap parts can work, but reliability decides where they belong.",
           "nerd": "Next comes dicing, packaging, electrical test, and binning by performance and power behavior."
         }
       },
@@ -1395,8 +1395,8 @@
         },
         "portraitColor": "#7dd3fc",
         "text": {
-          "kid": "So the same wafer can make different chip friends?",
-          "nerd": "So one wafer can produce dies sold into different product bins and chip roles?"
+          "kid": "So I can save budget with weaker chips, but I risk starving the final rack.",
+          "nerd": "So one wafer can produce dies for different roles, and the inventory choice becomes a reliability constraint."
         }
       }
     ],
@@ -1641,8 +1641,8 @@
         },
         "portraitColor": "#7dd3fc",
         "text": {
-          "kid": "We made chips. Why do we need a whole building now?",
-          "nerd": "We have packaged chips. Why does compute require so much facility infrastructure?"
+          "kid": "We made the chips. The clinic is still dark. What is missing?",
+          "nerd": "We have packaged chips, but Nova is still offline. What blocks delivered compute?"
         }
       },
       {
@@ -1665,8 +1665,8 @@
         },
         "portraitColor": "#7dd3fc",
         "text": {
-          "kid": "So the last step is keeping the team alive?",
-          "nerd": "So the final constraint is system integration, not just transistor performance?"
+          "kid": "I want every watt on compute. You are about to tell me cooling matters just as much.",
+          "nerd": "I want every watt on compute. You are about to tell me the final constraint is system integration, not transistor performance alone."
         }
       },
       {
@@ -1677,7 +1677,7 @@
         },
         "portraitColor": "#f0abfc",
         "text": {
-          "kid": "Exactly. Build the lot, serve real jobs, and bring the city online.",
+          "kid": "Exactly. Bring Nova online without cooking it, then serve the jobs that light the city.",
           "nerd": "Exactly. Meet workload requirements while staying inside power and thermal envelopes."
         }
       }
@@ -1817,8 +1817,8 @@
       "nerd": "Public-interest AI rescue sim"
     },
     "subtitle": {
-      "kid": "Bring one rack online, then trace every choice back through the chip supply chain.",
-      "nerd": "Keep Nova online under power, cooling, yield, and supply-chain constraints."
+      "kid": "Bring Nova back for the clinic, then trace every rescue choice through the chip supply chain.",
+      "nerd": "Keep a public-interest Nova workload online under power, cooling, yield, and supply-chain constraints."
     },
     "steps": [
       {
@@ -1851,8 +1851,8 @@
       "nerd": "Start Crisis Run"
     },
     "crisisDescription": {
-      "kid": "Bring the city back in five minutes",
-      "nerd": "Cold-start the Nova rescue under power and cooling pressure"
+      "kid": "Bring the clinic and city back in five minutes",
+      "nerd": "Cold-start the public-interest Nova rescue under power and cooling pressure"
     },
     "learnTitle": {
       "kid": "Learn the chain",

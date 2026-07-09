@@ -47,6 +47,27 @@ describe('sound design cues', () => {
     expect(calls).toContain('start');
     expect(calls).toContain('stop');
   });
+
+  it('plays layered transformation cues for the supply-chain chain', () => {
+    const calls: string[] = [];
+    vi.stubGlobal('window', {
+      AudioContext: fakeAudioContext(calls)
+    });
+    gameStore.replaceState({
+      ...createInitialGameState(),
+      preferences: {
+        ...createInitialGameState().preferences,
+        muted: false
+      }
+    });
+
+    playUiCue('victory');
+
+    expect(calls.filter((call) => call === 'createOscillator')).toHaveLength(3);
+    expect(calls.filter((call) => call === 'start')).toHaveLength(3);
+    expect(calls).toContain('type:triangle');
+    expect(calls).toContain('type:sine');
+  });
 });
 
 function fakeAudioContext(calls: string[]) {
@@ -61,7 +82,14 @@ function fakeAudioContext(calls: string[]) {
           setValueAtTime: () => undefined,
           exponentialRampToValueAtTime: () => undefined
         },
-        type: 'sine',
+        _type: 'sine',
+        get type() {
+          return this._type;
+        },
+        set type(value: OscillatorType) {
+          this._type = value;
+          calls.push(`type:${value}`);
+        },
         connect: () => undefined,
         start: () => calls.push('start'),
         stop: () => calls.push('stop')

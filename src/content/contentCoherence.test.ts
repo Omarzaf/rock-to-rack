@@ -48,4 +48,12 @@ describe('content coherence', () => {
     expect(allContentText).toMatch(/teaching shortcut/i);
     expect(allContentText).toMatch(/many weeks/i);
   });
+
+  it('frames the campaign around the Nova rescue mission and character tension', () => {
+    expect(allContentText).toMatch(/Nova is offline/i);
+    expect(allContentText).toMatch(/clinic/i);
+    expect(allContentText).toMatch(/urgency does not remove the need for honest abstractions/i);
+    expect(allContentText).toMatch(/speed has to answer to purity/i);
+    expect(allContentText).toMatch(/without cooking it/i);
+  });
 });

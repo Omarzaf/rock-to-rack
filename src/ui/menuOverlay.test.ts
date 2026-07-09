@@ -27,7 +27,7 @@ describe('menu overlay', () => {
 
     expect(root.textContent).toContain('The city is dark');
     expect(root.textContent).toContain('Play Crisis Run');
-    expect(root.textContent).toContain('Bring the city back in five minutes');
+    expect(root.textContent).toContain('Bring the clinic and city back in five minutes');
     expect(root.textContent).toContain('Learn the chain');
     expect(root.textContent).toContain('Mine, refine, grow, fab, package, then power Nova');
     expect(root.textContent).toContain('Gameplay simplifies real semiconductor work');
