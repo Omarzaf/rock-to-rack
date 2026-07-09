@@ -73,10 +73,10 @@ export class CrisisRunScene extends Phaser.Scene {
     documentRoot().replaceChildren();
     this.drawBackdrop();
     this.worldLayer = this.add.container(0, 0);
+    this.redrawWorld();
     this.mountOverlay();
     this.bindKeyboard();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.resizeHandler);
-    this.redrawWorld();
     this.runTimer = this.time.addEvent({
       delay: BALANCE.ch6.tickSeconds * 1000,
       loop: true,
@@ -111,7 +111,6 @@ export class CrisisRunScene extends Phaser.Scene {
     this.chapter = tickDatacenter(this.chapter, seconds, BALANCE.ch6);
     this.heatPeak = Math.max(this.heatPeak, this.chapter.heat);
     this.refreshOverlay();
-    this.redrawWorld();
   }
 
   private placeBuilding(column: number, row: number): void {

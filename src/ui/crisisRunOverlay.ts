@@ -35,45 +35,63 @@ export interface MountedCrisisRunOverlay {
 const BUILD_TYPES: DatacenterBuildingType[] = ['rack', 'power', 'cooling', 'network', 'battery'];
 
 export function mountCrisisRunOverlay(root: HTMLElement, options: CrisisRunOverlayOptions): MountedCrisisRunOverlay {
+  let latest = options;
   const shell = document.createElement('section');
   shell.className = 'crisis-overlay';
   root.append(shell);
 
+  const header = document.createElement('div');
+  header.className = 'crisis-header';
+  const challengeLabel = elementWithText('p', 'crisis-challenge-label', '');
+  header.append(
+    elementWithText('h1', 'crisis-title', 'Crisis Run'),
+    elementWithText('p', 'crisis-objective', 'Bring Nova online before the city goes dark.'),
+    challengeLabel
+  );
+
+  const stats = document.createElement('div');
+  stats.className = 'crisis-stats';
+  const statValues = {
+    time: stat('Time', ''),
+    lights: stat('Lights', ''),
+    heat: stat('Heat', ''),
+    power: stat('Power', '')
+  };
+  stats.append(statValues.time.item, statValues.lights.item, statValues.heat.item, statValues.power.item);
+
+  const builds = document.createElement('div');
+  builds.className = 'crisis-builds';
+  const buildButtons = new Map<DatacenterBuildingType, HTMLButtonElement>();
+  for (const type of BUILD_TYPES) {
+    const build = button(labelForBuild(type), '', () => latest.onSelectBuildType(type));
+    build.dataset.buildType = type;
+    buildButtons.set(type, build);
+    builds.append(build);
+  }
+
+  const selectedHelp = elementWithText('p', 'crisis-build-help', '');
+  const message = elementWithText('p', 'crisis-message', '');
+  const actions = document.createElement('div');
+  actions.className = 'crisis-actions';
+  const complete = button('Serve Nova', 'primary-action', () => latest.onComplete());
+  actions.append(complete, button('Menu', 'secondary-action', () => latest.onMenu()));
+
+  shell.append(header, stats, builds, selectedHelp, message, actions);
+
   const render = (next: CrisisRunOverlayOptions): void => {
-    const header = document.createElement('div');
-    header.className = 'crisis-header';
-    header.append(
-      elementWithText('h1', 'crisis-title', 'Crisis Run'),
-      elementWithText('p', 'crisis-objective', 'Bring Nova online before the city goes dark.'),
-      elementWithText('p', 'crisis-challenge-label', next.challengeLabel)
-    );
+    latest = next;
+    challengeLabel.textContent = next.challengeLabel;
+    statValues.time.value.textContent = `${Math.round(next.elapsedSeconds)}s`;
+    statValues.lights.value.textContent = `${Math.round(next.cityLights)}%`;
+    statValues.heat.value.textContent = `${Math.round(next.heat)}%`;
+    statValues.power.value.textContent = `${Math.round(next.powerLoad)}/${Math.round(next.powerCapacity)}`;
 
-    const stats = document.createElement('div');
-    stats.className = 'crisis-stats';
-    stats.append(
-      stat('Time', `${Math.round(next.elapsedSeconds)}s`),
-      stat('Lights', `${Math.round(next.cityLights)}%`),
-      stat('Heat', `${Math.round(next.heat)}%`),
-      stat('Power', `${Math.round(next.powerLoad)}/${Math.round(next.powerCapacity)}`)
-    );
-
-    const builds = document.createElement('div');
-    builds.className = 'crisis-builds';
-    for (const type of BUILD_TYPES) {
-      const build = button(labelForBuild(type), type === next.selectedBuildType ? 'is-selected' : '', () => next.onSelectBuildType(type));
-      build.dataset.buildType = type;
-      builds.append(build);
+    for (const [type, build] of buildButtons.entries()) {
+      build.className = type === next.selectedBuildType ? 'is-selected' : '';
     }
-
-    const selectedHelp = elementWithText('p', 'crisis-build-help', buildHelp(next.selectedBuildType));
-    const message = elementWithText('p', 'crisis-message', next.message);
-    const actions = document.createElement('div');
-    actions.className = 'crisis-actions';
-    const complete = button('Serve Nova', 'primary-action', next.onComplete);
+    selectedHelp.textContent = buildHelp(next.selectedBuildType);
+    message.textContent = next.message;
     complete.disabled = !next.canComplete;
-    actions.append(complete, button('Menu', 'secondary-action', next.onMenu));
-
-    shell.replaceChildren(header, stats, builds, selectedHelp, message, actions);
   };
 
   render(options);
@@ -97,9 +115,9 @@ export function mountCrisisRunResult(root: HTMLElement, options: CrisisRunResult
   const stats = document.createElement('div');
   stats.className = 'crisis-result-stats';
   stats.append(
-    stat('Time', formatResultSeconds(options.result.elapsedSeconds)),
-    stat('Lights', `${Math.round(options.result.cityLights)}%`),
-    stat('Heat peak', `${Math.round(options.result.heatPeak)}%`)
+    stat('Time', formatResultSeconds(options.result.elapsedSeconds)).item,
+    stat('Lights', `${Math.round(options.result.cityLights)}%`).item,
+    stat('Heat peak', `${Math.round(options.result.heatPeak)}%`).item
   );
   const comparison = document.createElement('div');
   comparison.className = 'crisis-replay-summary';
@@ -159,11 +177,12 @@ function buildHelp(type: DatacenterBuildingType): string {
   return `${help[type]} Tap a grid cell to place it.`;
 }
 
-function stat(label: string, value: string): HTMLElement {
+function stat(label: string, value: string): { item: HTMLElement; value: HTMLElement } {
   const item = document.createElement('span');
   item.className = 'crisis-stat';
-  item.append(elementWithText('strong', '', value), elementWithText('small', '', label));
-  return item;
+  const valueElement = elementWithText('strong', '', value);
+  item.append(valueElement, elementWithText('small', '', label));
+  return { item, value: valueElement };
 }
 
 function button(label: string, className: string, onClick: () => void): HTMLButtonElement {
