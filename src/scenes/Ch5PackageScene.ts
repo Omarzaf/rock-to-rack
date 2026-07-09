@@ -36,6 +36,7 @@ import { mountPipelineHud, type MountedPipelineHud, type PipelineHudLabels } fro
 import type { MountedModal, QuizDefinition } from '../ui/chapterOneOverlay';
 import type { TextModeText } from '../ui/text';
 import { textForMode } from '../ui/text';
+import { cycleIndex, digitToIndex, isActivationKey, isInteractiveElementFocused, isReplayInterruptKey } from './chapterKeyboard';
 import { emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
@@ -142,6 +143,8 @@ export class Ch5PackageScene extends Phaser.Scene {
   private cardZones: Phaser.GameObjects.Zone[] = [];
   private pendingFactIds: string[] = [];
   private pausedForOverlay = false;
+  private introInterruptible = false;
+  private keyboardHandler: ((event: KeyboardEvent) => void) | undefined;
   private waferDiced = false;
   private selectedChipId: ChipTypeId | null = null;
   private lastMessage: TextModeText | null = null;
@@ -158,6 +161,7 @@ export class Ch5PackageScene extends Phaser.Scene {
     this.drawBackdrop();
     this.worldLayer = this.add.container(0, 0);
     this.mountDom();
+    this.bindKeyboard();
     this.showIntroDialogue();
     this.redrawWorld();
 
@@ -617,6 +621,7 @@ export class Ch5PackageScene extends Phaser.Scene {
 
   private showIntroDialogue(): void {
     this.pausedForOverlay = true;
+    this.introInterruptible = gameStore.getState().chapters.ch5.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
       lines: jensenGuideLines(STRINGS.ch5.intro, 5),
@@ -632,6 +637,129 @@ export class Ch5PackageScene extends Phaser.Scene {
         this.showNextPendingFact();
       }
     });
+  }
+
+  private bindKeyboard(): void {
+    this.keyboardHandler = (event: KeyboardEvent) => {
+      if (this.dialogue && this.introInterruptible && isReplayInterruptKey(event)) {
+        event.preventDefault();
+        this.dismissIntroDialogue();
+        return;
+      }
+
+      if (this.pausedForOverlay || this.quiz || this.completion || this.factCard || this.eventCard || this.dialogue) {
+        return;
+      }
+
+      if (isInteractiveElementFocused()) {
+        return;
+      }
+
+      if (this.chapter.stage === 'dice') {
+        this.handleDiceKeyboard(event);
+        return;
+      }
+
+      if (this.chapter.stage === 'sort') {
+        this.handleSortKeyboard(event);
+        return;
+      }
+
+      if (this.chapter.stage === 'roster') {
+        this.handleRosterKeyboard(event);
+      }
+    };
+
+    this.input.keyboard?.on('keydown', this.keyboardHandler);
+  }
+
+  private handleDiceKeyboard(event: KeyboardEvent): void {
+    if (isActivationKey(event) || event.key === 'c' || event.key === 'C') {
+      event.preventDefault();
+      if (this.canCutWafer()) {
+        this.cutWafer();
+      } else if (this.canStartSort()) {
+        this.startSorting();
+      }
+      return;
+    }
+
+    if (event.key === 's' || event.key === 'S') {
+      event.preventDefault();
+      this.startSorting();
+    }
+  }
+
+  private handleSortKeyboard(event: KeyboardEvent): void {
+    const bins: DieBinId[] = ['perfect', 'good', 'salvage'];
+    const digitIndex = digitToIndex(event.key, bins.length);
+    if (digitIndex !== null) {
+      event.preventDefault();
+      this.sortCurrentDie(bins[digitIndex]);
+      return;
+    }
+
+    if (event.key === 'p' || event.key === 'P') {
+      event.preventDefault();
+      this.sortCurrentDie('perfect');
+      return;
+    }
+
+    if (event.key === 'g' || event.key === 'G') {
+      event.preventDefault();
+      this.sortCurrentDie('good');
+      return;
+    }
+
+    if (event.key === 's' || event.key === 'S') {
+      event.preventDefault();
+      this.sortCurrentDie('salvage');
+    }
+  }
+
+  private handleRosterKeyboard(event: KeyboardEvent): void {
+    const digitIndex = digitToIndex(event.key, CHIP_LIST.length);
+    if (digitIndex !== null && CHIP_LIST[digitIndex]) {
+      event.preventDefault();
+      this.selectChip(CHIP_LIST[digitIndex].id);
+      return;
+    }
+
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.cycleSelectedChip(-1);
+      return;
+    }
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.cycleSelectedChip(1);
+      return;
+    }
+
+    if (event.key === 'n' || event.key === 'N') {
+      event.preventDefault();
+      if (this.canAdvanceToQuiz()) {
+        this.showQuiz();
+      }
+      return;
+    }
+
+    if (isActivationKey(event)) {
+      event.preventDefault();
+      this.buildSelectedChip();
+    }
+  }
+
+  private cycleSelectedChip(offset: number): void {
+    const currentIndex = this.selectedChipId
+      ? CHIP_LIST.findIndex((chip) => chip.id === this.selectedChipId)
+      : 0;
+    const nextIndex = cycleIndex(currentIndex < 0 ? 0 : currentIndex, offset, CHIP_LIST.length);
+    const chip = CHIP_LIST[nextIndex];
+    if (chip) {
+      this.selectChip(chip.id);
+    }
   }
 
   private queueFact(factId: string): void {
@@ -893,6 +1021,10 @@ export class Ch5PackageScene extends Phaser.Scene {
   }
 
   private cleanup(): void {
+    if (this.keyboardHandler) {
+      this.input.keyboard?.off('keydown', this.keyboardHandler);
+      this.keyboardHandler = undefined;
+    }
     this.clearQuizRetryTimeout();
     for (const cleanup of this.cleanupCallbacks.splice(0)) {
       cleanup();
@@ -913,6 +1045,22 @@ export class Ch5PackageScene extends Phaser.Scene {
     this.hud = undefined;
     this.overlay = undefined;
     this.resetTransientState();
+  }
+
+  private dismissIntroDialogue(): void {
+    if (!this.dialogue) {
+      return;
+    }
+
+    this.dialogue.cleanup();
+    this.dialogue = undefined;
+    this.pausedForOverlay = false;
+    this.introInterruptible = false;
+    if (this.chapter.stage === 'complete') {
+      this.showCompletion();
+      return;
+    }
+    this.showNextPendingFact();
   }
 
   private canCutWafer(): boolean {

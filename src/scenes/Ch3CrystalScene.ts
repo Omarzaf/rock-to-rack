@@ -37,6 +37,7 @@ import { createGlobalPanelController, GLOBAL_TOOL_LABELS, type GlobalPanelContro
 import { mountPipelineHud, type MountedPipelineHud, type PipelineHudLabels } from '../ui/pipelineHud';
 import type { MountedModal, QuizDefinition } from '../ui/chapterOneOverlay';
 import type { TextModeText } from '../ui/text';
+import { clampIndex, cycleIndex, digitToIndex, isActivationKey, isInteractiveElementFocused, isReplayInterruptKey } from './chapterKeyboard';
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
@@ -108,6 +109,10 @@ export class Ch3CrystalScene extends Phaser.Scene {
   private sliceGuideZones: Phaser.GameObjects.Zone[] = [];
   private pendingFactIds: string[] = [];
   private pulling = false;
+  private introInterruptible = false;
+  private keyboardHandler: ((event: KeyboardEvent) => void) | undefined;
+  private keyboardKeyUpHandler: ((event: KeyboardEvent) => void) | undefined;
+  private keyboardSliceIndex = 0;
   private pausedForOverlay = false;
   private lastMessage: TextModeText | null = STRINGS.ch3.messages.pullHint;
 
@@ -120,6 +125,7 @@ export class Ch3CrystalScene extends Phaser.Scene {
     this.chapter = createInitialChapterThreeState();
     this.drawBackdrop();
     this.mountDom();
+    this.bindKeyboard();
     this.showIntroDialogue();
     this.redrawCrystal();
 
@@ -286,6 +292,10 @@ export class Ch3CrystalScene extends Phaser.Scene {
     }
 
     const position = ((pointer.x - SLICE_X) / SLICE_WIDTH) * 100;
+    this.sliceAtPosition(position);
+  }
+
+  private sliceAtPosition(position: number): void {
     const result = sliceIngot(this.chapter, position, BALANCE.ch3);
     this.chapter = result.chapter;
 
@@ -408,6 +418,7 @@ export class Ch3CrystalScene extends Phaser.Scene {
 
   private showIntroDialogue(): void {
     this.pausedForOverlay = true;
+    this.introInterruptible = gameStore.getState().chapters.ch3.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
       lines: jensenGuideLines(STRINGS.ch3.intro, 3),
@@ -418,6 +429,93 @@ export class Ch3CrystalScene extends Phaser.Scene {
         this.pausedForOverlay = false;
       }
     });
+  }
+
+  private bindKeyboard(): void {
+    this.keyboardHandler = (event: KeyboardEvent) => {
+      if (this.dialogue && this.introInterruptible && isReplayInterruptKey(event)) {
+        event.preventDefault();
+        this.dismissIntroDialogue();
+        return;
+      }
+
+      if (this.pausedForOverlay || this.quiz || this.completion || this.factCard || this.eventCard || this.dialogue) {
+        return;
+      }
+
+      if (isInteractiveElementFocused()) {
+        return;
+      }
+
+      if (event.key === 'r' || event.key === 'R') {
+        event.preventDefault();
+        this.handleRetryPull();
+        return;
+      }
+
+      if (this.chapter.stage === 'pull' && isActivationKey(event)) {
+        event.preventDefault();
+        this.pulling = true;
+        this.lastMessage = null;
+        this.refreshOverlay();
+        return;
+      }
+
+      if (this.chapter.stage !== 'slice') {
+        return;
+      }
+
+      const digitIndex = digitToIndex(event.key, this.chapter.ingotProfile.length);
+      if (digitIndex !== null) {
+        event.preventDefault();
+        this.keyboardSliceIndex = digitIndex;
+        this.sliceAtKeyboardIndex();
+        return;
+      }
+
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.moveKeyboardSlice(-1);
+        return;
+      }
+
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.moveKeyboardSlice(1);
+        return;
+      }
+
+      if (isActivationKey(event)) {
+        event.preventDefault();
+        this.sliceAtKeyboardIndex();
+      }
+    };
+    this.keyboardKeyUpHandler = (event: KeyboardEvent) => {
+      if (this.chapter.stage === 'pull' && isActivationKey(event) && this.pulling) {
+        event.preventDefault();
+        this.pulling = false;
+        this.refreshOverlay();
+      }
+    };
+
+    this.input.keyboard?.on('keydown', this.keyboardHandler);
+    this.input.keyboard?.on('keyup', this.keyboardKeyUpHandler);
+  }
+
+  private moveKeyboardSlice(offset: number): void {
+    this.keyboardSliceIndex = cycleIndex(this.keyboardSliceIndex, offset, this.chapter.ingotProfile.length);
+    this.lastMessage = STRINGS.ch3.messages.sliceHint;
+    this.refreshOverlay();
+  }
+
+  private sliceAtKeyboardIndex(): void {
+    if (this.chapter.stage !== 'slice' || this.chapter.ingotProfile.length === 0) {
+      return;
+    }
+
+    this.keyboardSliceIndex = clampIndex(this.keyboardSliceIndex, this.chapter.ingotProfile.length);
+    const segment = this.chapter.ingotProfile[this.keyboardSliceIndex];
+    this.sliceAtPosition((segment.start + segment.end) / 2);
   }
 
   private queueFact(factId: string): void {
@@ -710,6 +808,14 @@ export class Ch3CrystalScene extends Phaser.Scene {
   }
 
   private cleanup(): void {
+    if (this.keyboardHandler) {
+      this.input.keyboard?.off('keydown', this.keyboardHandler);
+      this.keyboardHandler = undefined;
+    }
+    if (this.keyboardKeyUpHandler) {
+      this.input.keyboard?.off('keyup', this.keyboardKeyUpHandler);
+      this.keyboardKeyUpHandler = undefined;
+    }
     for (const cleanup of this.cleanupCallbacks.splice(0)) {
       cleanup();
     }
@@ -728,6 +834,18 @@ export class Ch3CrystalScene extends Phaser.Scene {
     this.completion = undefined;
     this.hud = undefined;
     this.overlay = undefined;
+  }
+
+  private dismissIntroDialogue(): void {
+    if (!this.dialogue) {
+      return;
+    }
+
+    this.dialogue.cleanup();
+    this.dialogue = undefined;
+    this.pausedForOverlay = false;
+    this.introInterruptible = false;
+    this.refreshOverlay();
   }
 }
 

@@ -36,6 +36,7 @@ import { mountFactCard, type FactCardDefinition, type FactCardLabels, type Mount
 import { createGlobalPanelController, GLOBAL_TOOL_LABELS, type GlobalPanelController } from '../ui/globalPanels';
 import { mountPipelineHud, type MountedPipelineHud, type PipelineHudLabels } from '../ui/pipelineHud';
 import type { TextModeText } from '../ui/text';
+import { cycleIndex, isActivationKey, isInteractiveElementFocused, isReplayInterruptKey } from './chapterKeyboard';
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
@@ -117,6 +118,8 @@ export class Ch1MineScene extends Phaser.Scene {
   private completion: MountedModal | undefined;
   private pendingFactMinerals: MineralType[] = [];
   private pausedForOverlay = false;
+  private introInterruptible = false;
+  private keyboardHandler: ((event: KeyboardEvent) => void) | undefined;
   private lastMessage: TextModeText | null = null;
 
   constructor() {
@@ -130,6 +133,7 @@ export class Ch1MineScene extends Phaser.Scene {
     this.drawDeposits();
     this.drawPersistedMiners();
     this.mountDom();
+    this.bindKeyboard();
     this.showIntroDialogue();
 
     this.time.addEvent({
@@ -458,6 +462,7 @@ export class Ch1MineScene extends Phaser.Scene {
 
   private showIntroDialogue(): void {
     this.pausedForOverlay = true;
+    this.introInterruptible = gameStore.getState().chapters.ch1.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
       lines: jensenGuideLines(STRINGS.ch1.intro, 1),
@@ -468,6 +473,49 @@ export class Ch1MineScene extends Phaser.Scene {
         this.pausedForOverlay = false;
       }
     });
+  }
+
+  private bindKeyboard(): void {
+    this.keyboardHandler = (event: KeyboardEvent) => {
+      if (this.dialogue && this.introInterruptible && isReplayInterruptKey(event)) {
+        event.preventDefault();
+        this.dismissIntroDialogue();
+        return;
+      }
+
+      if (this.pausedForOverlay || this.quiz || this.completion || this.factCard || this.eventCard || this.dialogue) {
+        return;
+      }
+
+      if (isInteractiveElementFocused()) {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.selectDepositByOffset(-1);
+        return;
+      }
+
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.selectDepositByOffset(1);
+        return;
+      }
+
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        event.preventDefault();
+        this.removeSelectedMiner();
+        return;
+      }
+
+      if (isActivationKey(event)) {
+        event.preventDefault();
+        this.toggleSelectedMiner();
+      }
+    };
+
+    this.input.keyboard?.on('keydown', this.keyboardHandler);
   }
 
   private showNextPendingFact(): void {
@@ -674,6 +722,33 @@ export class Ch1MineScene extends Phaser.Scene {
     return this.chapter.deposits.find((deposit) => deposit.id === this.selectedDepositId) ?? null;
   }
 
+  private selectDepositByOffset(offset: number): void {
+    if (this.chapter.deposits.length === 0) {
+      return;
+    }
+
+    const currentIndex = this.selectedDepositId
+      ? this.chapter.deposits.findIndex((deposit) => deposit.id === this.selectedDepositId)
+      : 0;
+    const nextIndex = cycleIndex(currentIndex < 0 ? 0 : currentIndex, offset, this.chapter.deposits.length);
+    this.selectDeposit(this.chapter.deposits[nextIndex].id);
+  }
+
+  private toggleSelectedMiner(): void {
+    const selectedDeposit = this.selectedDeposit() ?? this.chapter.deposits[0] ?? null;
+    if (!selectedDeposit) {
+      return;
+    }
+
+    this.selectedDepositId = selectedDeposit.id;
+    if (this.chapter.miners.some((miner) => miner.depositId === selectedDeposit.id)) {
+      this.removeSelectedMiner();
+      return;
+    }
+
+    this.placeSelectedMiner();
+  }
+
   private removeSelectedMiner(): void {
     if (!this.selectedDepositId) {
       return;
@@ -727,6 +802,10 @@ export class Ch1MineScene extends Phaser.Scene {
   }
 
   private cleanup(): void {
+    if (this.keyboardHandler) {
+      this.input.keyboard?.off('keydown', this.keyboardHandler);
+      this.keyboardHandler = undefined;
+    }
     for (const cleanup of this.cleanupCallbacks.splice(0)) {
       cleanup();
     }
@@ -743,6 +822,18 @@ export class Ch1MineScene extends Phaser.Scene {
     this.globalPanels = undefined;
     this.hud = undefined;
     this.overlay = undefined;
+  }
+
+  private dismissIntroDialogue(): void {
+    if (!this.dialogue) {
+      return;
+    }
+
+    this.dialogue.cleanup();
+    this.dialogue = undefined;
+    this.pausedForOverlay = false;
+    this.introInterruptible = false;
+    this.refreshOverlay();
   }
 }
 

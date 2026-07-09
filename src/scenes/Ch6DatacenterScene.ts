@@ -29,6 +29,7 @@ import type {
   DatacenterBuildingProgress,
   DatacenterBuildingType,
   DatacenterContractId,
+  DatacenterGridPosition,
   ResourceState,
   TextMode
 } from '../state/types';
@@ -47,6 +48,7 @@ import { createGlobalPanelController, GLOBAL_TOOL_LABELS, type GlobalPanelContro
 import { mountPipelineHud, type MountedPipelineHud, type PipelineHudLabels } from '../ui/pipelineHud';
 import type { TextModeText } from '../ui/text';
 import { textForMode } from '../ui/text';
+import { clampIndex, cycleIndex, digitToIndex, isActivationKey, isInteractiveElementFocused, isReplayInterruptKey } from './chapterKeyboard';
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
@@ -112,6 +114,7 @@ const CHIP_LIST = chipsJson as unknown as ChipDefinition[];
 const CHIP_BY_ID = new Map(CHIP_LIST.map((chip) => [chip.id, chip] as const));
 const CONTRACTS = EVENTS.ch6Contracts;
 
+const BUILD_TYPE_ORDER: DatacenterBuildingType[] = ['rack', 'power', 'cooling', 'network', 'battery'];
 const GRID = {
   x: 284,
   y: 184,
@@ -159,6 +162,9 @@ export class Ch6DatacenterScene extends Phaser.Scene {
   private selectedChipId: ChipTypeId | null = null;
   private selectedContractId: DatacenterContractId | null = null;
   private pausedForOverlay = false;
+  private introInterruptible = false;
+  private keyboardHandler: ((event: KeyboardEvent) => void) | undefined;
+  private keyboardCursor: DatacenterGridPosition = { column: 1, row: 1 };
   private lastMessage: TextModeText | null = null;
   private quizRetryTimeout: number | undefined;
   private persistTicks = 0;
@@ -176,6 +182,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
     this.drawBackdrop();
     this.worldLayer = this.add.container(0, 0);
     this.mountDom();
+    this.bindKeyboard();
     this.showIntroDialogue();
     this.redrawWorld();
 
@@ -421,6 +428,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
 
   private showIntroDialogue(): void {
     this.pausedForOverlay = true;
+    this.introInterruptible = gameStore.getState().chapters.ch6.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
       lines: jensenGuideLines(STRINGS.ch6.intro, 6),
@@ -440,6 +448,133 @@ export class Ch6DatacenterScene extends Phaser.Scene {
         this.showNextPendingFact();
       }
     });
+  }
+
+  private bindKeyboard(): void {
+    this.keyboardHandler = (event: KeyboardEvent) => {
+      if (this.dialogue && this.introInterruptible && isReplayInterruptKey(event)) {
+        event.preventDefault();
+        this.dismissIntroDialogue();
+        return;
+      }
+
+      if (this.pausedForOverlay || this.quiz || this.completion || this.factCard || this.eventCard || this.dialogue) {
+        return;
+      }
+
+      if (isInteractiveElementFocused()) {
+        return;
+      }
+
+      const buildIndex = digitToIndex(event.key, BUILD_TYPE_ORDER.length);
+      if (buildIndex !== null) {
+        event.preventDefault();
+        this.selectBuildType(BUILD_TYPE_ORDER[buildIndex]);
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        this.moveKeyboardCursor(-1, 0);
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        this.moveKeyboardCursor(1, 0);
+        return;
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.moveKeyboardCursor(0, -1);
+        return;
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.moveKeyboardCursor(0, 1);
+        return;
+      }
+
+      if (event.key === 'i' || event.key === 'I') {
+        event.preventDefault();
+        this.installSelectedChip();
+        return;
+      }
+
+      if (event.key === 's' || event.key === 'S') {
+        event.preventDefault();
+        this.serveSelectedContract();
+        return;
+      }
+
+      if (event.key === 'n' || event.key === 'N') {
+        event.preventDefault();
+        this.runNovaChallenge();
+        return;
+      }
+
+      if (event.key === 'c' || event.key === 'C') {
+        event.preventDefault();
+        this.cycleSelectedContract(1);
+        return;
+      }
+
+      if (event.key === 'v' || event.key === 'V') {
+        event.preventDefault();
+        this.cycleSelectedChip(1);
+        return;
+      }
+
+      if (isActivationKey(event)) {
+        event.preventDefault();
+        this.activateKeyboardGridCell();
+      }
+    };
+
+    this.input.keyboard?.on('keydown', this.keyboardHandler);
+  }
+
+  private moveKeyboardCursor(deltaColumn: number, deltaRow: number): void {
+    this.keyboardCursor = {
+      column: clampIndex(this.keyboardCursor.column - 1 + deltaColumn, GRID.columns) + 1,
+      row: clampIndex(this.keyboardCursor.row - 1 + deltaRow, GRID.rows) + 1
+    };
+    this.redrawWorld();
+  }
+
+  private activateKeyboardGridCell(): void {
+    const building = this.chapter.buildings.find((candidate) => (
+      candidate.column === this.keyboardCursor.column && candidate.row === this.keyboardCursor.row
+    ));
+    if (building) {
+      this.selectBuilding(building.id);
+      return;
+    }
+
+    this.placeBuilding(this.keyboardCursor.column, this.keyboardCursor.row);
+  }
+
+  private cycleSelectedChip(offset: number): void {
+    const available = this.chapter.availableChipIds.filter((chipId) => !this.chapter.installedChipIds.includes(chipId));
+    if (available.length === 0) {
+      return;
+    }
+
+    const currentIndex = this.selectedChipId ? available.indexOf(this.selectedChipId) : 0;
+    this.selectChip(available[cycleIndex(currentIndex < 0 ? 0 : currentIndex, offset, available.length)]);
+  }
+
+  private cycleSelectedContract(offset: number): void {
+    if (CONTRACTS.length === 0) {
+      return;
+    }
+
+    const currentIndex = this.selectedContractId
+      ? CONTRACTS.findIndex((contract) => contract.id === this.selectedContractId)
+      : 0;
+    this.selectContract(CONTRACTS[cycleIndex(currentIndex < 0 ? 0 : currentIndex, offset, CONTRACTS.length)].id);
   }
 
   private queueFact(factId: string): void {
@@ -623,6 +758,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
     this.drawCityLights(graphics);
     this.drawGrid(graphics);
     this.drawBuildings(graphics);
+    this.drawKeyboardCursor(graphics);
     this.drawPipeline(graphics);
     this.drawWorldReadouts();
   }
@@ -703,6 +839,14 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       graphics.fillStyle(0xfb7185, Math.min(0.34, this.chapter.heat / 280));
       graphics.fillRoundedRect(GRID.x - 24, GRID.y - 20, GRID.columns * GRID.cellWidth + 48, GRID.rows * GRID.cellHeight + 48, 8);
     }
+  }
+
+  private drawKeyboardCursor(graphics: Phaser.GameObjects.Graphics): void {
+    const { x, y } = gridToScreen(this.keyboardCursor.column, this.keyboardCursor.row);
+    graphics.lineStyle(4, 0xfff7d6, 0.95);
+    graphics.strokeRoundedRect(x + 2, y + 2, GRID.cellWidth - 12, GRID.cellHeight - 12, 8);
+    graphics.fillStyle(0xfff7d6, 0.08);
+    graphics.fillRoundedRect(x + 2, y + 2, GRID.cellWidth - 12, GRID.cellHeight - 12, 8);
   }
 
   private drawRackSlots(building: DatacenterBuildingProgress, x: number, y: number): void {
@@ -927,6 +1071,10 @@ export class Ch6DatacenterScene extends Phaser.Scene {
   }
 
   private cleanup(): void {
+    if (this.keyboardHandler) {
+      this.input.keyboard?.off('keydown', this.keyboardHandler);
+      this.keyboardHandler = undefined;
+    }
     this.clearQuizRetryTimeout();
     this.gridZones.splice(0).forEach((zone) => zone.destroy());
     this.dialogue?.cleanup();
@@ -938,6 +1086,26 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       callback();
     }
     this.globalPanels = undefined;
+  }
+
+  private dismissIntroDialogue(): void {
+    if (!this.dialogue) {
+      return;
+    }
+
+    this.dialogue.cleanup();
+    this.dialogue = undefined;
+    this.pausedForOverlay = false;
+    this.introInterruptible = false;
+    if (this.chapter.quizCorrect === true) {
+      this.showCompletion();
+      return;
+    }
+    if (this.chapter.servedContracts.includes('hospitalNova')) {
+      this.showQuiz();
+      return;
+    }
+    this.showNextPendingFact();
   }
 }
 

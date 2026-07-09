@@ -36,6 +36,7 @@ import { createGlobalPanelController, GLOBAL_TOOL_LABELS, type GlobalPanelContro
 import { mountPipelineHud, type MountedPipelineHud, type PipelineHudLabels } from '../ui/pipelineHud';
 import type { MountedModal, QuizDefinition } from '../ui/chapterOneOverlay';
 import type { TextModeText } from '../ui/text';
+import { clampIndex, digitToIndex, isActivationKey, isInteractiveElementFocused, isReplayInterruptKey } from './chapterKeyboard';
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
@@ -128,6 +129,10 @@ export class Ch2RefineryScene extends Phaser.Scene {
   private completion: MountedModal | undefined;
   private pendingFactIds: string[] = [];
   private pausedForOverlay = false;
+  private introInterruptible = false;
+  private keyboardHandler: ((event: KeyboardEvent) => void) | undefined;
+  private keyboardCursor = { laneIndex: 0, column: 0 };
+  private keyboardCursorRect: Phaser.GameObjects.Rectangle | undefined;
   private lastMessage: TextModeText | null = null;
 
   constructor() {
@@ -142,6 +147,7 @@ export class Ch2RefineryScene extends Phaser.Scene {
     this.drawGrid();
     this.redrawModules();
     this.mountDom();
+    this.bindKeyboard();
     this.showIntroDialogue();
 
     this.time.addEvent({
@@ -245,6 +251,12 @@ export class Ch2RefineryScene extends Phaser.Scene {
         this.cellZones.push(zone);
       }
     }
+
+    this.keyboardCursorRect?.destroy();
+    this.keyboardCursorRect = this.add.rectangle(this.cellX(0), this.laneY(BALANCE.ch2.lanes[0]?.id ?? 'silicon'), CELL.width - 12, CELL.height - 12)
+      .setStrokeStyle(3, 0xf8d45c, 0.9)
+      .setFillStyle(0xf8d45c, 0.08);
+    this.updateKeyboardCursor();
   }
 
   private placeModule(laneId: RefineryLaneId, column: number): void {
@@ -398,6 +410,7 @@ export class Ch2RefineryScene extends Phaser.Scene {
 
   private showIntroDialogue(): void {
     this.pausedForOverlay = true;
+    this.introInterruptible = gameStore.getState().chapters.ch2.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
       lines: jensenGuideLines(STRINGS.ch2.intro, 2),
@@ -408,6 +421,114 @@ export class Ch2RefineryScene extends Phaser.Scene {
         this.pausedForOverlay = false;
       }
     });
+  }
+
+  private bindKeyboard(): void {
+    this.keyboardHandler = (event: KeyboardEvent) => {
+      if (this.dialogue && this.introInterruptible && isReplayInterruptKey(event)) {
+        event.preventDefault();
+        this.dismissIntroDialogue();
+        return;
+      }
+
+      if (this.pausedForOverlay || this.quiz || this.completion || this.factCard || this.eventCard || this.dialogue) {
+        return;
+      }
+
+      if (isInteractiveElementFocused()) {
+        return;
+      }
+
+      const moduleIndex = digitToIndex(event.key, 4);
+      if (moduleIndex !== null) {
+        this.selectedModule = (['crusher', 'furnace', 'chemicalBath', 'zoneRefiner'] as RefineryModuleType[])[moduleIndex];
+        this.refreshOverlay();
+        event.preventDefault();
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        this.moveKeyboardCursor(0, -1);
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        this.moveKeyboardCursor(0, 1);
+        return;
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.moveKeyboardCursor(-1, 0);
+        return;
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.moveKeyboardCursor(1, 0);
+        return;
+      }
+
+      if (event.key === 'r' || event.key === 'R') {
+        event.preventDefault();
+        this.handleRecycleSlag();
+        return;
+      }
+
+      if (event.key === 's' || event.key === 'S') {
+        event.preventDefault();
+        this.handleStoreSlag();
+        return;
+      }
+
+      if (isActivationKey(event)) {
+        event.preventDefault();
+        this.placeModule(this.currentLaneId(), this.keyboardCursor.column);
+      }
+    };
+
+    this.input.keyboard?.on('keydown', this.keyboardHandler);
+  }
+
+  private moveKeyboardCursor(deltaLane: number, deltaColumn: number): void {
+    if (BALANCE.ch2.lanes.length === 0) {
+      return;
+    }
+
+    this.keyboardCursor = {
+      laneIndex: clampIndex(this.keyboardCursor.laneIndex + deltaLane, BALANCE.ch2.lanes.length),
+      column: clampIndex(this.keyboardCursor.column + deltaColumn, BALANCE.ch2.grid.columns)
+    };
+    this.updateKeyboardCursor();
+    this.refreshOverlay();
+  }
+
+  private currentLaneId(): RefineryLaneId {
+    return BALANCE.ch2.lanes[this.keyboardCursor.laneIndex]?.id ?? BALANCE.ch2.lanes[0].id;
+  }
+
+  private updateKeyboardCursor(): void {
+    if (!this.keyboardCursorRect) {
+      return;
+    }
+
+    const laneId = this.currentLaneId();
+    this.keyboardCursorRect.setPosition(this.cellX(this.keyboardCursor.column), this.laneY(laneId));
+    this.keyboardCursorRect.setVisible(true);
+  }
+
+  private dismissIntroDialogue(): void {
+    if (!this.dialogue) {
+      return;
+    }
+
+    this.dialogue.cleanup();
+    this.dialogue = undefined;
+    this.pausedForOverlay = false;
+    this.introInterruptible = false;
+    this.refreshOverlay();
   }
 
   private queueFact(factId: string): void {
@@ -708,6 +829,10 @@ export class Ch2RefineryScene extends Phaser.Scene {
   }
 
   private cleanup(): void {
+    if (this.keyboardHandler) {
+      this.input.keyboard?.off('keydown', this.keyboardHandler);
+      this.keyboardHandler = undefined;
+    }
     for (const cleanup of this.cleanupCallbacks.splice(0)) {
       cleanup();
     }
@@ -720,6 +845,8 @@ export class Ch2RefineryScene extends Phaser.Scene {
     this.eventCard?.cleanup();
     this.quiz?.cleanup();
     this.completion?.cleanup();
+    this.keyboardCursorRect?.destroy();
+    this.keyboardCursorRect = undefined;
     this.dialogue = undefined;
     this.factCard = undefined;
     this.eventCard = undefined;
