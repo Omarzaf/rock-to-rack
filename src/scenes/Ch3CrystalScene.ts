@@ -42,6 +42,7 @@ import { clampIndex, cycleIndex, digitToIndex, isActivationKey, isInteractiveEle
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface BalanceContent {
   resources: {
@@ -667,7 +668,7 @@ export class Ch3CrystalScene extends Phaser.Scene {
       onNext: () => {
         window.location.hash = 'ch4';
         gameStore.enterScene(SceneKey.Ch4Fab, 4);
-        this.scene.start(SceneKey.Ch4Fab);
+        void startScene(this, SceneKey.Ch4Fab);
       }
     });
     window.setTimeout(() => removeQuizBackdrops(), 0);
@@ -794,7 +795,7 @@ export class Ch3CrystalScene extends Phaser.Scene {
       onToggleMode: () => this.toggleTextMode(),
       onMenu: () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     };
   }

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_SCENES } from '../scenes';
+import { BootScene } from '../scenes/BootScene';
 import { SceneKey } from '../scenes/sceneKeys';
 
 export interface RockToRackGameOptions {
@@ -17,7 +17,7 @@ export function createRockToRackGame(parent: string, options: RockToRackGameOpti
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH
     },
-    scene: GAME_SCENES,
+    scene: [BootScene],
     title: 'Rock to Rack',
     dom: {
       createContainer: false

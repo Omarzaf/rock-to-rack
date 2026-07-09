@@ -14,6 +14,7 @@ import { mountPipelineHud, type MountedPipelineHud, type PipelineHudLabels } fro
 import type { TextModeText } from '../ui/text';
 import { textForMode } from '../ui/text';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface SandboxActions {
   addResources: TextModeText;
@@ -155,7 +156,7 @@ export class SandboxScene extends Phaser.Scene {
       this.controlButton(content.actions.toggleMode, () => this.toggleTextMode()),
       this.controlButton(content.actions.menu, () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }, 'secondary-action')
     );
 

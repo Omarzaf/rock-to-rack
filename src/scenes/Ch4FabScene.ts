@@ -44,6 +44,7 @@ import { cycleIndex, digitToIndex, isActivationKey, isInteractiveElementFocused,
 import { emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface BalanceContent {
   resources: {
@@ -1056,7 +1057,7 @@ export class Ch4FabScene extends Phaser.Scene {
       onNext: () => {
         window.location.hash = 'ch5';
         gameStore.enterScene(SceneKey.Ch5Package, 5);
-        this.scene.start(SceneKey.Ch5Package);
+        void startScene(this, SceneKey.Ch5Package);
       }
     });
     window.setTimeout(() => removeQuizBackdrops(), 0);
@@ -1138,7 +1139,7 @@ export class Ch4FabScene extends Phaser.Scene {
       onToggleMode: () => this.toggleTextMode(),
       onMenu: () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     };
   }

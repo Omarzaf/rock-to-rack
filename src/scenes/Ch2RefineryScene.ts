@@ -41,6 +41,7 @@ import { clampIndex, digitToIndex, isActivationKey, isInteractiveElementFocused,
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface BalanceContent {
   resources: {
@@ -688,7 +689,7 @@ export class Ch2RefineryScene extends Phaser.Scene {
       onNext: () => {
         window.location.hash = 'ch3';
         gameStore.enterScene(SceneKey.Ch3Crystal, 3);
-        this.scene.start(SceneKey.Ch3Crystal);
+        void startScene(this, SceneKey.Ch3Crystal);
       }
     });
   }
@@ -804,7 +805,7 @@ export class Ch2RefineryScene extends Phaser.Scene {
       onToggleMode: () => this.toggleTextMode(),
       onMenu: () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     };
   }

@@ -5,6 +5,7 @@ import { openFeedbackLink } from '../ui/feedbackLink';
 import { createGlobalPanelController, type GlobalPanelController } from '../ui/globalPanels';
 import { mountMenuOverlay } from '../ui/menuOverlay';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 export class MenuScene extends Phaser.Scene {
   private cleanupOverlay: (() => void) | undefined;
@@ -58,12 +59,12 @@ export class MenuScene extends Phaser.Scene {
       onPlayCampaign: () => {
         window.location.hash = 'ch1';
         gameStore.enterScene(SceneKey.Ch1Mine, 1);
-        this.scene.start(SceneKey.Ch1Mine);
+        void startScene(this, SceneKey.Ch1Mine);
       },
       onPlayCrisis: () => {
         window.location.hash = 'crisis';
         gameStore.enterScene(SceneKey.CrisisRun);
-        this.scene.start(SceneKey.CrisisRun);
+        void startScene(this, SceneKey.CrisisRun);
       },
       onTextModeToggle: () => this.toggleTextMode(),
       onMuteToggle: () => {

@@ -40,6 +40,7 @@ import { cycleIndex, isActivationKey, isInteractiveElementFocused, isReplayInter
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface BalanceContent {
   resources: {
@@ -640,7 +641,7 @@ export class Ch1MineScene extends Phaser.Scene {
       onNext: () => {
         window.location.hash = 'ch2';
         gameStore.enterScene(SceneKey.Ch2Refinery, 2);
-        this.scene.start(SceneKey.Ch2Refinery);
+        void startScene(this, SceneKey.Ch2Refinery);
       }
     });
   }
@@ -710,7 +711,7 @@ export class Ch1MineScene extends Phaser.Scene {
       onToggleMode: () => this.toggleTextMode(),
       onMenu: () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     };
   }

@@ -41,6 +41,7 @@ import { cycleIndex, digitToIndex, isActivationKey, isInteractiveElementFocused,
 import { emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface BalanceContent {
   resources: {
@@ -923,7 +924,7 @@ export class Ch5PackageScene extends Phaser.Scene {
       onNext: () => {
         window.location.hash = 'ch6';
         gameStore.enterScene(SceneKey.Ch6Datacenter, 6);
-        this.scene.start(SceneKey.Ch6Datacenter);
+        void startScene(this, SceneKey.Ch6Datacenter);
       }
     });
   }
@@ -1005,7 +1006,7 @@ export class Ch5PackageScene extends Phaser.Scene {
       onToggleMode: () => this.toggleTextMode(),
       onMenu: () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     };
   }

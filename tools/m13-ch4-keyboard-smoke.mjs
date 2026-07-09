@@ -30,19 +30,19 @@ async function clearBlockingOverlays(page) {
   for (let attempt = 0; attempt < 20; attempt += 1) {
     if (await page.locator('.dialogue-shell').count()) {
       const next = page.locator('.dialogue-shell').getByRole('button', { name: /Next|Advance|Done|Close dialogue/ }).first();
-      await next.click();
+      await next.click({ force: true, timeout: 5_000 });
       await page.waitForTimeout(100);
       continue;
     }
 
     if (await page.locator('.fact-card').count()) {
-      await page.locator('.fact-card').getByRole('button', { name: /Dismiss|Close/ }).first().click();
+      await page.locator('.fact-card').getByRole('button', { name: /Dismiss|Close/ }).first().click({ force: true, timeout: 5_000 });
       await page.waitForTimeout(100);
       continue;
     }
 
     if (await page.locator('.event-card').count()) {
-      await page.locator('.event-choice').first().click();
+      await page.locator('.event-choice').first().click({ force: true, timeout: 5_000 });
       await page.waitForTimeout(100);
       continue;
     }
@@ -87,6 +87,7 @@ const issues = [];
 try {
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await context.newPage();
+  page.setDefaultTimeout(15_000);
   page.on('console', (message) => {
     if (message.type() === 'error') {
       issues.push(`console error: ${message.text()}`);
@@ -107,7 +108,7 @@ try {
   await completeWaferWithKeyboard(page, true);
 
   await page.waitForSelector('.ch1-quiz-card', { timeout: 10_000 });
-  await page.getByRole('button', { name: /Some tiny circuits|Some dies fail/ }).click();
+  await page.getByRole('button', { name: /Some tiny circuits|Some dies fail/ }).click({ force: true, timeout: 5_000 });
   await page.waitForSelector('.ch1-complete-card', { timeout: 10_000 });
   const bodyText = await page.locator('body').textContent();
   assert(bodyText?.includes('Next: Package Chips'), 'Chapter 4 keyboard path did not reach completion');

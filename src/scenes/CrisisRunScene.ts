@@ -18,6 +18,7 @@ import {
   type MountedCrisisRunOverlay
 } from '../ui/crisisRunOverlay';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface BalanceContent {
   resources: {
@@ -255,7 +256,7 @@ export class CrisisRunScene extends Phaser.Scene {
         this.resultModal?.cleanup();
         this.resultModal = undefined;
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     });
   }
@@ -342,7 +343,7 @@ export class CrisisRunScene extends Phaser.Scene {
       onComplete: () => this.completeIfReady(),
       onMenu: () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     };
   }

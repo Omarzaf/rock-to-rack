@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { gameStore } from '../state/gameStore';
 import { mountChapterOverlay } from '../ui/chapterOverlay';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 export class ChapterStubScene extends Phaser.Scene {
   private cleanupOverlay: (() => void) | undefined;
@@ -32,7 +33,7 @@ export class ChapterStubScene extends Phaser.Scene {
       hasNext: this.nextScene !== undefined,
       onMenu: () => {
         window.location.hash = 'menu';
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       },
       onNext: () => {
         if (!this.nextScene) {
@@ -41,7 +42,7 @@ export class ChapterStubScene extends Phaser.Scene {
 
         window.location.hash = `ch${this.chapter + 1}`;
         gameStore.enterScene(this.nextScene, this.chapter + 1);
-        this.scene.start(this.nextScene);
+        void startScene(this, this.nextScene);
       }
     });
 

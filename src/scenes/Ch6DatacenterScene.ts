@@ -53,6 +53,7 @@ import { clampIndex, cycleIndex, digitToIndex, isActivationKey, isInteractiveEle
 import { debugCatchUpMultiplier, emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 
 interface BalanceContent {
   resources: {
@@ -739,7 +740,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       epilogue: STRINGS.ch6.completion.epilogue,
       onNext: () => {
         this.persistChapterProgress(true);
-        this.scene.start(SceneKey.Menu);
+        void startScene(this, SceneKey.Menu);
       }
     });
     this.cleanupCallbacks.push(this.completion.cleanup);
@@ -945,7 +946,9 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       onServeSelectedContract: () => this.serveSelectedContract(),
       onRunNovaChallenge: () => this.runNovaChallenge(),
       onToggleMode: () => this.toggleTextMode(),
-      onMenu: () => this.scene.start(SceneKey.Menu)
+      onMenu: () => {
+        void startScene(this, SceneKey.Menu);
+      }
     };
   }
 

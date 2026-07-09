@@ -61,6 +61,12 @@ normal local ship path.
 
 Feedback plumbing is implemented but hidden until `SITE_METADATA.feedbackHref` is configured with a real mailto or form URL.
 
+## Cold Playtests
+
+Use `docs/playtests/2026-07-09-cold-playtest-script.md` for the human-run
+3-5 player pass before award submission. Keep tester names, contact details,
+and recordings out of the repo unless they are explicitly anonymized.
+
 ## Deployment
 
 Build output lives in `dist/`. Vercel preview deploy is the default shipping target. Production promotion requires explicit human approval.

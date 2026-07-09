@@ -5,6 +5,7 @@ import { loadSavedState } from '../state/storage';
 import { clearSavedState } from '../state/storage';
 import { stateForBootRequest } from './bootState';
 import { isChapterSceneKey, SceneKey } from './sceneKeys';
+import { startScene } from './sceneLoader';
 import { sceneKeyFromHash } from './sceneRouting';
 
 export class BootScene extends Phaser.Scene {
@@ -35,6 +36,6 @@ export class BootScene extends Phaser.Scene {
         ? savedScene
         : SceneKey.Menu;
 
-    this.scene.start(nextScene);
+    void startScene(this, nextScene);
   }
 }
