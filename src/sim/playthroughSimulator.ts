@@ -1,6 +1,7 @@
 import { createInitialGameState } from '../state/gameState';
 import type {
   DatacenterBuildingType,
+  DieBinId,
   FabNodeYield,
   GameState,
   ResourceState
@@ -90,6 +91,15 @@ export interface ChapterSimulationSummary {
   endingCredits: number;
   endingEnergy: number;
   endingWater: number;
+  package?: PackageSimulationSummary;
+}
+
+export interface PackageSimulationSummary {
+  sortedDies: number;
+  sortedBins: Record<DieBinId, number>;
+  remainingBins: Record<DieBinId, number>;
+  builtCount: number;
+  perfect7nmDies: number;
 }
 
 export interface ResourceCurvePoint {
@@ -134,6 +144,7 @@ interface SimulationContext {
   paceSettings: PaceSettings;
   elapsedSeconds: number;
   resourceCurves: ResourceCurvePoint[];
+  packageSimulation?: PackageSimulationSummary;
 }
 
 type ChapterMechanic = (context: SimulationContext) => void;
@@ -220,6 +231,7 @@ function simulateChapter(
 ): ChapterSimulationSummary {
   const startingResources = cloneResources(context.state.resources);
   mechanic(context);
+  const packageSummary = chapter === 5 ? context.packageSimulation : undefined;
   const duration = durationForProfile(context, chapter, targetSeconds);
   const catchUpTriggered = duration.catchUpMultiplier > 1;
   if (catchUpTriggered) {
@@ -238,7 +250,8 @@ function simulateChapter(
     catchUpTriggered,
     endingCredits: context.state.resources.credits,
     endingEnergy: context.state.resources.energy,
-    endingWater: context.state.resources.water
+    endingWater: context.state.resources.water,
+    ...(packageSummary ? { package: packageSummary } : {})
   };
 }
 
@@ -418,15 +431,12 @@ function simulatePackageMechanics(context: SimulationContext): void {
     chapter = sortTestDie(chapter, die.id, die.expectedBin, balance).chapter;
   }
 
+  const sortedBins = { ...chapter.bins };
+  const sortedPerfect7nmDies = chapter.perfect7nmDies;
+
   chapter = {
     ...chapter,
-    stage: 'roster',
-    bins: {
-      perfect: Math.max(chapter.bins.perfect, 12),
-      good: Math.max(chapter.bins.good, 24),
-      salvage: Math.max(chapter.bins.salvage, 12)
-    },
-    perfect7nmDies: Math.max(chapter.perfect7nmDies, 2)
+    stage: 'roster'
   };
 
   for (const chip of context.chips.filter((candidate) => !candidate.locked)) {
@@ -447,6 +457,14 @@ function simulatePackageMechanics(context: SimulationContext): void {
     perfect7nmDies: chapter.perfect7nmDies,
     triggeredEvents: ['probeDrift', 'substrateShortage'],
     firstFacts: ['ch5-packaging', 'ch5-binning', 'ch5-chip-roster']
+  };
+
+  context.packageSimulation = {
+    sortedDies: context.state.chapters.ch5.sortedDies,
+    sortedBins,
+    remainingBins: context.state.chapters.ch5.bins,
+    builtCount: context.state.chapters.ch5.builtChips.length,
+    perfect7nmDies: sortedPerfect7nmDies
   };
 }
 

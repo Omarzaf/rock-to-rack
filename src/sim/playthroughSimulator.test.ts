@@ -52,6 +52,27 @@ describe('playthrough simulator', () => {
     expect(result.chapters.some((chapter) => chapter.catchUpTriggered)).toBe(true);
   });
 
+  it('keeps Chapter 5 bins tied to actually sorted dies', () => {
+    const result = runPlaythroughSimulation({
+      profile: BOT_PROFILES.find((profile) => profile.id === 'average')!,
+      balance,
+      chips,
+      events
+    });
+    const packageChapter = result.chapters.find((chapter) => chapter.chapter === 5);
+
+    expect(packageChapter?.package).toBeDefined();
+    const packageSummary = packageChapter!.package!;
+    const binnedDies = Object.values(packageSummary.sortedBins).reduce((sum, count) => sum + count, 0);
+
+    expect(binnedDies).toBe(packageSummary.sortedDies);
+    expect(packageSummary.perfect7nmDies).toBeLessThanOrEqual(packageSummary.sortedBins.perfect);
+    expect(packageSummary.builtCount).toBeLessThanOrEqual(balance.ch5.maxBuildChoices);
+    expect(packageSummary.remainingBins.perfect).toBeLessThanOrEqual(packageSummary.sortedBins.perfect);
+    expect(packageSummary.remainingBins.good).toBeLessThanOrEqual(packageSummary.sortedBins.good);
+    expect(packageSummary.remainingBins.salvage).toBeLessThanOrEqual(packageSummary.sortedBins.salvage);
+  });
+
   it('formats a stable markdown report', () => {
     const results = BOT_PROFILES.map((profile) => runPlaythroughSimulation({
       profile,
