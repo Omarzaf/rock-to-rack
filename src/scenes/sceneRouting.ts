@@ -22,7 +22,12 @@ const CHAPTER_SCENES = new Map<number, SceneKey>([
 ]);
 
 export function sceneKeyFromHash(hash: string): SceneKey {
-  return HASH_SCENES.get(hash.trim().toLowerCase()) ?? SceneKey.Menu;
+  const normalized = hash.trim().toLowerCase();
+  if (normalized.length === 0) {
+    return SceneKey.CrisisRun;
+  }
+
+  return HASH_SCENES.get(normalized) ?? SceneKey.Menu;
 }
 
 export function sceneKeyFromChapter(chapter: number): SceneKey {

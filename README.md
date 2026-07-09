@@ -4,8 +4,8 @@ Rock to Rack is an interactive browser game about the semiconductor supply chain
 
 ## Demo Routes
 
+- Crisis Run front door: `/` or `/?reset#crisis`
 - Main menu: `/#menu`
-- Crisis Run: `/?reset#crisis`
 - Chapter 1: `/?reset#ch1`
 - Chapter 4 fab demo: `/?reset#ch4`
 - Chapter 6 data-center finale: `/?reset#ch6`

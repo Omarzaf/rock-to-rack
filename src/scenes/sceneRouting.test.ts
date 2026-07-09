@@ -17,8 +17,11 @@ describe('sceneKeyFromHash', () => {
     expect(sceneKeyFromHash('#crisis')).toBe(SceneKey.CrisisRun);
   });
 
-  it('falls back to the menu for unknown or empty hashes', () => {
-    expect(sceneKeyFromHash('')).toBe(SceneKey.Menu);
+  it('opens the bare URL directly into Crisis Run', () => {
+    expect(sceneKeyFromHash('')).toBe(SceneKey.CrisisRun);
+  });
+
+  it('falls back to the menu for unknown hashes', () => {
     expect(sceneKeyFromHash('#unknown')).toBe(SceneKey.Menu);
   });
 
