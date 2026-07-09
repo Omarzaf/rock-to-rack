@@ -7,9 +7,9 @@ import {
   type DatacenterBalance,
   type DatacenterChapterState
 } from '../sim/datacenter';
-import { compareCrisisRunToBest, createCrisisRunResult, elapsedWallClockSeconds } from '../sim/crisisRun';
+import { compareCrisisRunToBest, createCrisisRunChallenge, createCrisisRunResult, elapsedWallClockSeconds, type CrisisRunChallenge } from '../sim/crisisRun';
 import { gameStore } from '../state/gameStore';
-import type { DatacenterBuildingType, ResourceState } from '../state/types';
+import type { ChipTypeId, DatacenterBuildingType, ResourceState } from '../state/types';
 import {
   mountCrisisRunOverlay,
   mountCrisisRunResult,
@@ -40,8 +40,9 @@ const COMPACT_GRID: GridLayout = { x: 260, y: 250, cellWidth: 152, cellHeight: 1
 const BUILD_TYPES: DatacenterBuildingType[] = ['rack', 'power', 'cooling', 'network', 'battery'];
 
 export class CrisisRunScene extends Phaser.Scene {
-  private chapter = createCrisisChapter();
-  private resources = createCrisisResources();
+  private challenge!: CrisisRunChallenge;
+  private chapter!: DatacenterChapterState;
+  private resources!: ResourceState;
   private runStartedAtMs = 0;
   private selectedBuildType: DatacenterBuildingType = 'rack';
   private overlay: MountedCrisisRunOverlay | undefined;
@@ -61,8 +62,9 @@ export class CrisisRunScene extends Phaser.Scene {
 
   create(): void {
     gameStore.enterScene(SceneKey.CrisisRun);
-    this.chapter = createCrisisChapter();
-    this.resources = createCrisisResources();
+    this.challenge = createCrisisRunChallenge(gameStore.getState());
+    this.chapter = createCrisisChapter(this.challenge.availableChipIds);
+    this.resources = createCrisisResources(this.challenge.startingCredits);
     this.runStartedAtMs = performance.now();
     this.selectedBuildType = 'rack';
     this.heatPeak = 0;
@@ -152,7 +154,7 @@ export class CrisisRunScene extends Phaser.Scene {
       stage: 'victory'
     };
     const result = createCrisisRunResult({
-      runId: `crisis-${Date.now()}`,
+      runId: `crisis-${this.challenge.dailySeed}-${Date.now()}`,
       completedAt: new Date().toISOString(),
       elapsedSeconds,
       cityLights: this.chapter.cityLights,
@@ -170,6 +172,7 @@ export class CrisisRunScene extends Phaser.Scene {
       result,
       runNumber,
       comparison,
+      challengeLabel: this.challenge.label,
       onCopyResult: (shareLine) => copyResultToClipboard(shareLine),
       onReplay: () => {
         this.resultModal?.cleanup();
@@ -207,6 +210,7 @@ export class CrisisRunScene extends Phaser.Scene {
       powerCapacity: this.chapter.powerCapacity,
       selectedBuildType: this.selectedBuildType,
       canComplete: this.canComplete(),
+      challengeLabel: this.challenge.label,
       message,
       onSelectBuildType: (type) => {
         this.selectedBuildType = type;
@@ -308,14 +312,14 @@ export class CrisisRunScene extends Phaser.Scene {
   }
 }
 
-function createCrisisChapter(): DatacenterChapterState {
+function createCrisisChapter(challengeChipIds: ChipTypeId[]): DatacenterChapterState {
   return createInitialDatacenterChapter({
     completed: true,
     completedAtSeconds: 0,
     quizCorrect: true,
     sortedDies: 24,
     bins: { perfect: 8, good: 10, salvage: 6 },
-    selectedChipIds: ['cpu', 'gpu', 'dram', 'nand', 'nic', 'pmic', 'nova'],
+    selectedChipIds: challengeChipIds,
     builtChips: [],
     perfect7nmDies: 2,
     triggeredEvents: [],
@@ -323,14 +327,14 @@ function createCrisisChapter(): DatacenterChapterState {
   }, BALANCE.ch6);
 }
 
-function createCrisisResources(): ResourceState {
+function createCrisisResources(startingCredits: number): ResourceState {
   return {
     minerals: { quartz: 0, copper: 0, lithium: 6, cobalt: 4, rareEarths: 0 },
     wafers: 0,
     chips: 0,
     energy: 100,
     water: 100,
-    credits: 700
+    credits: startingCredits
   };
 }
 

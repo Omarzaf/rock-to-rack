@@ -64,8 +64,11 @@ describe('playthrough simulator', () => {
     expect(packageChapter?.package).toBeDefined();
     const packageSummary = packageChapter!.package!;
     const binnedDies = Object.values(packageSummary.sortedBins).reduce((sum, count) => sum + count, 0);
+    const remainingBins = Object.values(packageSummary.remainingBins).reduce((sum, count) => sum + count, 0);
 
     expect(binnedDies).toBe(packageSummary.sortedDies);
+    expect(packageSummary.remainingBins).not.toBe(packageSummary.sortedBins);
+    expect(remainingBins).toBeLessThanOrEqual(binnedDies);
     expect(packageSummary.perfect7nmDies).toBeLessThanOrEqual(packageSummary.sortedBins.perfect);
     expect(packageSummary.builtCount).toBeLessThanOrEqual(balance.ch5.maxBuildChoices);
     expect(packageSummary.remainingBins.perfect).toBeLessThanOrEqual(packageSummary.sortedBins.perfect);

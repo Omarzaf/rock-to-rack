@@ -1,4 +1,7 @@
-import type { CrisisRunGrade, CrisisRunResult } from '../state/types';
+import type { ChipTypeId, CrisisRunGrade, CrisisRunResult, GameState } from '../state/types';
+
+const DEFAULT_CRISIS_RUN_CHIP_IDS: ChipTypeId[] = ['cpu', 'gpu', 'dram', 'nand', 'nic', 'pmic', 'nova'];
+const DEFAULT_CRISIS_RUN_CREDITS = 700;
 
 export interface CrisisRunScoreInput {
   elapsedSeconds: number;
@@ -26,12 +29,43 @@ export interface CrisisRunReplayComparison {
   replayPrompt: string;
 }
 
+export type CrisisRunChallengeSource = 'quick-play' | 'campaign';
+
+export interface CrisisRunChallenge {
+  dailySeed: string;
+  source: CrisisRunChallengeSource;
+  availableChipIds: ChipTypeId[];
+  startingCredits: number;
+  label: string;
+}
+
 export const CRISIS_RUN_TARGET_SECONDS = 600;
 export const CRISIS_RUN_HISTORY_LIMIT = 12;
 
 export function elapsedWallClockSeconds(startMs: number, endMs: number): number {
   const elapsedMs = Math.max(0, endMs - startMs);
   return Math.max(1, Math.ceil(elapsedMs / 1000));
+}
+
+export function createCrisisRunChallenge(state: Pick<GameState, 'chapters'>, now: Date | string = new Date()): CrisisRunChallenge {
+  const dailySeed = dailySeedForDate(now);
+  const campaignChipIds = state.chapters.ch5.completed && state.chapters.ch5.selectedChipIds.length > 0
+    ? [...state.chapters.ch5.selectedChipIds]
+    : [...DEFAULT_CRISIS_RUN_CHIP_IDS];
+  const source: CrisisRunChallengeSource = state.chapters.ch5.completed && state.chapters.ch5.selectedChipIds.length > 0
+    ? 'campaign'
+    : 'quick-play';
+  const startingCredits = DEFAULT_CRISIS_RUN_CREDITS
+    + campaignChipIds.length * 15
+    + challengeSeedBonus(dailySeed);
+
+  return {
+    dailySeed,
+    source,
+    availableChipIds: campaignChipIds,
+    startingCredits,
+    label: challengeLabel(source, dailySeed, campaignChipIds.length)
+  };
 }
 
 export function calculateCrisisRunScore(input: CrisisRunScoreInput): number {
@@ -144,6 +178,21 @@ export function compareCrisisRunToBest(previousBest: CrisisRunResult | null, res
 
 export function appendCrisisRunHistory(history: CrisisRunResult[], result: CrisisRunResult): CrisisRunResult[] {
   return [result, ...history].slice(0, CRISIS_RUN_HISTORY_LIMIT);
+}
+
+function dailySeedForDate(now: Date | string): string {
+  const date = typeof now === 'string' ? new Date(now) : now;
+  return Number.isNaN(date.getTime()) ? '1970-01-01' : date.toISOString().slice(0, 10);
+}
+
+function challengeSeedBonus(dailySeed: string): number {
+  const hash = [...dailySeed].reduce((sum, character) => (sum * 31 + character.charCodeAt(0)) >>> 0, 0);
+  return (hash % 4) * 10;
+}
+
+function challengeLabel(source: CrisisRunChallengeSource, dailySeed: string, chipCount: number): string {
+  const lineupLabel = source === 'campaign' ? `campaign lineup (${chipCount} chips)` : 'quick play lineup';
+  return `Daily seed ${dailySeed} · ${lineupLabel}`;
 }
 
 function clamp(value: number, min: number, max: number): number {

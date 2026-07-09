@@ -24,6 +24,7 @@ describe('crisis run overlay', () => {
       powerCapacity: 80,
       selectedBuildType: 'rack',
       canComplete: false,
+      challengeLabel: 'Daily seed 2026-07-09 · campaign lineup (4 chips)',
       message: 'Place one rack, power, cooling, and network.',
       onSelectBuildType: (type) => selected.push(type),
       onComplete: () => undefined,
@@ -31,6 +32,7 @@ describe('crisis run overlay', () => {
     });
 
     expect(root.textContent).toContain('Crisis Run');
+    expect(root.textContent).toContain('campaign lineup');
     expect(root.textContent).toContain('25%');
     expect(root.textContent).toContain('Selected: Rack');
     root.querySelector<HTMLButtonElement>('[data-build-type="power"]')?.click();
@@ -71,6 +73,7 @@ describe('crisis run overlay', () => {
       result,
       runNumber: 2,
       comparison,
+      challengeLabel: 'Daily seed 2026-07-09 · campaign lineup (4 chips)',
       onCopyResult: (shareLine) => {
         copied.push(shareLine);
         return true;
@@ -82,6 +85,7 @@ describe('crisis run overlay', () => {
     expect(root.textContent).toContain('910');
     expect(root.textContent).toContain('New best');
     expect(root.textContent).toContain('Run 2');
+    expect(root.textContent).toContain('campaign lineup');
     expect(root.textContent).toContain('New best by 40 pts');
     expect(root.textContent).toContain('Previous best was 870.');
     expect(root.textContent).toContain('Replay to beat 910');
@@ -127,6 +131,7 @@ describe('crisis run overlay', () => {
       result,
       runNumber: 1,
       comparison,
+      challengeLabel: 'Daily seed 2026-07-09 · quick play lineup',
       onReplay: () => undefined,
       onMenu: () => undefined
     });
@@ -164,6 +169,7 @@ describe('crisis run overlay', () => {
       result,
       runNumber: 2,
       comparison,
+      challengeLabel: 'Daily seed 2026-07-09 · quick play lineup',
       onReplay: () => undefined,
       onMenu: () => undefined
     });

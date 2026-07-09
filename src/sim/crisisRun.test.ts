@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  createCrisisRunChallenge,
   elapsedWallClockSeconds,
   bestCrisisRun,
   calculateCrisisRunScore,
@@ -8,11 +9,40 @@ import {
   gradeForScore
 } from './crisisRun';
 import type { CrisisRunResult } from '../state/types';
+import { createInitialGameState } from '../state/gameState';
 
 describe('crisis run scoring', () => {
   it('keeps completed runs from reporting 0 seconds', () => {
     expect(elapsedWallClockSeconds(1_000, 1_100)).toBe(1);
     expect(elapsedWallClockSeconds(1_000, 8_250)).toBe(8);
+  });
+
+  it('derives a deterministic daily challenge from the date and campaign progress', () => {
+    const state = createInitialGameState();
+    const noCampaign = createCrisisRunChallenge(state, '2026-07-09T12:00:00.000Z');
+    const noCampaignRepeat = createCrisisRunChallenge(state, '2026-07-09T23:59:59.000Z');
+    const differentDay = createCrisisRunChallenge(state, '2026-07-10T12:00:00.000Z');
+    const campaign = createCrisisRunChallenge({
+      ...state,
+      chapters: {
+        ...state.chapters,
+        ch5: {
+          ...state.chapters.ch5,
+          completed: true,
+          selectedChipIds: ['cpu', 'gpu', 'dram', 'pmic']
+        }
+      }
+    }, '2026-07-09T12:00:00.000Z');
+
+    expect(noCampaign.dailySeed).toBe('2026-07-09');
+    expect(noCampaign.availableChipIds).toEqual(['cpu', 'gpu', 'dram', 'nand', 'nic', 'pmic', 'nova']);
+    expect(noCampaign.label).toContain('quick play lineup');
+    expect(noCampaignRepeat).toEqual(noCampaign);
+    expect(differentDay.dailySeed).toBe('2026-07-10');
+    expect(differentDay.startingCredits).not.toBe(noCampaign.startingCredits);
+    expect(campaign.source).toBe('campaign');
+    expect(campaign.availableChipIds).toEqual(['cpu', 'gpu', 'dram', 'pmic']);
+    expect(campaign.label).toContain('campaign lineup');
   });
 
   it('rewards city lights, contracts, efficiency, and speed', () => {

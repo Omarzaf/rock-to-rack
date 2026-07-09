@@ -10,6 +10,7 @@ export interface CrisisRunOverlayOptions {
   powerCapacity: number;
   selectedBuildType: DatacenterBuildingType;
   canComplete: boolean;
+  challengeLabel: string;
   message: string;
   onSelectBuildType: (type: DatacenterBuildingType) => void;
   onComplete: () => void;
@@ -20,6 +21,7 @@ export interface CrisisRunResultOptions {
   result: CrisisRunResult;
   runNumber: number;
   comparison: CrisisRunReplayComparison;
+  challengeLabel: string;
   onCopyResult?: (shareLine: string) => boolean | Promise<boolean>;
   onReplay: () => void;
   onMenu: () => void;
@@ -42,7 +44,8 @@ export function mountCrisisRunOverlay(root: HTMLElement, options: CrisisRunOverl
     header.className = 'crisis-header';
     header.append(
       elementWithText('h1', 'crisis-title', 'Crisis Run'),
-      elementWithText('p', 'crisis-objective', 'Bring Nova online before the city goes dark.')
+      elementWithText('p', 'crisis-objective', 'Bring Nova online before the city goes dark.'),
+      elementWithText('p', 'crisis-challenge-label', next.challengeLabel)
     );
 
     const stats = document.createElement('div');
@@ -113,6 +116,7 @@ export function mountCrisisRunResult(root: HTMLElement, options: CrisisRunResult
     elementWithText('span', 'crisis-result-kicker', isNewScoreBest ? 'New best' : 'Run complete'),
     title,
     elementWithText('p', 'crisis-share-line', options.result.shareLine),
+    elementWithText('p', 'crisis-result-challenge', options.challengeLabel),
     comparison,
     stats
   );

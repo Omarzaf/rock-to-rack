@@ -445,6 +445,7 @@ function simulatePackageMechanics(context: SimulationContext): void {
       chapter = built.chapter;
     }
   }
+  const remainingBins = { ...chapter.bins };
 
   context.state.chapters.ch5 = {
     ...context.state.chapters.ch5,
@@ -462,7 +463,7 @@ function simulatePackageMechanics(context: SimulationContext): void {
   context.packageSimulation = {
     sortedDies: context.state.chapters.ch5.sortedDies,
     sortedBins,
-    remainingBins: context.state.chapters.ch5.bins,
+    remainingBins,
     builtCount: context.state.chapters.ch5.builtChips.length,
     perfect7nmDies: sortedPerfect7nmDies
   };
