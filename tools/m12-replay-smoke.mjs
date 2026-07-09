@@ -2,6 +2,11 @@ import { chromium } from '@playwright/test';
 
 const baseUrl = process.env.M12_BASE_URL ?? 'http://localhost:4173/';
 const screenshotPath = '/tmp/rock-to-rack-m12-replay-result.png';
+const ipadScreenshotPath = '/tmp/rock-to-rack-m12-replay-ipad.png';
+const viewportCases = {
+  desktop: { viewport: { width: 1280, height: 900 } },
+  ipad: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true }
+};
 
 function fullUrl(path = '') {
   return new URL(path, baseUrl).toString();
@@ -60,7 +65,7 @@ const browser = await launchChromium();
 const issues = [];
 
 try {
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const context = await browser.newContext(viewportCases.desktop);
   const page = await context.newPage();
   page.on('console', (message) => {
     if (message.type() === 'error') {
@@ -98,6 +103,27 @@ try {
   const menuText = await page.locator('.menu-shell').textContent();
   assert(menuText?.includes('Best Crisis Run'), 'Menu did not show best Crisis Run after replay loop');
 
+  const ipadContext = await browser.newContext(viewportCases.ipad);
+  const ipadPage = await ipadContext.newPage();
+  ipadPage.on('console', (message) => {
+    if (message.type() === 'error') {
+      issues.push(`iPad console error: ${message.text()}`);
+    }
+  });
+  ipadPage.on('pageerror', (error) => issues.push(`iPad page error: ${error.message}`));
+  ipadPage.on('response', (response) => {
+    if (response.status() >= 400) {
+      issues.push(`iPad network ${response.status()}: ${response.url()}`);
+    }
+  });
+  await ipadPage.goto(fullUrl('?reset#crisis'), { waitUntil: 'domcontentloaded' });
+  await waitForGame(ipadPage);
+  await ipadPage.waitForSelector('.crisis-overlay', { timeout: 10_000 });
+  const rackButtonHeight = await ipadPage.getByRole('button', { name: 'Rack' }).evaluate((button) => button.getBoundingClientRect().height);
+  assert(rackButtonHeight >= 40, `Rack button too short on iPad viewport: ${rackButtonHeight}`);
+  await ipadPage.screenshot({ path: ipadScreenshotPath, fullPage: true });
+  await ipadContext.close();
+
   await context.close();
 } finally {
   await browser.close();
@@ -107,4 +133,4 @@ if (issues.length > 0) {
   throw new Error(`Replay smoke issues:\n${issues.join('\n')}`);
 }
 
-console.log(JSON.stringify({ status: 'pass', url: baseUrl, screenshot: screenshotPath }, null, 2));
+console.log(JSON.stringify({ status: 'pass', url: baseUrl, screenshot: screenshotPath, ipadScreenshot: ipadScreenshotPath }, null, 2));

@@ -5,7 +5,13 @@ const screenshots = {
   menu: '/tmp/rock-to-rack-m11-menu.png',
   crisis: '/tmp/rock-to-rack-m11-crisis.png',
   result: '/tmp/rock-to-rack-m11-result.png',
-  mobile: '/tmp/rock-to-rack-m11-mobile.png'
+  mobile: '/tmp/rock-to-rack-m11-mobile.png',
+  ipad: '/tmp/rock-to-rack-m11-ipad.png'
+};
+const viewportCases = {
+  desktop: { viewport: { width: 1280, height: 900 } },
+  mobile: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+  ipad: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true }
 };
 
 function assert(condition, message) {
@@ -76,7 +82,7 @@ async function runDesktopSmoke() {
   const issues = [];
   const browser = await launchChromium();
   try {
-    const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const context = await browser.newContext(viewportCases.desktop);
     const page = await context.newPage();
     watchPage(page, issues, 'desktop');
 
@@ -123,11 +129,36 @@ async function runDesktopSmoke() {
   }
 }
 
+async function runIpadSmoke() {
+  const issues = [];
+  const browser = await launchChromium();
+  try {
+    const context = await browser.newContext(viewportCases.ipad);
+    const page = await context.newPage();
+    watchPage(page, issues, 'ipad');
+
+    await page.goto(fullUrl('?reset#crisis'), { waitUntil: 'domcontentloaded' });
+    await waitForGame(page);
+    await page.waitForSelector('.crisis-overlay', { timeout: 10_000 });
+    await settleEntrance(page);
+    const rackButtonHeight = await page.getByRole('button', { name: 'Rack' }).evaluate((button) => button.getBoundingClientRect().height);
+    assert(rackButtonHeight >= 40, `Rack button too short on iPad viewport: ${rackButtonHeight}`);
+    await page.screenshot({ path: screenshots.ipad, fullPage: true });
+    await context.close();
+  } finally {
+    await browser.close();
+  }
+
+  if (issues.length > 0) {
+    throw new Error(`iPad smoke issues:\n${issues.join('\n')}`);
+  }
+}
+
 async function runMobileSmoke() {
   const issues = [];
   const browser = await launchChromium();
   try {
-    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    const context = await browser.newContext(viewportCases.mobile);
     const page = await context.newPage();
     watchPage(page, issues, 'mobile');
     await page.goto(fullUrl('?reset#crisis'), { waitUntil: 'domcontentloaded' });
@@ -148,6 +179,7 @@ async function runMobileSmoke() {
 }
 
 await runDesktopSmoke();
+await runIpadSmoke();
 await runMobileSmoke();
 
 console.log(JSON.stringify({ status: 'pass', url: baseUrl, screenshots }, null, 2));

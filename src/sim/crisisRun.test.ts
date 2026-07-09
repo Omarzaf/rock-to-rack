@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  elapsedWallClockSeconds,
   bestCrisisRun,
   calculateCrisisRunScore,
   compareCrisisRunToBest,
@@ -9,6 +10,11 @@ import {
 import type { CrisisRunResult } from '../state/types';
 
 describe('crisis run scoring', () => {
+  it('keeps completed runs from reporting 0 seconds', () => {
+    expect(elapsedWallClockSeconds(1_000, 1_100)).toBe(1);
+    expect(elapsedWallClockSeconds(1_000, 8_250)).toBe(8);
+  });
+
   it('rewards city lights, contracts, efficiency, and speed', () => {
     const score = calculateCrisisRunScore({
       elapsedSeconds: 420,

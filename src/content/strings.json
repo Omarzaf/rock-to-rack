@@ -603,6 +603,10 @@
         "kid": "That spot already has a machine.",
         "nerd": "Placement rejected: selected cell is already occupied."
       },
+      "inactiveSequence": {
+        "kid": "Start from the left. This machine will not run yet.",
+        "nerd": "Placement rejected: modules only activate in a connected left-to-right chain."
+      },
       "insufficientResources": {
         "kid": "Not enough credits for that machine.",
         "nerd": "Placement rejected: budget is below module cost."

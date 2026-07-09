@@ -11,6 +11,7 @@ import type {
   DatacenterChapterState,
   DatacenterContractDefinition
 } from '../sim/datacenter';
+import { canServeContract } from '../sim/datacenter';
 import type { ChipDefinition } from '../sim/package';
 import {
   mountQuizOverlay,
@@ -346,14 +347,11 @@ function contractPanel(options: ChapterSixOverlayOptions): HTMLElement {
 function contractCard(options: ChapterSixOverlayOptions, contract: DatacenterContractDefinition): HTMLElement {
   const served = options.chapter.servedContracts.includes(contract.id);
   const selected = options.selectedContractId === contract.id;
-  const missing = contract.requiredChipIds.filter((chipId) => !options.chapter.installedChipIds.includes(chipId));
-  const blocked = served
-    || missing.length > 0
-    || options.chapter.effectiveCompute < contract.requiredCompute
-    || options.chapter.networkLinks < contract.requiredNetworkLinks
-    || options.chapter.powerLoad > options.chapter.powerCapacity
-    || options.chapter.heat >= options.balance.heatThrottle
-    || (contract.id === 'hospitalNova' && (options.chapter.stage !== 'nova' || !options.chapter.novaBuilt));
+  const check = canServeContract(options.chapter, contract, options.balance);
+  const blocked = served || !check.ok;
+  const reasonLine = !served && check.reasons.length > 0
+    ? `Blocked: ${check.reasons.join(' · ')}`
+    : '';
 
   const card = document.createElement('button');
   card.type = 'button';
@@ -375,6 +373,7 @@ function contractCard(options: ChapterSixOverlayOptions, contract: DatacenterCon
   card.append(
     elementWithText('strong', '', textForMode(contract.title, options.textMode)),
     elementWithText('small', '', status),
+    reasonLine ? elementWithText('span', 'ch6-contract-reason', reasonLine) : elementWithText('span', 'ch6-contract-reason', ''),
     elementWithText('span', 'ch6-contract-requirements', `Chips: ${contract.requiredChipIds.join(', ')} | Compute ${contract.requiredCompute} | Net ${contract.requiredNetworkLinks}`),
     elementWithText('span', 'ch6-contract-reward', `+${contract.rewardCredits} / +${contract.cityLights}%`)
   );

@@ -47,6 +47,11 @@ corepack pnpm perf:m10
 Run `perf:m10` by itself, not in parallel with the browser smokes, so
 first-playable timing is not distorted by local contention.
 
+The browser smoke scripts keep running even if Firefox or WebKit are not
+installed. When those binaries are missing, the scripts report them as
+unavailable instead of making installation a hidden prerequisite for the
+normal local ship path.
+
 ## Pitch
 
 10 minutes, kids to CTOs, browser tab. Players feel the tradeoffs behind chips: resource constraints, yield, binning, heat, power, and data-center demand.

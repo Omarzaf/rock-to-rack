@@ -68,7 +68,7 @@ interface ChapterTwoStrings {
     laneNames: Record<RefineryLaneId, TextModeText>;
     messages: Record<
       'laneNotFound' | 'columnOutOfBounds' | 'cellOccupied' | 'insufficientResources'
-      | 'insufficientEnergyWater' | 'insufficientMinerals' | 'slagCapacity',
+      | 'inactiveSequence' | 'insufficientEnergyWater' | 'insufficientMinerals' | 'slagCapacity',
       TextModeText
     >;
     intro: DialogueLine[];
@@ -755,6 +755,9 @@ function messageForReason(
   }
   if (reason === 'cell-occupied') {
     return messages.cellOccupied;
+  }
+  if (reason === 'inactive sequence') {
+    return messages.inactiveSequence;
   }
   return messages.insufficientResources;
 }

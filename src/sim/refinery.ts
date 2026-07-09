@@ -65,11 +65,11 @@ export interface RefineryChapterState {
 export type PlaceRefineryModuleResult =
   | { ok: true; chapter: RefineryChapterState; resources: ResourceState; module: PlacedRefineryModule }
   | {
-    ok: false;
-    reason: 'lane-not-found' | 'column-out-of-bounds' | 'cell-occupied' | 'insufficient-resources';
-    chapter: RefineryChapterState;
-    resources: ResourceState;
-  };
+      ok: false;
+      reason: 'lane-not-found' | 'column-out-of-bounds' | 'cell-occupied' | 'inactive sequence' | 'insufficient-resources';
+      chapter: RefineryChapterState;
+      resources: ResourceState;
+    };
 
 export type RefineryBlockedReason = 'insufficient-energy-water' | 'insufficient-minerals' | 'slag-capacity';
 
@@ -116,6 +116,11 @@ export function placeRefineryModule(
 
   if (chapter.modules.some((module) => module.laneId === placement.laneId && module.column === placement.column)) {
     return { ok: false, reason: 'cell-occupied', chapter, resources };
+  }
+
+  const activeModules = getActiveLaneModules(chapter, placement.laneId, balance);
+  if (placement.column > activeModules.length) {
+    return { ok: false, reason: 'inactive sequence', chapter, resources };
   }
 
   const spent = spendResources(resources, balance.moduleCost);

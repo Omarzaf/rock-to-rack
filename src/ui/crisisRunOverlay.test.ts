@@ -97,6 +97,43 @@ describe('crisis run overlay', () => {
     expect(root.querySelector('.crisis-result-backdrop')).toBeNull();
   });
 
+  it('shows at least one second for a completed sub-second run', () => {
+    const root = document.createElement('div');
+    const result: CrisisRunResult = {
+      runId: 'run-quick',
+      mode: 'crisis',
+      completedAt: '2026-07-08T12:00:00.000Z',
+      elapsedSeconds: 0.4,
+      cityLights: 100,
+      servedContracts: 4,
+      powerEfficiency: 0.82,
+      heatPeak: 55,
+      mistakes: 0,
+      score: 910,
+      grade: 'S',
+      shareLine: 'Rock to Rack Crisis Run: 910 points, grade S, 100% city lights online.'
+    };
+    const comparison: CrisisRunReplayComparison = {
+      status: 'first-run',
+      bestScore: null,
+      deltaFromPreviousBest: null,
+      targetScore: 911,
+      headline: 'First run scored 910',
+      detail: 'Replay to set a higher best score.',
+      replayPrompt: 'Replay to beat 910'
+    };
+
+    mountCrisisRunResult(root, {
+      result,
+      runNumber: 1,
+      comparison,
+      onReplay: () => undefined,
+      onMenu: () => undefined
+    });
+
+    expect(root.textContent).toContain('1s');
+  });
+
   it('does not label a matched score as a new best score', () => {
     const root = document.createElement('div');
     const result: CrisisRunResult = {

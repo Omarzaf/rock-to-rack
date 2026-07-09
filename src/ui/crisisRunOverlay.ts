@@ -94,7 +94,7 @@ export function mountCrisisRunResult(root: HTMLElement, options: CrisisRunResult
   const stats = document.createElement('div');
   stats.className = 'crisis-result-stats';
   stats.append(
-    stat('Time', `${Math.round(options.result.elapsedSeconds)}s`),
+    stat('Time', formatResultSeconds(options.result.elapsedSeconds)),
     stat('Lights', `${Math.round(options.result.cityLights)}%`),
     stat('Heat peak', `${Math.round(options.result.heatPeak)}%`)
   );
@@ -189,4 +189,8 @@ function labelForBuild(type: DatacenterBuildingType): string {
     battery: 'Battery'
   };
   return labels[type];
+}
+
+function formatResultSeconds(seconds: number): string {
+  return `${Math.max(1, Math.round(seconds))}s`;
 }

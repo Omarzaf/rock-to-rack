@@ -277,6 +277,9 @@ export function canServeContract(
   if (chapter.heat >= balance.heatThrottle) {
     reasons.push('heat throttled');
   }
+  if (contract.id === 'hospitalNova' && (chapter.stage !== 'nova' || !chapter.novaBuilt)) {
+    reasons.push('nova locked');
+  }
 
   return {
     ok: reasons.length === 0,

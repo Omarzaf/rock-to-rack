@@ -220,7 +220,13 @@ function stagePanel(options: ChapterFiveOverlayOptions): HTMLElement {
   const message = document.createElement('p');
   message.textContent = options.message ? textForMode(options.message, options.textMode) : '';
 
-  panel.append(heading, message, detailBlock(options));
+  const thresholdNote = document.createElement('p');
+  thresholdNote.className = 'ch5-threshold-note';
+  thresholdNote.textContent = options.chapter.stage === 'sort'
+    ? `Perfect >= ${options.balance.binThresholds.perfect} · Good >= ${options.balance.binThresholds.good} · Salvage below ${options.balance.binThresholds.good}`
+    : '';
+
+  panel.append(heading, message, thresholdNote, detailBlock(options));
   return panel;
 }
 

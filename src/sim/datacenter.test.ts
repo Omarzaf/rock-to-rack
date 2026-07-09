@@ -280,6 +280,22 @@ describe('datacenter simulation', () => {
     expect(canServeContract(withCpu, cartoonStream, balance).ok).toBe(true);
   });
 
+  it('reports exact blocked contract reasons for missing chips and infrastructure', () => {
+    const placed = chapterWithRack();
+    const withCpu = installChip(placed.chapter, 'rack-1', 'cpu', balance).chapter;
+    const ready = tickDatacenter(withCpu, 1, balance);
+    const noNetwork = { ...ready, networkLinks: 0 };
+    const noPower = { ...ready, powerCapacity: ready.powerLoad - 1 };
+    const overheated = { ...ready, heat: balance.heatThrottle };
+    const noChip = tickDatacenter(placed.chapter, 1, balance);
+
+    expect(canServeContract(noChip, cartoonStream, balance).reasons).toContain('missing chip: cpu');
+    expect(canServeContract(noNetwork, cartoonStream, balance).reasons).toContain('insufficient network');
+    expect(canServeContract(noPower, cartoonStream, balance).reasons).toContain('insufficient power');
+    expect(canServeContract(overheated, cartoonStream, balance).reasons).toContain('heat throttled');
+    expect(canServeContract(placed.chapter, hospitalNova, balance).reasons).toContain('nova locked');
+  });
+
   it('serveContract rewards, city lights, and nova stage after three contracts', () => {
     const placed = chapterWithRack();
     const withCpu = installChip(placed.chapter, 'rack-1', 'cpu', balance).chapter;

@@ -4,7 +4,14 @@ const baseUrl = process.env.M10_BASE_URL ?? 'http://localhost:4173/';
 const screenshots = {
   menu: '/tmp/rock-to-rack-m10-menu.png',
   ch1: '/tmp/rock-to-rack-m10-ch1.png',
-  mobileCh6: '/tmp/rock-to-rack-m10-ch6-mobile.png'
+  mobileCh6: '/tmp/rock-to-rack-m10-ch6-mobile.png',
+  ipadMenu: '/tmp/rock-to-rack-m10-ipad-menu.png',
+  ipadCh1: '/tmp/rock-to-rack-m10-ipad-ch1.png'
+};
+const viewportCases = {
+  desktop: { viewport: { width: 1280, height: 900 } },
+  mobile: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+  ipad: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true }
 };
 
 function assert(condition, message) {
@@ -72,31 +79,31 @@ async function expectMetadata(page) {
   assert(metadata.fallbackIcon === '/favicon.ico', `Unexpected fallback icon ${metadata.fallbackIcon}`);
 }
 
-async function runDesktopSmoke() {
+async function runMenuAndChapterSmoke(viewport, label, menuScreenshotPath, ch1ScreenshotPath) {
   const issues = [];
   const browser = await launchChromium();
   try {
-    const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const context = await browser.newContext(viewport);
     const page = await context.newPage();
-    watchPage(page, 'desktop', issues);
+    watchPage(page, label, issues);
     await page.goto(fullUrl('#menu'), { waitUntil: 'domcontentloaded' });
     await waitForGame(page);
     await expectMetadata(page);
-    await page.screenshot({ path: screenshots.menu, fullPage: true });
+    await page.screenshot({ path: menuScreenshotPath, fullPage: true });
 
     await page.getByRole('button', { name: 'Learn Mode' }).click();
     await page.waitForURL(/#ch1$/, { timeout: 10_000 });
     await waitForGame(page);
     const ch1Heading = await page.locator('body').textContent();
     assert(ch1Heading?.includes('Quartz') || ch1Heading?.includes('Mine'), 'Ch1 did not expose expected chapter UI text');
-    await page.screenshot({ path: screenshots.ch1, fullPage: true });
+    await page.screenshot({ path: ch1ScreenshotPath, fullPage: true });
     await context.close();
   } finally {
     await browser.close();
   }
 
   if (issues.length > 0) {
-    throw new Error(`Desktop smoke issues:\n${issues.join('\n')}`);
+    throw new Error(`${label} smoke issues:\n${issues.join('\n')}`);
   }
 }
 
@@ -104,7 +111,7 @@ async function runMobileSmoke() {
   const issues = [];
   const browser = await launchChromium();
   try {
-    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    const context = await browser.newContext(viewportCases.mobile);
     const page = await context.newPage();
     watchPage(page, 'mobile', issues);
     await page.goto(fullUrl('?reset#ch6'), { waitUntil: 'domcontentloaded' });
@@ -135,11 +142,14 @@ async function optionalBrowserSmoke(browserType, name) {
     await browser.close();
     return { name, status: 'pass' };
   } catch (error) {
-    return { name, status: 'skipped-or-failed', reason: error.message };
+    const reason = error instanceof Error ? error.message : String(error);
+    const unavailable = reason.includes('Executable doesn') || reason.includes('is not installed') || reason.includes('could not find');
+    return { name, status: unavailable ? 'unavailable' : 'failed', reason };
   }
 }
 
-await runDesktopSmoke();
+await runMenuAndChapterSmoke(viewportCases.desktop, 'desktop', screenshots.menu, screenshots.ch1);
+await runMenuAndChapterSmoke(viewportCases.ipad, 'ipad', screenshots.ipadMenu, screenshots.ipadCh1);
 await runMobileSmoke();
 const optional = [
   await optionalBrowserSmoke(firefox, 'firefox'),

@@ -7,7 +7,7 @@ import {
   type DatacenterBalance,
   type DatacenterChapterState
 } from '../sim/datacenter';
-import { compareCrisisRunToBest, createCrisisRunResult } from '../sim/crisisRun';
+import { compareCrisisRunToBest, createCrisisRunResult, elapsedWallClockSeconds } from '../sim/crisisRun';
 import { gameStore } from '../state/gameStore';
 import type { DatacenterBuildingType, ResourceState } from '../state/types';
 import {
@@ -42,6 +42,7 @@ const BUILD_TYPES: DatacenterBuildingType[] = ['rack', 'power', 'cooling', 'netw
 export class CrisisRunScene extends Phaser.Scene {
   private chapter = createCrisisChapter();
   private resources = createCrisisResources();
+  private runStartedAtMs = 0;
   private selectedBuildType: DatacenterBuildingType = 'rack';
   private overlay: MountedCrisisRunOverlay | undefined;
   private resultModal: { cleanup: () => void } | undefined;
@@ -62,6 +63,7 @@ export class CrisisRunScene extends Phaser.Scene {
     gameStore.enterScene(SceneKey.CrisisRun);
     this.chapter = createCrisisChapter();
     this.resources = createCrisisResources();
+    this.runStartedAtMs = performance.now();
     this.selectedBuildType = 'rack';
     this.heatPeak = 0;
     this.mistakes = 0;
@@ -140,18 +142,19 @@ export class CrisisRunScene extends Phaser.Scene {
     }
 
     this.completed = true;
+    const elapsedSeconds = elapsedWallClockSeconds(this.runStartedAtMs, performance.now());
     this.chapter = {
       ...this.chapter,
       cityLights: 100,
       servedContracts: ['cartoonStream', 'weatherAi', 'cityBackup', 'hospitalNova'],
       completed: true,
-      completedAtSeconds: Math.round(this.chapter.elapsedSeconds),
+      completedAtSeconds: elapsedSeconds,
       stage: 'victory'
     };
     const result = createCrisisRunResult({
       runId: `crisis-${Date.now()}`,
       completedAt: new Date().toISOString(),
-      elapsedSeconds: this.chapter.completedAtSeconds ?? this.chapter.elapsedSeconds,
+      elapsedSeconds,
       cityLights: this.chapter.cityLights,
       servedContracts: this.chapter.servedContracts.length,
       powerEfficiency: this.powerEfficiency(),

@@ -29,6 +29,11 @@ export interface CrisisRunReplayComparison {
 export const CRISIS_RUN_TARGET_SECONDS = 600;
 export const CRISIS_RUN_HISTORY_LIMIT = 12;
 
+export function elapsedWallClockSeconds(startMs: number, endMs: number): number {
+  const elapsedMs = Math.max(0, endMs - startMs);
+  return Math.max(1, Math.ceil(elapsedMs / 1000));
+}
+
 export function calculateCrisisRunScore(input: CrisisRunScoreInput): number {
   const cityScore = clamp(input.cityLights, 0, 100) * 4;
   const contractScore = clamp(input.servedContracts, 0, 4) * 80;

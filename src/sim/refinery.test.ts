@@ -96,6 +96,22 @@ describe('refinery simulation', () => {
     expect(second.chapter).toEqual(first.chapter);
   });
 
+  it('rejects modules that would skip the active left-to-right chain', () => {
+    const chapter = createInitialRefineryChapter(balance);
+
+    const result = placeRefineryModule(chapter, resources, {
+      laneId: 'silicon',
+      column: 2,
+      moduleType: 'crusher'
+    }, balance);
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.reason).toBe('inactive sequence');
+    expect(result.resources).toBe(resources);
+    expect(result.chapter).toBe(chapter);
+  });
+
   it('treats only correctly ordered adjacent modules as an active chain', () => {
     let chapter = createInitialRefineryChapter(balance);
     const placements = [
