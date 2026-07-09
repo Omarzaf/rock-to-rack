@@ -388,14 +388,14 @@ export class Ch6DatacenterScene extends Phaser.Scene {
     }
 
     const servedHospitalNova = result.chapter.servedContracts.includes('hospitalNova');
-    this.chapter = tickDatacenter(servedHospitalNova ? pendingQuizChapter(result.chapter) : result.chapter, 0, BALANCE.ch6);
+    this.chapter = tickDatacenter(result.chapter, 0, BALANCE.ch6);
     this.replaceResources(result.resources);
     playUiCue(servedHospitalNova ? 'victory' : 'success');
     this.lastMessage = this.chapter.stage === 'victory' ? STRINGS.ch6.messages.victoryReady : STRINGS.ch6.messages.contractReady;
     this.refreshAfterMutation(true);
 
     if (servedHospitalNova) {
-      this.showQuiz();
+      this.showCompletion();
       return;
     }
 
@@ -446,12 +446,8 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       onComplete: () => {
         this.dialogue = undefined;
         this.pausedForOverlay = false;
-        if (this.chapter.quizCorrect === true) {
+        if (this.chapter.quizCorrect === true || this.chapter.servedContracts.includes('hospitalNova')) {
           this.showCompletion();
-          return;
-        }
-        if (this.chapter.servedContracts.includes('hospitalNova')) {
-          this.showQuiz();
           return;
         }
         this.showNextPendingFact();
@@ -727,11 +723,6 @@ export class Ch6DatacenterScene extends Phaser.Scene {
   }
 
   private showCompletion(): void {
-    if (this.chapter.quizCorrect !== true) {
-      this.showQuiz();
-      return;
-    }
-
     this.pausedForOverlay = true;
     this.completion?.cleanup();
     const progress = getDatacenterGoalProgress(this.chapter, CONTRACTS);
@@ -1106,12 +1097,8 @@ export class Ch6DatacenterScene extends Phaser.Scene {
     this.dialogue = undefined;
     this.pausedForOverlay = false;
     this.introInterruptible = false;
-    if (this.chapter.quizCorrect === true) {
+    if (this.chapter.quizCorrect === true || this.chapter.servedContracts.includes('hospitalNova')) {
       this.showCompletion();
-      return;
-    }
-    if (this.chapter.servedContracts.includes('hospitalNova')) {
-      this.showQuiz();
       return;
     }
     this.showNextPendingFact();
@@ -1130,7 +1117,7 @@ function createChapterSixState(): DatacenterChapterState {
     ? chapterFromProgress(saved, state.chapters.ch5.perfect7nmDies)
     : createInitialDatacenterChapter(state.chapters.ch5, BALANCE.ch6);
 
-  return tickDatacenter(withChapterSixLoaners(pendingQuizChapter(base)), 0, BALANCE.ch6);
+  return tickDatacenter(withChapterSixLoaners(base), 0, BALANCE.ch6);
 }
 
 function chapterFromProgress(progress: ChapterSixProgress, perfect7nmDies: number): DatacenterChapterState {
@@ -1163,40 +1150,27 @@ function withChapterSixLoaners(chapter: DatacenterChapterState): DatacenterChapt
   };
 }
 
-function pendingQuizChapter(chapter: DatacenterChapterState): DatacenterChapterState {
-  if (!chapter.servedContracts.includes('hospitalNova') || chapter.quizCorrect === true) {
-    return chapter;
-  }
-
-  return {
-    ...chapter,
-    completed: false,
-    completedAtSeconds: null
-  };
-}
-
 function chapterProgressFrom(chapter: DatacenterChapterState): ChapterSixProgress {
-  const normalized = pendingQuizChapter(chapter);
   return {
-    completed: normalized.completed,
-    completedAtSeconds: normalized.completedAtSeconds,
-    quizCorrect: normalized.quizCorrect,
-    stage: normalized.stage,
-    buildings: normalized.buildings,
-    servedContracts: normalized.servedContracts,
-    availableChipIds: normalized.availableChipIds,
-    installedChipIds: normalized.installedChipIds,
-    novaBuilt: normalized.novaBuilt,
-    heat: normalized.heat,
-    powerCapacity: normalized.powerCapacity,
-    powerLoad: normalized.powerLoad,
-    cooling: normalized.cooling,
-    networkLinks: normalized.networkLinks,
-    batteryCharge: normalized.batteryCharge,
-    cityLights: normalized.cityLights,
-    eventDeltas: normalized.eventDeltas,
-    triggeredEvents: normalized.triggeredEvents,
-    firstFacts: normalized.firstFacts
+    completed: chapter.completed,
+    completedAtSeconds: chapter.completedAtSeconds,
+    quizCorrect: chapter.quizCorrect,
+    stage: chapter.stage,
+    buildings: chapter.buildings,
+    servedContracts: chapter.servedContracts,
+    availableChipIds: chapter.availableChipIds,
+    installedChipIds: chapter.installedChipIds,
+    novaBuilt: chapter.novaBuilt,
+    heat: chapter.heat,
+    powerCapacity: chapter.powerCapacity,
+    powerLoad: chapter.powerLoad,
+    cooling: chapter.cooling,
+    networkLinks: chapter.networkLinks,
+    batteryCharge: chapter.batteryCharge,
+    cityLights: chapter.cityLights,
+    eventDeltas: chapter.eventDeltas,
+    triggeredEvents: chapter.triggeredEvents,
+    firstFacts: chapter.firstFacts
   };
 }
 
