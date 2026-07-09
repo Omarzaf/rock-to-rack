@@ -66,6 +66,14 @@ Feedback plumbing is implemented but hidden until `SITE_METADATA.feedbackHref` i
 Use `docs/playtests/2026-07-09-cold-playtest-script.md` for the human-run
 3-5 player pass before award submission. Keep tester names, contact details,
 and recordings out of the repo unless they are explicitly anonymized.
+Use `docs/playtests/2026-07-09-cold-playtest-notes-template.md` for private,
+anonymous observer notes.
+
+## Award Submission
+
+Use `docs/submission/2026-07-09-award-submission-checklist.md` as the manual
+gate before any award submission. Agents may prepare evidence and copy, but
+Umar performs any production promotion or submission.
 
 ## Deployment
 

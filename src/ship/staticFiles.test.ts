@@ -54,4 +54,18 @@ describe('ship static files', () => {
     expect(read('public/sw.js')).toContain("event.request.mode !== 'navigate'");
     expect(read('public/sw.js')).toContain('fetch');
   });
+
+  it('keeps award playtest and submission handoff files linked', () => {
+    const readme = read('README.md');
+    const playtestScript = read('docs/playtests/2026-07-09-cold-playtest-script.md');
+    const notesTemplate = read('docs/playtests/2026-07-09-cold-playtest-notes-template.md');
+    const submissionChecklist = read('docs/submission/2026-07-09-award-submission-checklist.md');
+
+    expect(readme).toContain('docs/playtests/2026-07-09-cold-playtest-script.md');
+    expect(readme).toContain('docs/playtests/2026-07-09-cold-playtest-notes-template.md');
+    expect(readme).toContain('docs/submission/2026-07-09-award-submission-checklist.md');
+    expect(playtestScript).toContain('3-5 people');
+    expect(notesTemplate).toContain('Do not store');
+    expect(submissionChecklist).toContain('must not submit forms');
+  });
 });
