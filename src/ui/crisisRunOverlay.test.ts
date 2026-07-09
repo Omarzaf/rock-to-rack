@@ -23,10 +23,17 @@ describe('crisis run overlay', () => {
       powerLoad: 20,
       powerCapacity: 80,
       selectedBuildType: 'rack',
+      availableChipIds: ['cpu', 'gpu'],
+      installedChipIds: [],
+      selectedChipId: 'cpu',
+      selectedRackLabel: 'rack-1',
+      canInstallSelectedChip: true,
       canComplete: false,
       challengeLabel: 'Daily seed 2026-07-09 · campaign lineup (4 chips)',
       message: 'Place one rack, power, cooling, and network.',
       onSelectBuildType: (type) => selected.push(type),
+      onSelectChip: (chipId) => selected.push(chipId),
+      onInstallSelectedChip: () => selected.push('install'),
       onComplete: () => undefined,
       onMenu: () => undefined
     });
@@ -35,8 +42,11 @@ describe('crisis run overlay', () => {
     expect(root.textContent).toContain('campaign lineup');
     expect(root.textContent).toContain('25%');
     expect(root.textContent).toContain('Selected: Rack');
+    expect(root.textContent).toContain('Selected chip: CPU');
     root.querySelector<HTMLButtonElement>('[data-build-type="power"]')?.click();
-    expect(selected).toEqual(['power']);
+    root.querySelector<HTMLButtonElement>('[data-chip-id="gpu"]')?.click();
+    root.querySelector<HTMLButtonElement>('.crisis-install-chip')?.click();
+    expect(selected).toEqual(['power', 'gpu', 'install']);
     overlay.cleanup();
     expect(root.querySelector('.crisis-overlay')).toBeNull();
   });
@@ -287,6 +297,11 @@ class FakeElement {
     const buildType = selector.match(/^\[data-build-type="(.+)"\]$/)?.[1];
     if (buildType !== undefined) {
       return this.dataset.buildType === buildType;
+    }
+
+    const chipId = selector.match(/^\[data-chip-id="(.+)"\]$/)?.[1];
+    if (chipId !== undefined) {
+      return this.dataset.chipId === chipId;
     }
 
     const attribute = selector.match(/^\[([^=]+)="(.+)"\]$/);

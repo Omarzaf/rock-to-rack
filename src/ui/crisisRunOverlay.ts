@@ -1,5 +1,5 @@
 import type { CrisisRunReplayComparison } from '../sim/crisisRun';
-import type { CrisisRunResult, DatacenterBuildingType } from '../state/types';
+import type { ChipTypeId, CrisisRunResult, DatacenterBuildingType } from '../state/types';
 import { activateModalFocus } from './modalFocus';
 
 export interface CrisisRunOverlayOptions {
@@ -9,10 +9,17 @@ export interface CrisisRunOverlayOptions {
   powerLoad: number;
   powerCapacity: number;
   selectedBuildType: DatacenterBuildingType;
+  availableChipIds: ChipTypeId[];
+  installedChipIds: ChipTypeId[];
+  selectedChipId: ChipTypeId | null;
+  selectedRackLabel: string | null;
+  canInstallSelectedChip: boolean;
   canComplete: boolean;
   challengeLabel: string;
   message: string;
   onSelectBuildType: (type: DatacenterBuildingType) => void;
+  onSelectChip: (chipId: ChipTypeId) => void;
+  onInstallSelectedChip: () => void;
   onComplete: () => void;
   onMenu: () => void;
 }
@@ -69,14 +76,18 @@ export function mountCrisisRunOverlay(root: HTMLElement, options: CrisisRunOverl
     builds.append(build);
   }
 
+  const chips = document.createElement('div');
+  chips.className = 'crisis-chips';
+  const chipHelp = elementWithText('p', 'crisis-chip-help', '');
   const selectedHelp = elementWithText('p', 'crisis-build-help', '');
   const message = elementWithText('p', 'crisis-message', '');
   const actions = document.createElement('div');
   actions.className = 'crisis-actions';
+  const installChip = button('Install chip', 'secondary-action crisis-install-chip', () => latest.onInstallSelectedChip());
   const complete = button('Serve Nova', 'primary-action', () => latest.onComplete());
-  actions.append(complete, button('Menu', 'secondary-action', () => latest.onMenu()));
+  actions.append(installChip, complete, button('Menu', 'secondary-action', () => latest.onMenu()));
 
-  shell.append(header, stats, builds, selectedHelp, message, actions);
+  shell.append(header, stats, builds, chips, selectedHelp, chipHelp, message, actions);
 
   const render = (next: CrisisRunOverlayOptions): void => {
     latest = next;
@@ -89,8 +100,20 @@ export function mountCrisisRunOverlay(root: HTMLElement, options: CrisisRunOverl
     for (const [type, build] of buildButtons.entries()) {
       build.className = type === next.selectedBuildType ? 'is-selected' : '';
     }
+    chips.replaceChildren();
+    if (next.availableChipIds.length === 0) {
+      chips.append(elementWithText('span', 'crisis-chip-empty', 'All chips installed'));
+    } else {
+      for (const chipId of next.availableChipIds) {
+        const chip = button(labelForChip(chipId), chipId === next.selectedChipId ? 'is-selected' : '', () => latest.onSelectChip(chipId));
+        chip.dataset.chipId = chipId;
+        chips.append(chip);
+      }
+    }
     selectedHelp.textContent = buildHelp(next.selectedBuildType);
+    chipHelp.textContent = chipHelpText(next);
     message.textContent = next.message;
+    installChip.disabled = !next.canInstallSelectedChip;
     complete.disabled = !next.canComplete;
   };
 
@@ -212,6 +235,32 @@ function labelForBuild(type: DatacenterBuildingType): string {
     battery: 'Battery'
   };
   return labels[type];
+}
+
+function labelForChip(chipId: ChipTypeId): string {
+  const labels: Record<ChipTypeId, string> = {
+    cpu: 'CPU',
+    gpu: 'GPU',
+    dram: 'DRAM',
+    nand: 'NAND',
+    nic: 'NIC',
+    pmic: 'PMIC',
+    nova: 'Nova'
+  };
+  return labels[chipId];
+}
+
+function chipHelpText(options: CrisisRunOverlayOptions): string {
+  if (options.installedChipIds.length > 0) {
+    return `Installed: ${options.installedChipIds.map(labelForChip).join(', ')}.`;
+  }
+
+  if (!options.selectedChipId) {
+    return 'No campaign chips remain. Replay the campaign for a stronger Crisis Run inventory.';
+  }
+
+  const rack = options.selectedRackLabel ?? 'a rack';
+  return `Selected chip: ${labelForChip(options.selectedChipId)}. Select ${rack}, then install it before serving Nova.`;
 }
 
 function formatResultSeconds(seconds: number): string {

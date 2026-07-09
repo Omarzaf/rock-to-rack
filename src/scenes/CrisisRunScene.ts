@@ -3,6 +3,7 @@ import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import {
   createInitialDatacenterChapter,
+  installChip,
   placeDatacenterBuilding,
   tickDatacenter,
   type DatacenterBalance,
@@ -46,6 +47,7 @@ export class CrisisRunScene extends Phaser.Scene {
   private resources!: ResourceState;
   private runStartedAtMs = 0;
   private selectedBuildType: DatacenterBuildingType = 'rack';
+  private selectedChipId: ChipTypeId | null = null;
   private overlay: MountedCrisisRunOverlay | undefined;
   private resultModal: { cleanup: () => void } | undefined;
   private worldLayer: Phaser.GameObjects.Container | undefined;
@@ -68,6 +70,7 @@ export class CrisisRunScene extends Phaser.Scene {
     this.resources = createCrisisResources(this.challenge.startingCredits);
     this.runStartedAtMs = performance.now();
     this.selectedBuildType = 'rack';
+    this.selectedChipId = this.challenge.availableChipIds[0] ?? null;
     this.heatPeak = 0;
     this.mistakes = 0;
     this.completed = false;
@@ -100,6 +103,12 @@ export class CrisisRunScene extends Phaser.Scene {
       if (event.code === 'Space') {
         this.completeIfReady();
       }
+      if (event.code === 'KeyI') {
+        this.installSelectedChip();
+      }
+      if (event.code === 'KeyC') {
+        this.selectNextChip();
+      }
     };
     this.input.keyboard?.on('keydown', this.keyboardHandler);
   }
@@ -119,6 +128,20 @@ export class CrisisRunScene extends Phaser.Scene {
       return;
     }
 
+    const occupied = this.chapter.buildings.find((building) => building.column === column && building.row === row);
+    if (occupied) {
+      this.chapter = {
+        ...this.chapter,
+        selectedBuildingId: occupied.id
+      };
+      this.refreshOverlay(occupied.type === 'rack'
+        ? `${labelForBuild(occupied.type)} selected. Install a campaign chip before serving Nova.`
+        : `${labelForBuild(occupied.type)} selected. Pick a rack if you want to install a chip.`);
+      this.redrawWorld();
+      return;
+    }
+
+    const selectedRackBeforePlacement = this.selectedRack();
     const result = placeDatacenterBuilding(this.chapter, this.resources, this.selectedBuildType, { column, row }, BALANCE.ch6);
     if (!result.ok) {
       playUiCue('warning');
@@ -128,9 +151,53 @@ export class CrisisRunScene extends Phaser.Scene {
     }
 
     this.chapter = tickDatacenter(result.chapter, 0, BALANCE.ch6);
+    if (this.selectedBuildType !== 'rack' && selectedRackBeforePlacement) {
+      this.chapter = {
+        ...this.chapter,
+        selectedBuildingId: selectedRackBeforePlacement.id
+      };
+    }
     this.resources = result.resources;
     playUiCue('rack');
-    this.refreshOverlay();
+    this.refreshOverlay(this.selectedBuildType === 'rack'
+      ? 'Rack placed. Install a campaign chip so Nova has real compute.'
+      : undefined);
+    this.redrawWorld();
+  }
+
+  private installSelectedChip(): void {
+    if (this.completed) {
+      return;
+    }
+
+    const selectedRack = this.selectedRack();
+    if (!selectedRack) {
+      playUiCue('warning');
+      this.mistakes += 1;
+      this.refreshOverlay('Select or place a rack before installing a campaign chip.');
+      return;
+    }
+
+    if (!this.selectedChipId) {
+      playUiCue('warning');
+      this.mistakes += 1;
+      this.refreshOverlay('No campaign chips are available for this run.');
+      return;
+    }
+
+    const result = installChip(this.chapter, selectedRack.id, this.selectedChipId, BALANCE.ch6);
+    if (!result.ok) {
+      playUiCue('warning');
+      this.mistakes += 1;
+      this.refreshOverlay(chipFailureMessage(result.reason));
+      return;
+    }
+
+    const installedChipId = this.selectedChipId;
+    this.chapter = tickDatacenter(result.chapter, 0, BALANCE.ch6);
+    this.selectedChipId = this.chapter.availableChipIds[0] ?? null;
+    playUiCue('success');
+    this.refreshOverlay(`${labelForChip(installedChipId)} installed. Balance power and cooling, then serve Nova.`);
     this.redrawWorld();
   }
 
@@ -142,7 +209,7 @@ export class CrisisRunScene extends Phaser.Scene {
     if (!this.canComplete()) {
       playUiCue('warning');
       this.mistakes += 1;
-      this.refreshOverlay('Nova needs one rack, power, cooling, and network before the city lights can return.');
+      this.refreshOverlay(this.completionBlockerMessage());
       return;
     }
 
@@ -194,7 +261,7 @@ export class CrisisRunScene extends Phaser.Scene {
   }
 
   private canComplete(): boolean {
-    return ['rack', 'power', 'cooling', 'network'].every((type) => this.chapter.buildings.some((building) => building.type === type));
+    return this.hasCoreInfrastructure() && this.chapter.installedChipIds.length > 0;
   }
 
   private powerEfficiency(): number {
@@ -205,7 +272,49 @@ export class CrisisRunScene extends Phaser.Scene {
     return Math.min(this.chapter.powerLoad / this.chapter.powerCapacity, 1);
   }
 
-  private overlayOptions(message = 'Place one rack, power, cooling, and network. Then serve Nova.'): Parameters<typeof mountCrisisRunOverlay>[1] {
+  private hasCoreInfrastructure(): boolean {
+    return ['rack', 'power', 'cooling', 'network'].every((type) => this.chapter.buildings.some((building) => building.type === type));
+  }
+
+  private selectedRack(): DatacenterChapterState['buildings'][number] | null {
+    const selected = this.chapter.buildings.find((building) => building.id === this.chapter.selectedBuildingId);
+    return selected?.type === 'rack' ? selected : null;
+  }
+
+  private canInstallSelectedChip(): boolean {
+    return Boolean(
+      this.selectedChipId
+        && this.selectedRack()
+        && this.chapter.availableChipIds.includes(this.selectedChipId)
+    );
+  }
+
+  private selectNextChip(): void {
+    if (this.chapter.availableChipIds.length === 0) {
+      this.selectedChipId = null;
+      this.refreshOverlay('All campaign chips are already installed.');
+      return;
+    }
+
+    const currentIndex = this.selectedChipId ? this.chapter.availableChipIds.indexOf(this.selectedChipId) : -1;
+    const nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % this.chapter.availableChipIds.length;
+    this.selectedChipId = this.chapter.availableChipIds[nextIndex];
+    this.refreshOverlay(`${labelForChip(this.selectedChipId)} selected for the next rack.`);
+  }
+
+  private completionBlockerMessage(): string {
+    if (!this.hasCoreInfrastructure()) {
+      return 'Nova needs one rack, power, cooling, and network before the city lights can return.';
+    }
+
+    if (this.chapter.installedChipIds.length === 0) {
+      return 'Nova needs at least one campaign chip installed in a rack before the city lights can return.';
+    }
+
+    return 'Nova is not stable yet. Check rack chips, power, cooling, and network.';
+  }
+
+  private overlayOptions(message = 'Place one rack, power, cooling, and network, then install a campaign chip before serving Nova.'): Parameters<typeof mountCrisisRunOverlay>[1] {
     return {
       elapsedSeconds: this.chapter.elapsedSeconds,
       cityLights: this.chapter.cityLights,
@@ -213,6 +322,11 @@ export class CrisisRunScene extends Phaser.Scene {
       powerLoad: this.chapter.powerLoad,
       powerCapacity: this.chapter.powerCapacity,
       selectedBuildType: this.selectedBuildType,
+      availableChipIds: this.chapter.availableChipIds,
+      installedChipIds: this.chapter.installedChipIds,
+      selectedChipId: this.selectedChipId,
+      selectedRackLabel: this.selectedRack()?.id ?? null,
+      canInstallSelectedChip: this.canInstallSelectedChip(),
       canComplete: this.canComplete(),
       challengeLabel: this.challenge.label,
       message,
@@ -220,6 +334,11 @@ export class CrisisRunScene extends Phaser.Scene {
         this.selectedBuildType = type;
         this.refreshOverlay();
       },
+      onSelectChip: (chipId) => {
+        this.selectedChipId = chipId;
+        this.refreshOverlay(`${labelForChip(chipId)} selected. Tap a rack and install it.`);
+      },
+      onInstallSelectedChip: () => this.installSelectedChip(),
       onComplete: () => this.completeIfReady(),
       onMenu: () => {
         window.location.hash = 'menu';
@@ -277,7 +396,8 @@ export class CrisisRunScene extends Phaser.Scene {
     const building = this.chapter.buildings.find((candidate) => candidate.column === column && candidate.row === row);
     graphics.fillStyle(building ? colorForBuild(building.type) : 0x0b2536, building ? 0.85 : 0.55);
     graphics.fillRoundedRect(x, y, grid.cellWidth - 10, grid.cellHeight - 10, 8);
-    graphics.lineStyle(2, building ? 0xfff7d6 : 0x60a5fa, building ? 0.72 : 0.18);
+    const selected = building?.id === this.chapter.selectedBuildingId;
+    graphics.lineStyle(selected ? 4 : 2, selected ? 0xf8d45c : building ? 0xfff7d6 : 0x60a5fa, selected ? 0.95 : building ? 0.72 : 0.18);
     graphics.strokeRoundedRect(x, y, grid.cellWidth - 10, grid.cellHeight - 10, 8);
     if (building) {
       const label = this.add.text(x + 16, y + 20, labelForBuild(building.type), {
@@ -287,6 +407,15 @@ export class CrisisRunScene extends Phaser.Scene {
         fontStyle: '900'
       });
       this.worldLayer?.add(label);
+      if (building.installedChipIds.length > 0) {
+        const chips = this.add.text(x + 16, y + 44, building.installedChipIds.map(labelForChip).join(' + '), {
+          color: '#06111d',
+          fontFamily: 'Nunito, system-ui',
+          fontSize: chipFontSize(grid.labelFontSize),
+          fontStyle: '900'
+        });
+        this.worldLayer?.add(chips);
+      }
     }
     const zone = this.add.zone(x + (grid.cellWidth - 10) / 2, y + (grid.cellHeight - 10) / 2, grid.cellWidth - 10, grid.cellHeight - 10)
       .setInteractive({ useHandCursor: true })
@@ -402,6 +531,43 @@ function labelForBuild(type: DatacenterBuildingType): string {
     network: 'NET',
     battery: 'BATT'
   }[type];
+}
+
+function labelForChip(chipId: ChipTypeId): string {
+  return {
+    cpu: 'CPU',
+    gpu: 'GPU',
+    dram: 'DRAM',
+    nand: 'NAND',
+    nic: 'NIC',
+    pmic: 'PMIC',
+    nova: 'Nova'
+  }[chipId];
+}
+
+function chipFontSize(labelFontSize: string): string {
+  const parsed = Number.parseFloat(labelFontSize);
+  return Number.isFinite(parsed) ? `${Math.max(11, Math.round(parsed * 0.78))}px` : '12px';
+}
+
+function chipFailureMessage(reason: 'building not found' | 'not a rack' | 'chip unavailable' | 'already installed' | 'rack full' | undefined): string {
+  if (reason === 'not a rack') {
+    return 'Chips can only be installed in racks. Select a rack first.';
+  }
+
+  if (reason === 'chip unavailable') {
+    return 'That chip is not in this run inventory. Use one of the available campaign chips.';
+  }
+
+  if (reason === 'already installed') {
+    return 'That chip is already installed. Pick another available chip.';
+  }
+
+  if (reason === 'rack full') {
+    return 'That rack is full. Place or select another rack.';
+  }
+
+  return 'Select a rack before installing a campaign chip.';
 }
 
 function buildFailureMessage(

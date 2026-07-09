@@ -1196,7 +1196,7 @@
         },
         "summary": {
           "kid": "The most advanced fabs use giant machines to print the smallest patterns.",
-          "nerd": "Advanced nodes rely on extreme ultraviolet lithography scanners, a highly specialized tool category dominated by ASML."
+          "nerd": "Advanced nodes use extreme ultraviolet lithography for their most intricate layers; ASML describes EUV as unique to its systems."
         },
         "deeper": {
           "kid": "Smaller patterns can make faster chips, but the machines are harder to build.",
@@ -1990,7 +1990,7 @@
         },
         "benchmark": {
           "kid": "The biggest data centers use as much electricity as a whole city of homes.",
-          "nerd": "Hyperscale data centers draw 100+ MW — on the order of tens of thousands of homes."
+          "nerd": "AI-focused data centers can use electricity on the scale of many thousands of homes, so chip efficiency, siting, and cooling matter."
         },
         "handoff": {
           "kid": "From rock to rack: you built the whole chain that lights the modern world.",

@@ -109,6 +109,16 @@ async function runDesktopSmoke() {
       await clickGame(page, placement.x, placement.y);
     }
     await page.getByRole('button', { name: 'Serve Nova' }).waitFor({ state: 'visible', timeout: 10_000 });
+    const serveDisabledBeforeChip = await page.getByRole('button', { name: 'Serve Nova' }).evaluate((button) => button.disabled);
+    assert(serveDisabledBeforeChip, 'Crisis Run allowed completion before installing a campaign chip');
+    await clickGame(page, 430, 260);
+    await page.getByRole('button', { name: 'CPU' }).click();
+    await page.waitForFunction(() => {
+      const buttons = Array.from(document.querySelectorAll('button'));
+      return buttons.some((button) => button.textContent === 'Install chip' && !button.disabled);
+    }, { timeout: 10_000 });
+    await page.getByRole('button', { name: 'Install chip' }).click();
+    await page.getByRole('button', { name: 'Serve Nova' }).waitFor({ state: 'visible', timeout: 10_000 });
     await page.waitForFunction(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
       return buttons.some((button) => button.textContent === 'Serve Nova' && !button.disabled);

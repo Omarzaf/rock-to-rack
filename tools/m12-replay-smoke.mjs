@@ -29,7 +29,13 @@ async function launchChromium() {
 async function waitForGame(page) {
   await page.waitForSelector('canvas', { timeout: 10_000 });
   await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 10_000 });
+  await page.waitForFunction(() => {
+    const canvas = document.querySelector('canvas');
+    const rect = canvas?.getBoundingClientRect();
+    return Boolean(rect && rect.width > 100 && rect.height > 100);
+  }, { timeout: 10_000 });
   await page.waitForSelector('.crisis-overlay', { timeout: 10_000 });
+  await page.waitForTimeout(700);
 }
 
 async function clickGame(page, gameX, gameY) {
@@ -52,6 +58,16 @@ async function completeRun(page) {
     await page.getByRole('button', { name: placement.label }).click();
     await clickGame(page, placement.x, placement.y);
   }
+
+  const serveDisabledBeforeChip = await page.getByRole('button', { name: 'Serve Nova' }).evaluate((button) => button.disabled);
+  assert(serveDisabledBeforeChip, 'Crisis Run allowed completion before installing a campaign chip');
+  await clickGame(page, 430, 260);
+  await page.getByRole('button', { name: 'CPU' }).click();
+  await page.waitForFunction(() => {
+    const buttons = Array.from(document.querySelectorAll('button'));
+    return buttons.some((button) => button.textContent === 'Install chip' && !button.disabled);
+  }, { timeout: 10_000 });
+  await page.getByRole('button', { name: 'Install chip' }).click();
 
   await page.waitForFunction(() => {
     const buttons = Array.from(document.querySelectorAll('button'));

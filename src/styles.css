@@ -2239,6 +2239,7 @@ body.text-large {
 .crisis-objective,
 .crisis-message,
 .crisis-build-help,
+.crisis-chip-help,
 .crisis-copy-status {
   margin: 0;
   color: var(--text-dim);
@@ -2248,19 +2249,40 @@ body.text-large {
 
 .crisis-build-help {
   grid-column: 1 / 2;
-  max-width: 34rem;
+  max-width: 20rem;
   color: rgba(214, 246, 239, 0.88);
   font-size: 0.88rem;
 }
 
 .crisis-stats,
 .crisis-builds,
+.crisis-chips,
 .crisis-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   justify-content: flex-end;
+}
+
+.crisis-stats {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.crisis-builds {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+.crisis-chips {
+  grid-column: 1 / 2;
+}
+
+.crisis-actions {
+  grid-column: 3 / 4;
+  grid-row: 2 / 5;
+  max-width: 420px;
 }
 
 .crisis-stat {
@@ -2298,6 +2320,44 @@ body.text-large {
 .crisis-builds button.is-selected {
   background: var(--accent);
   color: var(--text-on-accent);
+}
+
+.crisis-chips {
+  max-width: 360px;
+}
+
+.crisis-chips button,
+.crisis-chip-empty {
+  min-height: 44px;
+  border: 1px solid rgba(96, 211, 148, 0.36);
+  border-radius: var(--radius-sm);
+  background: rgba(6, 17, 29, 0.82);
+  color: var(--text-warm);
+  font-weight: 900;
+  padding: 0 12px;
+}
+
+.crisis-chips button.is-selected {
+  background: var(--mint);
+  color: var(--ink);
+}
+
+.crisis-chip-empty {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-dim);
+}
+
+.crisis-chip-help {
+  grid-column: 1 / 2;
+  max-width: 20rem;
+  color: rgba(214, 246, 239, 0.88);
+  font-size: 0.88rem;
+}
+
+.crisis-message {
+  grid-column: 1 / 2;
+  max-width: 20rem;
 }
 
 .crisis-result-backdrop {
@@ -2401,6 +2461,17 @@ body.text-large {
 
   .crisis-stats,
   .crisis-builds,
+  .crisis-chips,
+  .crisis-actions,
+  .crisis-message,
+  .crisis-chip-help {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .crisis-stats,
+  .crisis-builds,
+  .crisis-chips,
   .crisis-actions {
     justify-content: flex-start;
   }
@@ -2416,14 +2487,17 @@ body.text-large {
   }
 
   .crisis-build-help,
+  .crisis-chip-help,
   .crisis-message {
     border: 1px solid rgba(255, 247, 214, 0.16);
     border-radius: var(--radius-sm);
+    max-width: none;
     padding: 8px 10px;
     background: rgba(6, 17, 29, 0.56);
   }
 
   .crisis-builds button,
+  .crisis-chips button,
   .crisis-actions button {
     min-height: 44px;
   }
