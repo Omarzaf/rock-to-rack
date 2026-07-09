@@ -82,7 +82,7 @@ function fakeAudioContext(calls: string[]) {
           setValueAtTime: () => undefined,
           exponentialRampToValueAtTime: () => undefined
         },
-        _type: 'sine',
+        _type: 'sine' as OscillatorType,
         get type() {
           return this._type;
         },
