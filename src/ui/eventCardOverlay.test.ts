@@ -1,26 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mountDialogue } from './dialogueOverlay';
-
-const labels = {
-  next: { kid: 'Next', nerd: 'Advance' },
-  done: { kid: 'Done', nerd: 'Close dialogue' },
-  skip: { kid: 'Skip', nerd: 'Skip briefing' }
-};
-
-const lines = [
-  {
-    id: 'one',
-    speakerName: { kid: 'Sam', nerd: 'Sam' },
-    portraitColor: '#f8d45c',
-    text: { kid: 'First line', nerd: 'First line' }
-  },
-  {
-    id: 'two',
-    speakerName: { kid: 'Dr. Vega', nerd: 'Dr. Vega' },
-    portraitColor: '#60d394',
-    text: { kid: 'Second line', nerd: 'Second line' }
-  }
-];
+import { mountEventCard } from './eventCardOverlay';
 
 beforeEach(() => {
   vi.stubGlobal('HTMLElement', FakeElement);
@@ -31,70 +10,48 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('mountDialogue', () => {
-  it('renders as a labelled dialog, traps tab focus, and restores focus on cleanup', async () => {
+describe('mountEventCard', () => {
+  it('renders as a labelled dialog, keeps click behavior, and restores focus on cleanup', async () => {
     const root = document.createElement('div');
     const opener = document.createElement('button');
     root.append(opener);
     opener.focus();
+    const choices: string[] = [];
 
-    const mounted = mountDialogue(root, {
-      lines,
+    const mounted = mountEventCard(root, {
+      event: {
+        id: 'event-1',
+        title: { kid: 'Market shock', nerd: 'Market shock' },
+        scenario: { kid: 'You hear a rumor.', nerd: 'You hear a rumor.' },
+        choices: [
+          { id: 'keep', label: { kid: 'Keep going', nerd: 'Keep going' }, effects: { credits: 0 } },
+          { id: 'wait', label: { kid: 'Wait', nerd: 'Wait' }, effects: { credits: 0 } }
+        ]
+      },
       textMode: 'kid',
-      labels,
-      onComplete: () => undefined
+      labels: { paused: { kid: 'Paused', nerd: 'Paused' } },
+      onChoice: (choiceId) => choices.push(choiceId)
     });
 
     await Promise.resolve();
 
-    const shell = root.querySelector('.dialogue-shell');
-    expect(shell?.getAttribute('role')).toBe('dialog');
-    expect(shell?.getAttribute('aria-modal')).toBe('true');
-    expect(shell?.getAttribute('aria-labelledby')).toContain('dialogue-speaker-');
-    expect(shell?.getAttribute('aria-describedby')).toContain('dialogue-text-');
-    expect(document.activeElement).toBe(root.querySelector('.dialogue-next'));
+    const card = root.querySelector('.event-card');
+    expect(card?.getAttribute('role')).toBe('dialog');
+    expect(card?.getAttribute('aria-modal')).toBe('true');
+    expect(card?.getAttribute('aria-labelledby')).toContain('event-card-title-');
+    expect(card?.getAttribute('aria-describedby')).toContain('event-card-scenario-');
+    expect(document.activeElement).toBe(root.querySelector('.event-choice'));
 
-    const back = root.querySelector<HTMLButtonElement>('.dialogue-back');
-    expect(back).toBeNull();
+    const secondChoice = root.querySelectorAll('.event-choice')[1] as unknown as FakeElement;
+    secondChoice.focus();
+    (card as unknown as FakeElement).dispatchKeydown('Tab');
+    expect(document.activeElement).toBe(root.querySelector('.event-choice'));
 
-    root.querySelector<HTMLButtonElement>('.dialogue-next')?.click();
-    await Promise.resolve();
-
-    const done = root.querySelector<HTMLButtonElement>('.dialogue-next');
-    const backOnLastLine = root.querySelector<HTMLButtonElement>('.dialogue-back');
-    expect(done).not.toBeNull();
-    expect(backOnLastLine).not.toBeNull();
-    (done as unknown as FakeElement).focus();
-    (root.querySelector('.dialogue-shell') as unknown as FakeElement).dispatchKeydown('Tab');
-    expect(document.activeElement).toBe(backOnLastLine);
+    root.querySelector<HTMLButtonElement>('.event-choice')?.click();
+    expect(choices).toEqual(['keep']);
 
     mounted.cleanup();
-    expect(root.querySelector('.dialogue-shell')).toBeNull();
-    expect(document.activeElement).toBe(opener);
-  });
-
-  it('treats Escape as a dismiss path when skip is available', async () => {
-    const root = document.createElement('div');
-    const opener = document.createElement('button');
-    root.append(opener);
-    opener.focus();
-    let completed = 0;
-
-    mountDialogue(root, {
-      lines,
-      textMode: 'kid',
-      labels,
-      onComplete: () => {
-        completed += 1;
-      }
-    });
-
-    await Promise.resolve();
-
-    (root.querySelector('.dialogue-shell') as unknown as FakeElement).dispatchKeydown('Escape');
-
-    expect(completed).toBe(1);
-    expect(root.querySelector('.dialogue-shell')).toBeNull();
+    expect(root.querySelector('.event-card')).toBeNull();
     expect(document.activeElement).toBe(opener);
   });
 });
@@ -109,13 +66,9 @@ class FakeDocument {
 
 class FakeElement {
   className = '';
-  dataset: Record<string, string> = {};
   disabled = false;
   id = '';
   type = '';
-  style = {
-    setProperty: vi.fn()
-  };
   private readonly attributes = new Map<string, string>();
   private children: FakeElement[] = [];
   private ownText = '';

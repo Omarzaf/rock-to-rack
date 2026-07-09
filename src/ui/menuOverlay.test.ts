@@ -25,10 +25,13 @@ describe('menu overlay', () => {
       onOpenSettings: () => undefined
     });
 
-    expect(root.textContent).toContain('Crisis Run');
-    expect(root.textContent).toContain('Fast 5 minute challenge');
-    expect(root.textContent).toContain('Learn Mode');
-    expect(root.textContent).toContain('Full guided supply chain');
+    expect(root.textContent).toContain('The city is dark');
+    expect(root.textContent).toContain('Play Crisis Run');
+    expect(root.textContent).toContain('Bring the city back in five minutes');
+    expect(root.textContent).toContain('Learn the chain');
+    expect(root.textContent).toContain('Mine, refine, grow, fab, package, then power Nova');
+    expect(root.textContent).toContain('Gameplay simplifies real semiconductor work');
+    expect(root.textContent).toContain('Built by Muhammad Umar Zafar');
     expect(root.querySelector('.menu-play')).not.toBeNull();
     expect(root.querySelector('.menu-learn')).not.toBeNull();
     expect(root.querySelectorAll('.toggle-action')[0]?.getAttribute('aria-pressed')).toBe('false');

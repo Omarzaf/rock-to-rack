@@ -1338,7 +1338,7 @@
         "nerd": "Incorrect binning downgraded the die to the next lower commercial bin."
       },
       "rosterHint": {
-        "kid": "Spend binned dies to build up to four chip friends.",
+        "kid": "Spend binned dies to build up to six chip friends.",
         "nerd": "Allocate tested dies into a limited chip lineup that will matter in the data center."
       },
       "maxChoices": {
@@ -1813,12 +1813,12 @@
   },
   "menu": {
     "eyebrow": {
-      "kid": "A chip-making adventure",
-      "nerd": "An interactive supply-chain simulation"
+      "kid": "The city is dark",
+      "nerd": "Public-interest AI rescue sim"
     },
     "subtitle": {
-      "kid": "Build a chip from minerals to a working data center.",
-      "nerd": "A semiconductor supply-chain strategy game with dual-register learning."
+      "kid": "Bring one rack online, then trace every choice back through the chip supply chain.",
+      "nerd": "Keep Nova online under power, cooling, yield, and supply-chain constraints."
     },
     "steps": [
       {
@@ -1845,7 +1845,31 @@
         "kid": "Power",
         "nerd": "Data center"
       }
-    ]
+    ],
+    "crisisTitle": {
+      "kid": "Play Crisis Run",
+      "nerd": "Start Crisis Run"
+    },
+    "crisisDescription": {
+      "kid": "Bring the city back in five minutes",
+      "nerd": "Cold-start the Nova rescue under power and cooling pressure"
+    },
+    "learnTitle": {
+      "kid": "Learn the chain",
+      "nerd": "Learn Mode"
+    },
+    "learnDescription": {
+      "kid": "Mine, refine, grow, fab, package, then power Nova",
+      "nerd": "Full supply-chain campaign with sourced approximations"
+    },
+    "accuracyNote": {
+      "kid": "Gameplay simplifies real semiconductor work; the Codex labels what is an approximation.",
+      "nerd": "Educational abstractions are gameplay approximations, with source notes in the Codex."
+    },
+    "creditsNote": {
+      "kid": "Built by Muhammad Umar Zafar with AI-generated, human-curated assets.",
+      "nerd": "Credits: Muhammad Umar Zafar; AI-generated, human-curated art and sound direction."
+    }
   },
   "journey": {
     "benchmarkLabel": {
@@ -1885,8 +1909,8 @@
           "nerd": "Electronic-grade silicon"
         },
         "benchmark": {
-          "kid": "Real chip silicon is 99.9999999% pure — nine nines. One wrong atom in a billion is too many.",
-          "nerd": "Electronic-grade polysilicon reaches 9N purity (99.9999999%) — about one impurity atom per billion."
+          "kid": "Nine nines is a teaching shortcut for 99.9999999% pure. Chipmaking needs impurities controlled on purpose, not random dirt.",
+          "nerd": "9N is used here as a purity shorthand: 99.9999999% pure, or roughly one impurity part per billion before intentional doping."
         },
         "handoff": {
           "kid": "Your pure silicon heads to the crystal plant.",
@@ -1925,8 +1949,8 @@
           "nerd": "Known-good dies"
         },
         "benchmark": {
-          "kid": "A real chip factory works on one wafer for about 3 months — over 1,000 tiny steps, day and night.",
-          "nerd": "Leading-edge wafers undergo 1,000+ process steps across ~12 weeks in fabs that never stop running."
+          "kid": "A real chip factory repeats careful steps for many weeks: print, etch, clean, check, and repeat until the wafer is ready.",
+          "nerd": "Advanced wafer fabrication can take many weeks and repeat lithography, deposition, etch, clean, implant, inspection, and metrology operations hundreds to thousands of times."
         },
         "handoff": {
           "kid": "Your good chips go to packaging.",

@@ -7,6 +7,12 @@ interface MenuStrings {
   eyebrow: TextModeText;
   subtitle: TextModeText;
   steps: TextModeText[];
+  crisisTitle: TextModeText;
+  crisisDescription: TextModeText;
+  learnTitle: TextModeText;
+  learnDescription: TextModeText;
+  accuracyNote: TextModeText;
+  creditsNote: TextModeText;
 }
 
 const MENU_STRINGS = (stringsJson as unknown as { menu: MenuStrings }).menu;
@@ -59,14 +65,14 @@ export function mountMenuOverlay(root: HTMLElement, options: MenuOverlayOptions)
   actions.className = 'menu-actions';
   actions.append(
     actionButton({
-      title: 'Crisis Run',
-      description: 'Fast 5 minute challenge',
+      title: textForMode(MENU_STRINGS.crisisTitle, textMode),
+      description: textForMode(MENU_STRINGS.crisisDescription, textMode),
       className: 'primary-action menu-play',
       onClick: options.onPlayCrisis
     }),
     actionButton({
-      title: 'Learn Mode',
-      description: 'Full guided supply chain',
+      title: textForMode(MENU_STRINGS.learnTitle, textMode),
+      description: textForMode(MENU_STRINGS.learnDescription, textMode),
       className: 'secondary-action menu-learn',
       onClick: options.onPlayCampaign
     })
@@ -97,12 +103,28 @@ export function mountMenuOverlay(root: HTMLElement, options: MenuOverlayOptions)
     utility.append(button('Feedback', 'secondary-action', options.onOpenFeedback));
   }
 
-  shell.append(titleStack, pipeline, actions, utility);
+  const notes = document.createElement('div');
+  notes.className = 'menu-notes';
+  notes.append(
+    elementWithText('p', '', textForMode(MENU_STRINGS.accuracyNote, textMode)),
+    elementWithText('p', '', textForMode(MENU_STRINGS.creditsNote, textMode))
+  );
+
+  shell.append(titleStack, pipeline, actions, notes, utility);
   root.append(shell);
 
   return () => {
     shell.remove();
   };
+}
+
+function elementWithText<K extends keyof HTMLElementTagNameMap>(tag: K, className: string, text: string): HTMLElementTagNameMap[K] {
+  const element = document.createElement(tag);
+  if (className) {
+    element.className = className;
+  }
+  element.textContent = text;
+  return element;
 }
 
 function button(label: string, className: string, onClick: () => void): HTMLButtonElement {

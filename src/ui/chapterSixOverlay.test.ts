@@ -1,8 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import chipsJson from '../content/chips.json';
 import stringsJson from '../content/strings.json';
 import { createInitialDatacenterChapter, type DatacenterBalance, type DatacenterContractDefinition } from '../sim/datacenter';
+import type { ChipDefinition } from '../sim/package';
 import type { ChapterFiveProgress } from '../state/types';
 import { mountChapterSixOverlay } from './chapterSixOverlay';
+import { textForMode } from './text';
 
 const balance: DatacenterBalance = {
   tickSeconds: 1,
@@ -76,6 +79,10 @@ const hospitalNova: DatacenterContractDefinition = {
   cityLights: 50
 };
 
+const chips = chipsJson as unknown as ChipDefinition[];
+const cpuChip = chips.find((chip) => chip.id === 'cpu');
+const novaChip = chips.find((chip) => chip.id === 'nova');
+
 beforeEach(() => {
   vi.stubGlobal('document', new FakeDocument());
 });
@@ -85,15 +92,15 @@ afterEach(() => {
 });
 
 describe('chapter six overlay', () => {
-  it('shows exact blocked reasons for contract requirements', () => {
+  it('opens on a single mission-focused view with secondary panels hidden behind switchers', () => {
     const root = document.createElement('div');
     const chapter = createInitialDatacenterChapter(ch5, balance);
 
     mountChapterSixOverlay(root, {
       chapter,
       balance,
-      contracts: [cartoonStream],
-      chips: [],
+      contracts: [cartoonStream, hospitalNova],
+      chips: [cpuChip!, novaChip!],
       resources: {
         minerals: { quartz: 0, copper: 0, lithium: 0, cobalt: 0, rareEarths: 0 },
         wafers: 0,
@@ -124,6 +131,69 @@ describe('chapter six overlay', () => {
       onMenu: () => undefined
     });
 
+    expect(root.textContent).toContain(textForMode(stringsJson.ch6.labels.novaChallenge, 'nerd'));
+    expect(root.textContent).toContain('contracts are feeding the city lights');
+    expect(root.textContent).toContain(textForMode(stringsJson.ch6.labels.buildRack, 'nerd'));
+    expect(root.textContent).not.toContain('Cartoon Stream');
+    expect(root.textContent).not.toContain(textForMode(cpuChip!.name, 'nerd'));
+
+    const shell = firstChild(root);
+    expect(findButton(shell, textForMode(stringsJson.ch6.labels.buildRack, 'nerd')).getAttribute('aria-pressed')).toBe('true');
+    const switcher = findButton(shell, textForMode(stringsJson.ch6.labels.installChip, 'nerd'));
+    switcher.click();
+
+    expect(root.textContent).toContain(textForMode(stringsJson.ch6.labels.installChip, 'nerd'));
+    expect(root.textContent).toContain(textForMode(cpuChip!.name, 'nerd'));
+    expect(root.textContent).not.toContain('Cartoon Stream');
+
+    findButton(shell, textForMode(stringsJson.ch6.labels.contracts, 'nerd')).click();
+    expect(root.textContent).toContain('Cartoon Stream');
+    findButton(firstChild(root), textForMode(stringsJson.ch6.labels.contracts, 'nerd')).click();
+
+    expect(root.textContent).toContain('Blocked: missing chip: cpu');
+  });
+
+  it('shows exact blocked reasons for contract requirements', () => {
+    const root = document.createElement('div');
+    const chapter = createInitialDatacenterChapter(ch5, balance);
+
+    mountChapterSixOverlay(root, {
+      chapter,
+      balance,
+      contracts: [cartoonStream],
+      chips: [cpuChip!],
+      resources: {
+        minerals: { quartz: 0, copper: 0, lithium: 0, cobalt: 0, rareEarths: 0 },
+        wafers: 0,
+        chips: 0,
+        energy: 0,
+        water: 0,
+        credits: 0
+      },
+      labels: stringsJson.ch6.labels,
+      stageNames: stringsJson.ch6.stageNames,
+      textMode: 'nerd',
+      message: null,
+      selectedBuildType: 'rack',
+      selectedBuildingId: null,
+      selectedChipId: null,
+      selectedContractId: 'cartoonStream',
+      canBuildType: { rack: true, power: true, cooling: true, network: true, battery: true },
+      canInstallSelectedChip: false,
+      canServeSelectedContract: false,
+      canRunNovaChallenge: false,
+      onSelectBuildType: () => undefined,
+      onSelectChip: () => undefined,
+      onInstallSelectedChip: () => undefined,
+      onSelectContract: () => undefined,
+      onServeSelectedContract: () => undefined,
+      onRunNovaChallenge: () => undefined,
+      onToggleMode: () => undefined,
+      onMenu: () => undefined
+    });
+
+    findButton(firstChild(root), textForMode(stringsJson.ch6.labels.contracts, 'nerd')).click();
+
     expect(root.textContent).toContain('Blocked: missing chip: cpu');
     expect(root.textContent).toContain('insufficient network');
   });
@@ -145,7 +215,7 @@ describe('chapter six overlay', () => {
       chapter,
       balance,
       contracts: [hospitalNova],
-      chips: [],
+      chips: [novaChip!],
       resources: {
         minerals: { quartz: 0, copper: 0, lithium: 0, cobalt: 0, rareEarths: 0 },
         wafers: 0,
@@ -176,6 +246,8 @@ describe('chapter six overlay', () => {
       onMenu: () => undefined
     });
 
+    findButton(firstChild(root), textForMode(stringsJson.ch6.labels.contracts, 'nerd')).click();
+
     expect(root.textContent).toContain('nova locked');
   });
 
@@ -190,7 +262,7 @@ describe('chapter six overlay', () => {
       chapter,
       balance,
       contracts: [cartoonStream],
-      chips: [],
+      chips: [cpuChip!],
       resources: {
         minerals: { quartz: 0, copper: 0, lithium: 0, cobalt: 0, rareEarths: 0 },
         wafers: 0,
@@ -221,6 +293,8 @@ describe('chapter six overlay', () => {
       onMenu: () => undefined
     });
 
+    findButton(firstChild(root), textForMode(stringsJson.ch6.labels.contracts, 'nerd')).click();
+
     expect(root.textContent).toContain('Served');
     expect(root.textContent).not.toContain('Blocked:');
   });
@@ -236,6 +310,9 @@ class FakeElement {
   className = '';
   disabled = false;
   type = '';
+  readonly children: FakeElement[] = [];
+  private readonly attributes = new Map<string, string>();
+  private readonly listeners = new Map<string, Array<() => void>>();
   classList = {
     add: (...classes: string[]) => {
       this.className = [...new Set([...this.className.split(' ').filter(Boolean), ...classes])].join(' ');
@@ -244,7 +321,6 @@ class FakeElement {
   style = {
     setProperty: () => undefined
   };
-  private readonly children: FakeElement[] = [];
   private ownText = '';
   private parent: FakeElement | undefined;
 
@@ -277,7 +353,29 @@ class FakeElement {
     this.parent?.removeChild(this);
   }
 
-  addEventListener(): void {}
+  addEventListener(type: string, handler: () => void): void {
+    const handlers = this.listeners.get(type) ?? [];
+    handlers.push(handler);
+    this.listeners.set(type, handlers);
+  }
+
+  setAttribute(name: string, value: string): void {
+    this.attributes.set(name, value);
+  }
+
+  getAttribute(name: string): string | null {
+    return this.attributes.get(name) ?? null;
+  }
+
+  click(): void {
+    if (this.disabled) {
+      return;
+    }
+
+    for (const handler of this.listeners.get('click') ?? []) {
+      handler();
+    }
+  }
 
   private removeChild(child: FakeElement): void {
     const index = this.children.indexOf(child);
@@ -286,4 +384,21 @@ class FakeElement {
     }
     child.parent = undefined;
   }
+}
+
+function firstChild(root: FakeElement | HTMLElement): FakeElement {
+  return (root as unknown as FakeElement).children[0];
+}
+
+function findButton(root: FakeElement, label: string): FakeElement {
+  const stack = [...root.children];
+  while (stack.length > 0) {
+    const node = stack.shift()!;
+    if (node.type === 'button' && node.textContent === label) {
+      return node;
+    }
+    stack.unshift(...node.children);
+  }
+
+  throw new Error(`Missing button: ${label}`);
 }

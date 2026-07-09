@@ -1,6 +1,7 @@
 import type { MineralType, ResourceState, TextMode } from '../state/types';
 import type { MineDeposit, MiningBalance, MiningChapterState } from '../sim/mining';
 import { appendJourneyBlock, type JourneyChapter } from './chapterJourney';
+import { activateModalFocus, type ModalFocusController } from './modalFocus';
 import type { TextModeText } from './text';
 import { textForMode } from './text';
 
@@ -70,6 +71,8 @@ export interface MountedModal {
 }
 
 const MINERALS: MineralType[] = ['quartz', 'copper', 'lithium', 'cobalt', 'rareEarths'];
+let quizModalId = 0;
+let chapterCompleteModalId = 0;
 
 export function mountChapterOneOverlay(root: HTMLElement, options: ChapterOneOverlayOptions): MountedChapterOneOverlay {
   const shell = document.createElement('section');
@@ -101,6 +104,9 @@ export function mountQuizOverlay(root: HTMLElement, options: {
   onAnswer: (answer: QuizAnswerDefinition) => void;
 }): MountedModal {
   let textMode = options.textMode;
+  let focusController: ModalFocusController | undefined;
+  const titleId = `ch1-quiz-title-${++quizModalId}`;
+  const questionId = `ch1-quiz-question-${quizModalId}`;
 
   const backdrop = document.createElement('section');
   backdrop.className = 'ch1-modal-backdrop';
@@ -109,12 +115,18 @@ export function mountQuizOverlay(root: HTMLElement, options: {
   const render = (): void => {
     const card = document.createElement('article');
     card.className = 'ch1-quiz-card';
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-modal', 'true');
+    card.setAttribute('aria-labelledby', titleId);
+    card.setAttribute('aria-describedby', questionId);
 
     const eyebrow = document.createElement('span');
     eyebrow.className = 'event-card-eyebrow';
+    eyebrow.id = titleId;
     eyebrow.textContent = textForMode(options.labels.quizTitle, textMode);
 
     const question = document.createElement('h2');
+    question.id = questionId;
     question.textContent = textForMode(options.quiz.question, textMode);
 
     const answers = document.createElement('div');
@@ -145,9 +157,11 @@ export function mountQuizOverlay(root: HTMLElement, options: {
 
     card.append(eyebrow, question, answers);
     backdrop.replaceChildren(card);
+    focusController?.focusInitial();
   };
 
   render();
+  focusController = activateModalFocus(backdrop.querySelector('.ch1-quiz-card') as HTMLElement);
 
   return {
     updateMode: (nextTextMode) => {
@@ -155,6 +169,7 @@ export function mountQuizOverlay(root: HTMLElement, options: {
       render();
     },
     cleanup: () => {
+      focusController?.deactivate();
       backdrop.remove();
     }
   };
@@ -171,6 +186,9 @@ export function mountChapterCompleteOverlay(root: HTMLElement, options: {
   onNext: () => void;
 }): MountedModal {
   let textMode = options.textMode;
+  let focusController: ModalFocusController | undefined;
+  const titleId = `ch1-complete-title-${++chapterCompleteModalId}`;
+  const descriptionId = `ch1-complete-body-${chapterCompleteModalId}`;
 
   const backdrop = document.createElement('section');
   backdrop.className = 'ch1-modal-backdrop';
@@ -179,11 +197,17 @@ export function mountChapterCompleteOverlay(root: HTMLElement, options: {
   const render = (): void => {
     const card = document.createElement('article');
     card.className = 'ch1-complete-card';
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-modal', 'true');
+    card.setAttribute('aria-labelledby', titleId);
+    card.setAttribute('aria-describedby', descriptionId);
 
     const title = document.createElement('h2');
+    title.id = titleId;
     title.textContent = textForMode(options.title, textMode);
 
     const body = document.createElement('p');
+    body.id = descriptionId;
     body.textContent = textForMode(options.body, textMode);
 
     const stats = document.createElement('p');
@@ -213,9 +237,11 @@ export function mountChapterCompleteOverlay(root: HTMLElement, options: {
     appendJourneyBlock(card, options.journeyChapter ?? 1, textMode);
     card.append(next);
     backdrop.replaceChildren(card);
+    focusController?.focusInitial();
   };
 
   render();
+  focusController = activateModalFocus(backdrop.querySelector('.ch1-complete-card') as HTMLElement);
 
   return {
     updateMode: (nextTextMode) => {
@@ -223,6 +249,7 @@ export function mountChapterCompleteOverlay(root: HTMLElement, options: {
       render();
     },
     cleanup: () => {
+      focusController?.deactivate();
       backdrop.remove();
     }
   };

@@ -1,26 +1,27 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mountDialogue } from './dialogueOverlay';
+import { mountChapterCompleteOverlay, mountQuizOverlay } from './chapterOneOverlay';
 
 const labels = {
-  next: { kid: 'Next', nerd: 'Advance' },
-  done: { kid: 'Done', nerd: 'Close dialogue' },
-  skip: { kid: 'Skip', nerd: 'Skip briefing' }
+  targetBasket: { kid: 'Target basket', nerd: 'Target basket' },
+  minerSlots: { kid: 'Miner slots', nerd: 'Miner slots' },
+  selectedDeposit: { kid: 'Selected deposit', nerd: 'Selected deposit' },
+  noDeposit: { kid: 'No deposit', nerd: 'No deposit' },
+  placeMiner: { kid: 'Place miner', nerd: 'Place miner' },
+  removeMiner: { kid: 'Remove miner', nerd: 'Remove miner' },
+  depleted: { kid: 'Depleted', nerd: 'Depleted' },
+  producing: { kid: 'Producing', nerd: 'Producing' },
+  depth: { kid: 'Depth', nerd: 'Depth' },
+  remaining: { kid: 'Remaining', nerd: 'Remaining' },
+  cost: { kid: 'Cost', nerd: 'Cost' },
+  quizTitle: { kid: 'Quick check', nerd: 'Quick check' },
+  correct: { kid: 'Correct', nerd: 'Correct' },
+  tryAgain: { kid: 'Try again', nerd: 'Try again' },
+  chapterComplete: { kid: 'Chapter complete', nerd: 'Chapter complete' },
+  nextChapter: { kid: 'Next chapter', nerd: 'Next chapter' },
+  stats: { kid: 'Stats', nerd: 'Stats' },
+  menu: { kid: 'Menu', nerd: 'Menu' },
+  toggleMode: { kid: 'Toggle mode', nerd: 'Toggle mode' }
 };
-
-const lines = [
-  {
-    id: 'one',
-    speakerName: { kid: 'Sam', nerd: 'Sam' },
-    portraitColor: '#f8d45c',
-    text: { kid: 'First line', nerd: 'First line' }
-  },
-  {
-    id: 'two',
-    speakerName: { kid: 'Dr. Vega', nerd: 'Dr. Vega' },
-    portraitColor: '#60d394',
-    text: { kid: 'Second line', nerd: 'Second line' }
-  }
-];
 
 beforeEach(() => {
   vi.stubGlobal('HTMLElement', FakeElement);
@@ -31,70 +32,74 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('mountDialogue', () => {
-  it('renders as a labelled dialog, traps tab focus, and restores focus on cleanup', async () => {
+describe('chapter one modal overlays', () => {
+  it('renders the quiz overlay as a labelled dialog with tab containment', async () => {
     const root = document.createElement('div');
     const opener = document.createElement('button');
     root.append(opener);
     opener.focus();
 
-    const mounted = mountDialogue(root, {
-      lines,
-      textMode: 'kid',
+    const mounted = mountQuizOverlay(root, {
+      quiz: {
+        id: 'quiz-1',
+        question: { kid: 'Which mineral starts the chain?', nerd: 'Which mineral starts the chain?' },
+        answers: [
+          { id: 'a', label: { kid: 'Quartz', nerd: 'Quartz' }, correct: true, explanation: { kid: 'Yes', nerd: 'Yes' } },
+          { id: 'b', label: { kid: 'Copper', nerd: 'Copper' }, correct: false, explanation: { kid: 'No', nerd: 'No' } }
+        ]
+      },
       labels,
-      onComplete: () => undefined
+      textMode: 'kid',
+      onAnswer: () => undefined
     });
 
     await Promise.resolve();
 
-    const shell = root.querySelector('.dialogue-shell');
-    expect(shell?.getAttribute('role')).toBe('dialog');
-    expect(shell?.getAttribute('aria-modal')).toBe('true');
-    expect(shell?.getAttribute('aria-labelledby')).toContain('dialogue-speaker-');
-    expect(shell?.getAttribute('aria-describedby')).toContain('dialogue-text-');
-    expect(document.activeElement).toBe(root.querySelector('.dialogue-next'));
+    const card = root.querySelector('.ch1-quiz-card');
+    expect(card?.getAttribute('role')).toBe('dialog');
+    expect(card?.getAttribute('aria-modal')).toBe('true');
+    expect(card?.getAttribute('aria-labelledby')).toContain('ch1-quiz-title-');
+    expect(card?.getAttribute('aria-describedby')).toContain('ch1-quiz-question-');
+    expect(document.activeElement).toBe(root.querySelector('.event-choice'));
 
-    const back = root.querySelector<HTMLButtonElement>('.dialogue-back');
-    expect(back).toBeNull();
-
-    root.querySelector<HTMLButtonElement>('.dialogue-next')?.click();
-    await Promise.resolve();
-
-    const done = root.querySelector<HTMLButtonElement>('.dialogue-next');
-    const backOnLastLine = root.querySelector<HTMLButtonElement>('.dialogue-back');
-    expect(done).not.toBeNull();
-    expect(backOnLastLine).not.toBeNull();
-    (done as unknown as FakeElement).focus();
-    (root.querySelector('.dialogue-shell') as unknown as FakeElement).dispatchKeydown('Tab');
-    expect(document.activeElement).toBe(backOnLastLine);
+    const answers = root.querySelectorAll('.event-choice');
+    (answers[1] as unknown as FakeElement).focus();
+    (card as unknown as FakeElement).dispatchKeydown('Tab');
+    expect(document.activeElement).toBe(answers[0]);
 
     mounted.cleanup();
-    expect(root.querySelector('.dialogue-shell')).toBeNull();
+    expect(root.querySelector('.ch1-modal-backdrop')).toBeNull();
     expect(document.activeElement).toBe(opener);
   });
 
-  it('treats Escape as a dismiss path when skip is available', async () => {
+  it('renders the chapter completion overlay as a labelled dialog and restores focus on cleanup', async () => {
     const root = document.createElement('div');
     const opener = document.createElement('button');
     root.append(opener);
     opener.focus();
-    let completed = 0;
 
-    mountDialogue(root, {
-      lines,
-      textMode: 'kid',
+    const mounted = mountChapterCompleteOverlay(root, {
+      title: { kid: 'Mission complete', nerd: 'Mission complete' },
+      body: { kid: 'You did it.', nerd: 'You did it.' },
       labels,
-      onComplete: () => {
-        completed += 1;
-      }
+      textMode: 'kid',
+      elapsedSeconds: 91,
+      minedCount: 4,
+      journeyChapter: 1,
+      onNext: () => undefined
     });
 
     await Promise.resolve();
 
-    (root.querySelector('.dialogue-shell') as unknown as FakeElement).dispatchKeydown('Escape');
+    const card = root.querySelector('.ch1-complete-card');
+    expect(card?.getAttribute('role')).toBe('dialog');
+    expect(card?.getAttribute('aria-modal')).toBe('true');
+    expect(card?.getAttribute('aria-labelledby')).toContain('ch1-complete-title-');
+    expect(card?.getAttribute('aria-describedby')).toContain('ch1-complete-body-');
+    expect(document.activeElement).toBe(root.querySelector('.primary-action'));
 
-    expect(completed).toBe(1);
-    expect(root.querySelector('.dialogue-shell')).toBeNull();
+    mounted.cleanup();
+    expect(root.querySelector('.ch1-modal-backdrop')).toBeNull();
     expect(document.activeElement).toBe(opener);
   });
 });
@@ -105,11 +110,16 @@ class FakeDocument {
   createElement(tagName: string): HTMLElement {
     return new FakeElement(this, tagName) as unknown as HTMLElement;
   }
+
+  createTextNode(text: string): FakeElement {
+    const node = new FakeElement(this, '#text');
+    node.textContent = text;
+    return node;
+  }
 }
 
 class FakeElement {
   className = '';
-  dataset: Record<string, string> = {};
   disabled = false;
   id = '';
   type = '';

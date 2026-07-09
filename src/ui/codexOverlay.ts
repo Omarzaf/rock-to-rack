@@ -70,7 +70,7 @@ function codexPrimer(): HTMLElement {
   title.textContent = 'Start building your chip library';
 
   const body = document.createElement('p');
-  body.textContent = 'Mine your first minerals or play Learn Mode to unlock real supply-chain cards. Each card turns a game action into the concept behind it.';
+  body.textContent = 'Mine your first minerals or play Learn the chain to unlock real supply-chain cards. Each card turns a game action into the concept behind it.';
 
   primer.append(title, body);
   return primer;

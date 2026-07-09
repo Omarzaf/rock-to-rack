@@ -1,4 +1,5 @@
 export interface ModalFocusController {
+  focusInitial: () => void;
   deactivate: (options?: { restoreFocus?: boolean }) => void;
 }
 
@@ -6,6 +7,13 @@ const FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:
 
 export function activateModalFocus(container: HTMLElement, onEscape?: () => void): ModalFocusController {
   const previousFocus = activeHTMLElement();
+
+  const focusInitial = (): void => {
+    queueMicrotask(() => {
+      const [first] = focusableElements(container);
+      first?.focus();
+    });
+  };
 
   const onKeyDown = (event: KeyboardEvent): void => {
     if (event.key === 'Escape' && onEscape) {
@@ -41,12 +49,10 @@ export function activateModalFocus(container: HTMLElement, onEscape?: () => void
   };
 
   container.addEventListener('keydown', onKeyDown);
-  queueMicrotask(() => {
-    const [first] = focusableElements(container);
-    first?.focus();
-  });
+  focusInitial();
 
   return {
+    focusInitial,
     deactivate: (options = {}) => {
       container.removeEventListener('keydown', onKeyDown);
       if (options.restoreFocus !== false) {

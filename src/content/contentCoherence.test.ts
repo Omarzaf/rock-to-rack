@@ -40,4 +40,12 @@ describe('content coherence', () => {
   it('keeps shipped content free of implementation-placeholder language', () => {
     expect(allContentText).not.toMatch(/\bstub\b/i);
   });
+
+  it('keeps brittle fabrication benchmarks softened as approximations', () => {
+    expect(allContentText).not.toMatch(/about 3 months/i);
+    expect(allContentText).not.toMatch(/over 1,000 tiny steps/i);
+    expect(allContentText).not.toMatch(/one wrong atom in a billion is too many/i);
+    expect(allContentText).toMatch(/teaching shortcut/i);
+    expect(allContentText).toMatch(/many weeks/i);
+  });
 });

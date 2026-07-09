@@ -393,6 +393,21 @@ button:disabled {
   text-align: center;
 }
 
+.menu-notes {
+  display: grid;
+  gap: 5px;
+  width: min(720px, 100%);
+  color: rgba(214, 246, 239, 0.78);
+  text-align: center;
+}
+
+.menu-notes p {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
 .menu-utility {
   display: flex;
   flex-wrap: wrap;
@@ -442,6 +457,10 @@ button:disabled {
 
 .menu-shell > :nth-child(4) {
   animation-delay: 260ms;
+}
+
+.menu-shell > :nth-child(5) {
+  animation-delay: 320ms;
 }
 
 @keyframes menu-rise {
@@ -2424,15 +2443,21 @@ body.text-large {
   position: absolute;
   inset: 0;
   z-index: 4;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 104px 24px 18px;
   pointer-events: none;
 }
 
 .ch6-status-panel,
+.ch6-switcher-panel,
+.ch6-detail-panel,
 .ch6-build-panel,
 .ch6-chip-panel,
 .ch6-contract-panel,
 .ch6-action-panel {
-  position: absolute;
+  position: relative;
   z-index: 4;
   border: 1px solid var(--stroke-hud);
   border-radius: var(--radius-sm);
@@ -2444,58 +2469,119 @@ body.text-large {
 }
 
 .ch6-status-panel {
-  top: 104px;
-  left: 50%;
   display: grid;
-  grid-template-columns: repeat(8, minmax(68px, 1fr));
-  gap: 7px;
-  width: min(880px, calc(100% - 48px));
-  padding: 9px;
-  transform: translateX(-50%);
+  gap: 10px;
+  width: min(920px, calc(100% - 48px));
+  justify-self: center;
+  padding: 12px;
+}
+
+.ch6-objective-card {
+  display: grid;
+  gap: 6px;
+}
+
+.ch6-objective-card h2 {
+  margin: 0;
+  color: var(--text-warm);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.ch6-objective-card p,
+.ch6-objective-signal {
+  margin: 0;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.ch6-objective-signal {
+  color: var(--info);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.ch6-pressure-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ch6-switcher-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-self: center;
+  gap: 8px;
+  width: min(920px, calc(100% - 48px));
+  padding: 10px 12px;
+}
+
+.ch6-switcher-button {
+  min-height: 42px;
+  flex: 1 1 160px;
+  border: 1px solid rgba(155, 246, 255, 0.18);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  background: rgba(96, 165, 250, 0.16);
+  color: var(--text-hi);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.ch6-switcher-button.is-selected {
+  border-color: rgba(248, 212, 92, 0.92);
+  background: rgba(248, 212, 92, 0.24);
+  color: var(--text-warm);
+  box-shadow: 0 0 0 2px rgba(248, 212, 92, 0.18);
+}
+
+.ch6-detail-panel {
+  display: grid;
+  width: min(920px, calc(100% - 48px));
+  justify-self: center;
 }
 
 .ch6-build-panel {
-  top: 222px;
-  left: 24px;
   display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.ch6-build-panel h2,
+.ch6-chip-panel h2,
+.ch6-contract-panel h2 {
+  margin: 0;
+  color: var(--text-warm);
+  font-size: 0.94rem;
+  letter-spacing: 0;
+}
+
+.ch6-build-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
-  width: 154px;
-  padding: 10px;
 }
 
 .ch6-chip-panel {
-  top: 222px;
-  right: 24px;
-  width: 300px;
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
 }
 
 .ch6-contract-panel {
-  left: 196px;
-  right: auto;
-  bottom: 94px;
-  width: 352px;
-  max-height: 284px;
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
 }
 
 .ch6-action-panel {
-  right: 24px;
-  bottom: 18px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
-  max-width: min(620px, calc(100% - 48px));
-  padding: 10px;
-}
-
-.ch6-chip-panel h2,
-.ch6-contract-panel h2 {
-  margin: 0 0 8px;
-  color: var(--text-warm);
-  font-size: 0.94rem;
-  letter-spacing: 0;
+  width: min(920px, calc(100% - 48px));
+  justify-self: center;
+  padding: 10px 12px;
 }
 
 .ch6-panel-note,
@@ -2508,7 +2594,7 @@ body.text-large {
 }
 
 .ch6-panel-button {
-  min-height: 38px;
+  min-height: 42px;
   border: 1px solid rgba(155, 246, 255, 0.18);
   border-radius: var(--radius-sm);
   padding: 9px 10px;
@@ -2564,7 +2650,7 @@ body.text-large {
 
 .ch6-chip-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-height: 224px;
+  max-height: 260px;
   overflow: auto;
 }
 
@@ -2638,7 +2724,7 @@ body.text-large {
 }
 
 .ch6-contract-list {
-  max-height: 220px;
+  max-height: 260px;
   overflow: auto;
 }
 
@@ -2847,6 +2933,8 @@ body.text-large {
 .ch5-roster-panel,
 .ch5-action-panel,
 .ch6-status-panel,
+.ch6-switcher-panel,
+.ch6-detail-panel,
 .ch6-build-panel,
 .ch6-chip-panel,
 .ch6-contract-panel,
@@ -2900,13 +2988,14 @@ body.text-large {
 /* Selection affordance for card-style buttons (ch5/ch6). */
 @media (hover: hover) {
   .ch5-chip-card:not(:disabled):hover,
-  .ch6-chip-card:not(:disabled):hover,
-  .ch6-contract-card:not(:disabled):hover,
-  .ch6-panel-button:not(:disabled):hover,
-  .ch2-module-button:not(:disabled):hover {
-    border-color: var(--stroke-hud-strong);
-    transform: translateY(-1px);
-  }
+.ch6-chip-card:not(:disabled):hover,
+.ch6-contract-card:not(:disabled):hover,
+.ch6-panel-button:not(:disabled):hover,
+.ch6-switcher-button:not(:disabled):hover,
+.ch2-module-button:not(:disabled):hover {
+  border-color: var(--stroke-hud-strong);
+  transform: translateY(-1px);
+}
 }
 
 /* ── Journey block (chapter report card) ─────────────────────
@@ -3100,6 +3189,7 @@ body.text-large {
   .event-choice,
   .codex-close,
   .ch2-module-button,
+  .ch6-switcher-button,
   .ch6-panel-button,
   .ch6-install-action {
     min-height: 44px;
@@ -3123,6 +3213,37 @@ body.text-large {
 }
 
 @media (max-width: 860px) {
+  .menu-shell {
+    gap: 16px;
+    padding: 24px 14px;
+  }
+
+  .title-stack h1 {
+    font-size: 3.5rem;
+  }
+
+  .title-stack p {
+    max-width: 540px;
+    font-size: 1rem;
+  }
+
+  .menu-pipeline {
+    max-width: 440px;
+  }
+
+  .menu-pipeline-step::after {
+    display: none;
+  }
+
+  .menu-action-card {
+    width: min(100%, 330px);
+    min-width: 0;
+  }
+
+  .menu-notes p {
+    font-size: 0.72rem;
+  }
+
   .pipeline-hud {
     top: 8px;
     display: grid;
@@ -3496,141 +3617,135 @@ body.text-large {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .ch6-status-panel,
-  .ch6-build-panel,
-  .ch6-chip-panel,
-  .ch6-contract-panel,
-  .ch6-action-panel {
-    left: 10px;
-    right: 10px;
-    width: auto;
-    max-width: none;
-    transform: none;
+  .ch6-status-panel {
+    width: calc(100% - 24px);
+    padding: 10px;
+    gap: 8px;
   }
 
-  .ch6-status-panel {
-    top: 132px;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
-    padding: 7px;
+  .ch6-pressure-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ch6-switcher-panel {
+    width: calc(100% - 24px);
+    padding: 8px 10px;
+  }
+
+  .ch6-switcher-button {
+    min-height: 44px;
+    flex: 1 1 calc(50% - 8px);
+    padding: 8px 10px;
+    font-size: 0.72rem;
+  }
+
+  .ch6-detail-panel {
+    width: calc(100% - 24px);
   }
 
   .ch6-build-panel {
-    top: auto;
-    bottom: 252px;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 5px;
-    padding: 7px;
+    padding: 10px;
+  }
+
+  .ch6-build-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .ch6-panel-button {
-    min-height: 34px;
-    padding: 7px 5px;
-    font-size: 0.64rem;
+    min-height: 44px;
+    padding: 8px 6px;
+    font-size: 0.72rem;
     text-align: center;
   }
 
-  .ch6-chip-panel {
-    top: auto;
-    bottom: 156px;
-    max-height: 90px;
-    overflow: auto;
-    padding: 7px;
+  .ch6-build-grid .ch6-panel-button {
+    min-height: 44px;
+  }
+
+  .ch6-chip-panel,
+  .ch6-contract-panel {
+    padding: 10px;
   }
 
   .ch6-chip-panel h2,
-  .ch6-panel-note {
-    display: none;
+  .ch6-contract-panel h2 {
+    display: block;
+  }
+
+  .ch6-panel-note,
+  .ch6-contract-ticker {
+    display: block;
   }
 
   .ch6-chip-list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    max-height: none;
-    gap: 5px;
-    overflow: visible;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 240px;
+    gap: 6px;
   }
 
   .ch6-chip-card {
-    grid-template-columns: 1fr;
-    min-height: 42px;
-    padding: 5px;
+    min-height: 54px;
+    padding: 6px;
   }
 
   .ch6-chip-face {
-    width: 100%;
-    height: 18px;
+    width: 34px;
+    height: 34px;
     font-size: 0.56rem;
   }
 
   .ch6-chip-text small {
-    display: none;
+    display: block;
   }
 
   .ch6-install-action {
-    min-height: 30px;
-    margin-top: 5px;
-  }
-
-  .ch6-contract-panel {
-    top: auto;
-    bottom: 68px;
-    max-height: 82px;
-    overflow: auto;
-    padding: 7px;
-  }
-
-  .ch6-contract-panel h2,
-  .ch6-contract-ticker {
-    display: none;
+    min-height: 44px;
+    margin-top: 6px;
   }
 
   .ch6-contract-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-height: none;
-    gap: 5px;
-    overflow: visible;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    max-height: 240px;
+    gap: 6px;
   }
 
   .ch6-contract-card {
-    gap: 2px;
-    min-height: 64px;
-    padding: 6px;
+    min-height: 68px;
+    padding: 8px;
   }
 
   .ch6-contract-card strong {
-    font-size: 0.68rem;
+    font-size: 0.74rem;
   }
 
   .ch6-contract-card small,
   .ch6-contract-requirements,
   .ch6-contract-reward {
-    font-size: 0.56rem;
-  }
-
-  .ch6-action-panel {
-    bottom: 8px;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
-    padding: 7px;
-  }
-
-  .ch6-action-panel button {
-    min-height: 34px;
-    padding: 7px 5px;
     font-size: 0.62rem;
   }
 
+  .ch6-action-panel {
+    width: calc(100% - 24px);
+    padding: 8px 10px;
+  }
+
+  .ch6-action-panel button {
+    min-height: 44px;
+    padding: 8px 6px;
+    font-size: 0.68rem;
+  }
+
   .ch6-stat-block {
-    padding: 5px 6px;
+    padding: 6px 8px;
   }
 
   .ch6-stat-block small {
-    font-size: 0.54rem;
+    font-size: 0.58rem;
   }
 
   .ch6-stat-block strong {
-    font-size: 0.76rem;
+    font-size: 0.8rem;
   }
 
   .ch6-complete-stats,
@@ -3639,45 +3754,15 @@ body.text-large {
   }
 
   @media (max-height: 740px) {
-    .ch5-status-panel {
-      top: 124px;
+    .ch6-overlay {
+      padding-top: 96px;
     }
 
-    .ch5-stage-panel {
-      bottom: 252px;
-      max-height: 102px;
-    }
-
-    .ch5-roster-panel {
-      bottom: 144px;
-      max-height: 100px;
-    }
-
-    .ch5-chip-card-grid {
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-    }
-
-    .ch5-chip-card-text {
-      display: none;
-    }
-
-    .ch6-status-panel {
-      top: 120px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .ch6-build-panel {
-      bottom: 230px;
-    }
-
-    .ch6-chip-panel {
-      bottom: 142px;
-      max-height: 82px;
-    }
-
-    .ch6-contract-panel {
-      bottom: 62px;
-      max-height: 74px;
+    .ch6-status-panel,
+    .ch6-switcher-panel,
+    .ch6-detail-panel,
+    .ch6-action-panel {
+      width: calc(100% - 20px);
     }
   }
 
@@ -3717,8 +3802,8 @@ body.text-large {
   }
 
   .ch6-action-panel button {
-    min-height: 32px;
-    padding: 6px 5px;
+    min-height: 44px;
+    padding: 8px 6px;
   }
 }
 
@@ -3779,9 +3864,9 @@ body.text-large {
 
   .ch6-panel-button,
   .ch6-action-panel button {
-    min-height: 28px;
-    padding: 4px 5px;
-    font-size: 0.58rem;
+    min-height: 44px;
+    padding: 8px 6px;
+    font-size: 0.68rem;
   }
 
   .ch6-chip-panel {
@@ -3797,8 +3882,8 @@ body.text-large {
   }
 
   .ch6-chip-card {
-    min-height: 34px;
-    padding: 4px;
+    min-height: 44px;
+    padding: 6px;
   }
 
   .ch6-chip-face {
@@ -3811,8 +3896,8 @@ body.text-large {
   }
 
   .ch6-install-action {
-    min-height: 24px;
-    margin-top: 4px;
+    min-height: 44px;
+    margin-top: 6px;
   }
 
   .ch6-contract-panel {
@@ -3828,8 +3913,8 @@ body.text-large {
   }
 
   .ch6-contract-card {
-    min-height: 30px;
-    padding: 4px;
+    min-height: 44px;
+    padding: 6px;
   }
 
   .ch6-contract-card strong {
@@ -3863,5 +3948,248 @@ body.text-large {
 
   .ch6-stat-block strong {
     font-size: 0.68rem;
+  }
+}
+
+/* Chapter 6 award pass: a single mission surface with drill-down controls. */
+.ch6-overlay .ch6-status-panel,
+.ch6-overlay .ch6-switcher-panel,
+.ch6-overlay .ch6-detail-panel,
+.ch6-overlay .ch6-action-panel {
+  position: relative;
+  z-index: 4;
+  border: 1px solid var(--stroke-hud);
+  border-radius: var(--radius-md);
+  background: var(--surface-hud);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(8px);
+  color: var(--text-hi);
+  pointer-events: auto;
+}
+
+.ch6-overlay .ch6-status-panel {
+  display: grid;
+  gap: 10px;
+  width: min(920px, calc(100% - 48px));
+  justify-self: center;
+  padding: 12px;
+}
+
+.ch6-objective-card {
+  display: grid;
+  gap: 5px;
+}
+
+.ch6-objective-card h2 {
+  margin: 0;
+  color: var(--text-warm);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.ch6-objective-card p,
+.ch6-objective-signal {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.ch6-pressure-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.ch6-objective-signal {
+  grid-column: 1 / -1;
+  color: var(--gold);
+}
+
+.ch6-overlay .ch6-switcher-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: min(920px, calc(100% - 48px));
+  justify-self: center;
+  padding: 10px 12px;
+}
+
+.ch6-switcher-button,
+.ch6-panel-button,
+.ch6-action-panel button,
+.ch6-install-action {
+  min-height: 44px;
+}
+
+.ch6-switcher-button {
+  border: 1px solid rgba(155, 246, 255, 0.18);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  background: rgba(96, 165, 250, 0.16);
+  color: var(--text-hi);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.ch6-switcher-button.is-selected,
+.ch6-switcher-button[aria-pressed="true"] {
+  border-color: rgba(248, 212, 92, 0.9);
+  background: rgba(248, 212, 92, 0.22);
+  color: var(--text-warm);
+  box-shadow: 0 0 0 2px rgba(248, 212, 92, 0.18);
+}
+
+.ch6-overlay .ch6-detail-panel {
+  display: grid;
+  width: min(920px, calc(100% - 48px));
+  justify-self: center;
+  max-height: min(380px, calc(100vh - 320px));
+  overflow: auto;
+  padding: 12px;
+}
+
+.ch6-overlay .ch6-detail-panel > .ch6-build-panel,
+.ch6-overlay .ch6-detail-panel > .ch6-chip-panel,
+.ch6-overlay .ch6-detail-panel > .ch6-contract-panel {
+  position: static;
+  display: grid;
+  width: auto;
+  max-height: none;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  color: inherit;
+}
+
+.ch6-build-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ch6-overlay .ch6-chip-list {
+  max-height: 260px;
+}
+
+.ch6-overlay .ch6-contract-list {
+  max-height: 260px;
+}
+
+.ch6-overlay .ch6-action-panel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  width: min(920px, calc(100% - 48px));
+  justify-self: center;
+  padding: 10px 12px;
+}
+
+@media (max-width: 860px) {
+  .ch6-overlay .ch6-status-panel,
+  .ch6-overlay .ch6-switcher-panel,
+  .ch6-overlay .ch6-detail-panel,
+  .ch6-overlay .ch6-action-panel {
+    width: calc(100% - 24px);
+  }
+
+  .ch6-overlay .ch6-status-panel {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .ch6-overlay .ch6-switcher-panel {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .ch6-overlay .ch6-detail-panel {
+    max-height: min(320px, calc(100vh - 310px));
+    padding: 9px;
+  }
+
+  .ch6-overlay .ch6-action-panel {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .ch6-switcher-button,
+  .ch6-panel-button,
+  .ch6-action-panel button,
+  .ch6-install-action {
+    min-height: 44px;
+    padding: 8px 7px;
+    font-size: 0.7rem;
+    text-align: center;
+  }
+
+  .ch6-overlay .ch6-chip-card,
+  .ch6-overlay .ch6-contract-card {
+    min-height: 52px;
+  }
+}
+
+@media (max-width: 520px) and (min-height: 700px) {
+  .ch6-overlay .ch6-switcher-panel {
+    padding: 8px;
+  }
+
+  .ch6-overlay .ch6-detail-panel {
+    max-height: min(300px, calc(100vh - 304px));
+  }
+
+  .ch6-overlay .ch6-action-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) and (max-height: 520px) {
+  .ch6-overlay .ch6-status-panel {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .ch6-objective-card h2 {
+    font-size: 0.82rem;
+  }
+
+  .ch6-objective-card p,
+  .ch6-objective-signal {
+    font-size: 0.62rem;
+  }
+
+  .ch6-pressure-row {
+    gap: 4px;
+  }
+
+  .ch6-overlay .ch6-switcher-panel {
+    padding: 6px 8px;
+  }
+
+  .ch6-overlay .ch6-detail-panel {
+    max-height: min(240px, calc(100vh - 240px));
+  }
+
+  .ch6-overlay .ch6-action-panel {
+    padding: 6px 8px;
+  }
+
+  .ch6-switcher-button,
+  .ch6-panel-button,
+  .ch6-action-panel button,
+  .ch6-install-action,
+  .ch6-overlay .ch6-chip-card,
+  .ch6-overlay .ch6-contract-card {
+    min-height: 44px;
   }
 }

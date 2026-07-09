@@ -91,7 +91,7 @@ async function runMenuAndChapterSmoke(viewport, label, menuScreenshotPath, ch1Sc
     await expectMetadata(page);
     await page.screenshot({ path: menuScreenshotPath, fullPage: true });
 
-    await page.getByRole('button', { name: 'Learn Mode' }).click();
+    await page.getByRole('button', { name: /Learn (Mode|the chain)/ }).click();
     await page.waitForURL(/#ch1$/, { timeout: 10_000 });
     await waitForGame(page);
     const ch1Heading = await page.locator('body').textContent();

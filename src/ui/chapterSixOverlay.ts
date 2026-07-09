@@ -83,6 +83,8 @@ export interface MountedChapterSixOverlay {
   cleanup: () => void;
 }
 
+type ChapterSixView = 'build' | 'chips' | 'contracts';
+
 const BUILD_TYPES: Array<{
   type: DatacenterBuildingType;
   labelKey: keyof Pick<ChapterSixLabels, 'buildRack' | 'buildPower' | 'buildCooling' | 'buildNetwork' | 'buildBattery'>;
@@ -98,13 +100,16 @@ export function mountChapterSixOverlay(root: HTMLElement, options: ChapterSixOve
   const shell = document.createElement('section');
   shell.className = 'ch6-overlay';
   root.append(shell);
+  let activeView: ChapterSixView = 'build';
 
   const render = (nextOptions: ChapterSixOverlayOptions): void => {
     shell.replaceChildren(
       statusPanel(nextOptions),
-      buildPanel(nextOptions),
-      chipPanel(nextOptions),
-      contractPanel(nextOptions),
+      switcherPanel(nextOptions, activeView, (view) => {
+        activeView = view;
+        render(nextOptions);
+      }),
+      detailPanel(nextOptions, activeView),
       actionPanel(nextOptions)
     );
   };
@@ -228,16 +233,65 @@ function statusPanel(options: ChapterSixOverlayOptions): HTMLElement {
   const panel = document.createElement('aside');
   panel.className = 'ch6-status-panel';
 
-  panel.append(
-    statBlock(textForMode(options.labels.stage, options.textMode), textForMode(options.stageNames[options.chapter.stage], options.textMode)),
-    statBlock(textForMode(options.labels.heat, options.textMode), `${Math.round(options.chapter.heat)}%`),
-    statBlock(textForMode(options.labels.power, options.textMode), `${Math.round(options.chapter.powerLoad)}/${Math.round(options.chapter.powerCapacity)}`),
-    statBlock(textForMode(options.labels.cooling, options.textMode), String(Math.round(options.chapter.cooling))),
-    statBlock(textForMode(options.labels.network, options.textMode), String(Math.round(options.chapter.networkLinks))),
-    statBlock(textForMode(options.labels.battery, options.textMode), String(Math.round(options.chapter.batteryCharge))),
-    statBlock(textForMode(options.labels.compute, options.textMode), String(Math.round(options.chapter.effectiveCompute))),
-    statBlock(textForMode(options.labels.cityLights, options.textMode), `${Math.round(options.chapter.cityLights)}%`)
+  const objective = document.createElement('div');
+  objective.className = 'ch6-objective-card';
+  objective.append(
+    elementWithText('h2', '', textForMode(options.labels.novaChallenge, options.textMode)),
+    elementWithText(
+      'p',
+      '',
+      `Bring Nova online under power and cooling pressure. ${options.chapter.servedContracts.filter((contractId) => contractId !== 'hospitalNova').length}/${options.balance.contractsToUnlockNova} contracts are feeding the city lights.`
+    )
   );
+
+  const pressure = document.createElement('div');
+  pressure.className = 'ch6-pressure-row';
+  pressure.append(
+    statChip(textForMode(options.labels.stage, options.textMode), textForMode(options.stageNames[options.chapter.stage], options.textMode)),
+    statChip(textForMode(options.labels.power, options.textMode), `${Math.round(options.chapter.powerLoad)}/${Math.round(options.chapter.powerCapacity)}`),
+    statChip(textForMode(options.labels.cooling, options.textMode), String(Math.round(options.chapter.cooling))),
+    statChip(textForMode(options.labels.cityLights, options.textMode), `${Math.round(options.chapter.cityLights)}%`)
+  );
+
+  const signal = document.createElement('p');
+  signal.className = 'ch6-objective-signal';
+  const contractsRemaining = Math.max(0, options.balance.contractsToUnlockNova - options.chapter.servedContracts.filter((contractId) => contractId !== 'hospitalNova').length);
+  signal.textContent = options.chapter.novaBuilt
+    ? 'Nova is online. The city lights respond.'
+    : `Nova unlocks after ${contractsRemaining} more contract${contractsRemaining === 1 ? '' : 's'}.`;
+
+  panel.append(objective, pressure, signal);
+  return panel;
+}
+
+function switcherPanel(
+  options: ChapterSixOverlayOptions,
+  activeView: ChapterSixView,
+  onSelectView: (view: ChapterSixView) => void
+): HTMLElement {
+  const panel = document.createElement('aside');
+  panel.className = 'ch6-switcher-panel';
+
+  panel.append(
+    switcherButton(textForMode(options.labels.buildRack, options.textMode), activeView === 'build', () => onSelectView('build')),
+    switcherButton(textForMode(options.labels.installChip, options.textMode), activeView === 'chips', () => onSelectView('chips')),
+    switcherButton(textForMode(options.labels.contracts, options.textMode), activeView === 'contracts', () => onSelectView('contracts'))
+  );
+
+  return panel;
+}
+
+function detailPanel(options: ChapterSixOverlayOptions, activeView: ChapterSixView): HTMLElement {
+  const panel = document.createElement('aside');
+  panel.className = 'ch6-detail-panel';
+
+  if (activeView === 'chips') {
+    panel.append(chipPanel(options));
+  } else if (activeView === 'contracts') {
+    panel.append(contractPanel(options));
+  } else {
+    panel.append(buildPanel(options));
+  }
 
   return panel;
 }
@@ -246,6 +300,17 @@ function buildPanel(options: ChapterSixOverlayOptions): HTMLElement {
   const panel = document.createElement('aside');
   panel.className = 'ch6-build-panel';
 
+  const heading = document.createElement('h2');
+  heading.textContent = textForMode(options.labels.buildRack, options.textMode);
+
+  const note = document.createElement('p');
+  note.className = 'ch6-panel-note';
+  note.textContent = options.message
+    ? textForMode(options.message, options.textMode)
+    : 'Build the rack, then tune power, cooling, network, and battery to keep Nova alive.';
+
+  const grid = document.createElement('div');
+  grid.className = 'ch6-build-grid';
   for (const entry of BUILD_TYPES) {
     const button = panelButton(
       textForMode(options.labels[entry.labelKey], options.textMode),
@@ -256,9 +321,10 @@ function buildPanel(options: ChapterSixOverlayOptions): HTMLElement {
     if (options.selectedBuildType === entry.type) {
       button.classList.add('is-selected');
     }
-    panel.append(button);
+    grid.append(button);
   }
 
+  panel.append(heading, note, grid);
   return panel;
 }
 
@@ -344,6 +410,19 @@ function contractPanel(options: ChapterSixOverlayOptions): HTMLElement {
   return panel;
 }
 
+function switcherButton(label: string, selected: boolean, onClick: () => void): HTMLButtonElement {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'ch6-switcher-button';
+  button.textContent = label;
+  button.setAttribute('aria-pressed', String(selected));
+  if (selected) {
+    button.classList.add('is-selected');
+  }
+  button.addEventListener('click', onClick);
+  return button;
+}
+
 function contractCard(options: ChapterSixOverlayOptions, contract: DatacenterContractDefinition): HTMLElement {
   const served = options.chapter.servedContracts.includes(contract.id);
   const selected = options.selectedContractId === contract.id;
@@ -390,16 +469,6 @@ function actionPanel(options: ChapterSixOverlayOptions): HTMLElement {
     panelButton(textForMode(options.labels.menu, options.textMode), options.onMenu, false, 'secondary-action')
   );
   return panel;
-}
-
-function statBlock(labelText: string, valueText: string): HTMLElement {
-  const block = document.createElement('span');
-  block.className = 'ch6-stat-block';
-  block.append(
-    elementWithText('small', '', labelText),
-    elementWithText('strong', '', valueText)
-  );
-  return block;
 }
 
 function statChip(labelText: string, valueText: string): HTMLElement {

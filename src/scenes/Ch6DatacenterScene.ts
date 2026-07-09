@@ -628,7 +628,11 @@ export class Ch6DatacenterScene extends Phaser.Scene {
   }
 
   private drawCityLights(graphics: Phaser.GameObjects.Graphics): void {
-    const lightAlpha = 0.12 + (this.chapter.cityLights / 100) * 0.74;
+    const lightAlpha = 0.18 + (this.chapter.cityLights / 100) * 0.82;
+    graphics.fillStyle(this.chapter.novaBuilt ? 0x60d394 : 0xf8d45c, this.chapter.novaBuilt ? 0.12 + lightAlpha * 0.2 : 0.08 + lightAlpha * 0.14);
+    graphics.fillRoundedRect(36, 444, 1208, 140, 18);
+    graphics.fillStyle(0x9bf6ff, 0.06 + (this.chapter.cityLights / 100) * 0.1);
+    graphics.fillRoundedRect(0, 500, 1280, 92, 0);
     for (let i = 0; i < 18; i += 1) {
       const x = 68 + i * 68;
       const h = 38 + (i % 5) * 16;
@@ -726,15 +730,25 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       fontSize: '14px',
       fontStyle: '700'
     });
-    const city = this.add.text(826, 506, `${textForMode(STRINGS.ch6.labels.cityLights, this.textMode)} ${Math.round(this.chapter.cityLights)}%`, {
+    const payoff = this.add.rectangle(966, 518, 286, 78, 0x06111d, 0.6);
+    payoff.setStrokeStyle(1, 0x60d394, 0.26);
+    const city = this.add.text(832, 498, `${textForMode(STRINGS.ch6.labels.cityLights, this.textMode)} ${Math.round(this.chapter.cityLights)}%`, {
       color: '#f8d45c',
       fontFamily: 'Nunito, system-ui',
-      fontSize: '16px',
+      fontSize: '18px',
       fontStyle: '900'
+    });
+    const nova = this.add.text(832, 526, this.chapter.novaBuilt ? 'Nova online · the city lights are responding' : 'Nova offline · power and cooling are still under pressure', {
+      color: this.chapter.novaBuilt ? '#60d394' : '#d6f6ef',
+      fontFamily: 'Nunito, system-ui',
+      fontSize: '13px',
+      fontStyle: '800'
     });
     this.worldLayer?.add(title);
     this.worldLayer?.add(subtitle);
+    this.worldLayer?.add(payoff);
     this.worldLayer?.add(city);
+    this.worldLayer?.add(nova);
   }
 
   private drawPipeline(graphics: Phaser.GameObjects.Graphics): void {

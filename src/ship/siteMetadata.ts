@@ -1,6 +1,6 @@
 export const SITE_METADATA = {
   title: 'Rock to Rack',
-  description: 'A browser game about the semiconductor supply chain, from mined minerals to chips, data centers, and city lights.',
+  description: 'A browser game where you bring a public-interest AI online, then trace every chip choice back through the semiconductor supply chain.',
   url: 'https://rock-to-rack.vercel.app',
   faviconPath: '/favicon.svg',
   coverImagePath: '/og-cover.svg',

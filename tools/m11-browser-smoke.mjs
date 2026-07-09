@@ -91,7 +91,7 @@ async function runDesktopSmoke() {
     await page.waitForSelector('.menu-shell', { timeout: 10_000 });
     await settleEntrance(page);
     await page.screenshot({ path: screenshots.menu, fullPage: true });
-    await page.getByRole('button', { name: 'Crisis Run' }).click();
+    await page.getByRole('button', { name: /(Play|Start )?Crisis Run/ }).click();
     await page.waitForURL(/#crisis$/, { timeout: 10_000 });
     await waitForGame(page);
     await page.waitForSelector('.crisis-overlay', { timeout: 10_000 });

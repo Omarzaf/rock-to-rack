@@ -29,6 +29,8 @@ M5 Fab copy uses high-level cleanroom, photolithography, etching, doping, partic
 - Intel Newsroom, Explaining Common Chip Terms. Used for the clarification that current process-node names are closer to density/performance generation labels than literal physical dimensions.
   https://newsroom.intel.com/tech101/explaining-common-chip-terms
 
+July 2026 accuracy pass: player-facing benchmark copy now avoids exact unsourced cycle-time phrasing such as "3 months" and "over 1,000 tiny steps." The shipped wording uses "many weeks" and "hundreds to thousands" for advanced wafer fabrication, and labels 9N as a teaching shorthand rather than a universal material spec.
+
 M6 Packaging copy uses conservative educational summaries of semiconductor packaging, electrical test, and binning. The chapter frames packaging as the step that connects a bare die to the outside system, binning as sorting chips by tested performance and power behavior, and GPUs as parallel processors useful for graphics and AI workloads. Tighten final publishing copy against semiconductor manufacturer, university, or standards-body references.
 
 ## M7 Chapter 6 Data Center Content
