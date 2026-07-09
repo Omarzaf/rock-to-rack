@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Rock to Rack social cover">
+  <rect width="1200" height="630" fill="#08131f"/>
+  <rect y="390" width="1200" height="240" fill="#12372f"/>
+  <path d="M0 430 C180 360 320 460 500 392 C720 310 850 430 1200 350 L1200 630 L0 630 Z" fill="#1c5447"/>
+  <g transform="translate(92 92)">
+    <text x="0" y="0" fill="#fff7d6" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="900">Rock to Rack</text>
+    <text x="0" y="72" fill="#d6f6ef" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Mine minerals. Print chips. Light the city.</text>
+  </g>
+  <g transform="translate(110 278)">
+    <circle cx="0" cy="0" r="32" fill="#d8f3dc"/>
+    <rect x="120" y="-26" width="90" height="52" rx="10" fill="#ffb703"/>
+    <rect x="330" y="-34" width="100" height="68" rx="12" fill="#8ecae6"/>
+    <rect x="565" y="-46" width="130" height="92" rx="14" fill="#b8b8ff"/>
+    <rect x="850" y="-58" width="150" height="116" rx="14" fill="#2dd4bf"/>
+    <path d="M34 0 H116 M214 0 H326 M434 0 H560 M700 0 H842" stroke="#fff7d6" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(92 525)" fill="#f8fafc" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">
+    <text>Interactive semiconductor supply-chain game for kids, adults, and demos.</text>
+  </g>
+</svg>

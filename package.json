@@ -1,0 +1,29 @@
+{
+  "name": "rock-to-rack",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.10.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "simulate": "vitest run src/sim/playthroughSimulator.test.ts --reporter=verbose",
+    "test": "vitest run",
+    "verify:static": "vitest run src/ship/siteMetadata.test.ts src/ship/staticFiles.test.ts",
+    "smoke:m10": "node tools/m10-browser-smoke.mjs",
+    "smoke:m11": "node tools/m11-browser-smoke.mjs",
+    "smoke:m12": "node tools/m12-replay-smoke.mjs",
+    "perf:m10": "node tools/m10-performance-smoke.mjs"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
+  }
+}

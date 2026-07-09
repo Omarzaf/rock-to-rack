@@ -1,0 +1,1974 @@
+{
+  "hud": {
+    "minerals": {
+      "kid": "Minerals",
+      "nerd": "Mineral inventory"
+    },
+    "mineralNames": {
+      "quartz": {
+        "kid": "Quartz",
+        "nerd": "Quartz silicon source"
+      },
+      "copper": {
+        "kid": "Copper",
+        "nerd": "Copper interconnect metal"
+      },
+      "lithium": {
+        "kid": "Lithium",
+        "nerd": "Lithium power material"
+      },
+      "cobalt": {
+        "kid": "Cobalt",
+        "nerd": "Cobalt battery metal"
+      },
+      "rareEarths": {
+        "kid": "Rare earths",
+        "nerd": "Rare-earth elements"
+      }
+    },
+    "wafers": {
+      "kid": "Wafers",
+      "nerd": "Processed wafers"
+    },
+    "chips": {
+      "kid": "Chips",
+      "nerd": "Packaged chips"
+    },
+    "energy": {
+      "kid": "Energy",
+      "nerd": "Energy capacity"
+    },
+    "water": {
+      "kid": "Water",
+      "nerd": "Process water"
+    },
+    "credits": {
+      "kid": "Credits",
+      "nerd": "Operating budget"
+    }
+  },
+  "globalTools": {
+    "codex": {
+      "kid": "Codex",
+      "nerd": "Open Codex"
+    },
+    "settings": {
+      "kid": "Settings",
+      "nerd": "Open settings"
+    }
+  },
+  "sandbox": {
+    "title": {
+      "kid": "Shared Systems Sandbox",
+      "nerd": "M1 Shared Systems Integration Sandbox"
+    },
+    "subtitle": {
+      "kid": "Try the shared tools that every chapter will use.",
+      "nerd": "This scene mounts the reusable DOM HUD, dialogue, FactCard, analytics, and event-card systems."
+    },
+    "actions": {
+      "addResources": {
+        "kid": "Run factory tick",
+        "nerd": "Apply balance-driven delta"
+      },
+      "showDialogue": {
+        "kid": "Start dialogue",
+        "nerd": "Mount dialogue sequence"
+      },
+      "showFact": {
+        "kid": "Open fact card",
+        "nerd": "Emit factcard_opened"
+      },
+      "showEvent": {
+        "kid": "Trigger event",
+        "nerd": "Pause with event card"
+      },
+      "toggleMode": {
+        "kid": "Switch to Nerd Mode",
+        "nerd": "Switch to Kid Mode"
+      },
+      "menu": {
+        "kid": "Menu",
+        "nerd": "Return to menu"
+      }
+    },
+    "dialogueLabels": {
+      "next": {
+        "kid": "Next",
+        "nerd": "Advance"
+      },
+      "done": {
+        "kid": "Done",
+        "nerd": "Close dialogue"
+      },
+      "skip": {
+        "kid": "Skip",
+        "nerd": "Skip briefing"
+      }
+    },
+    "factLabels": {
+      "goDeeper": {
+        "kid": "Go Deeper",
+        "nerd": "Technical note"
+      },
+      "dismiss": {
+        "kid": "Dismiss",
+        "nerd": "Close"
+      }
+    },
+    "eventLabels": {
+      "paused": {
+        "kid": "Gameplay paused",
+        "nerd": "Simulation paused for decision"
+      }
+    },
+    "analyticsLabel": {
+      "kid": "Signal log",
+      "nerd": "Analytics event log"
+    },
+    "analyticsEmpty": {
+      "kid": "Open a fact card or event to log a signal.",
+      "nerd": "No analytics:event payloads have been emitted yet."
+    },
+    "dialogue": [
+      {
+        "id": "sam-hello",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam, player guide"
+        },
+        "portraitColor": "#f8d45c",
+        "text": {
+          "kid": "This top bar follows every chapter, so you always know what your factory has.",
+          "nerd": "The HUD is a reusable DOM overlay that reads from the shared GameState resource object."
+        }
+      },
+      {
+        "id": "vega-facts",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega, systems mentor"
+        },
+        "portraitColor": "#60d394",
+        "text": {
+          "kid": "When something important happens, a fact card connects the game to the real world.",
+          "nerd": "Fact cards are data-defined learning moments and emit analytics when opened."
+        }
+      },
+      {
+        "id": "sam-events",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam, player guide"
+        },
+        "portraitColor": "#f8d45c",
+        "text": {
+          "kid": "Event cards pause the action and ask you to choose what the supply chain should do next.",
+          "nerd": "Event choices apply pure resource effects through src/sim/events.ts, separate from Phaser rendering."
+        }
+      }
+    ],
+    "factCard": {
+      "id": "first-mineral-to-chip",
+      "title": {
+        "kid": "A Chip Starts as Rock",
+        "nerd": "Semiconductors Begin With Refined Minerals"
+      },
+      "imageGlyph": "Si",
+      "imageAlt": {
+        "kid": "A bright mineral becoming a chip",
+        "nerd": "Silicon source material represented as a chip precursor"
+      },
+      "summary": {
+        "kid": "The chip in a phone or computer begins with minerals pulled from the ground. Quartz can become the silicon wafer where tiny circuits are printed.",
+        "nerd": "Integrated circuits depend on ultra-pure silicon wafers, conductive metals, power materials, and process inputs that move through a long global supply chain."
+      },
+      "deeper": {
+        "kid": "The cleaner the material gets, the better the chip can work.",
+        "nerd": "Chip-grade silicon is refined far beyond ordinary industrial material because stray atoms can disrupt transistor behavior at nanometer scales."
+      }
+    }
+  },
+  "ch1": {
+    "title": {
+      "kid": "Chapter 1: The Mine",
+      "nerd": "Chapter 1: Mineral Extraction"
+    },
+    "subtitle": {
+      "kid": "Place miners, fill the basket, and learn what chips are made from.",
+      "nerd": "Allocate limited extraction capacity across mineral deposits while managing budget and energy."
+    },
+    "labels": {
+      "targetBasket": {
+        "kid": "Goal Basket",
+        "nerd": "Required input basket"
+      },
+      "minerSlots": {
+        "kid": "Miner slots",
+        "nerd": "Active extraction slots"
+      },
+      "selectedDeposit": {
+        "kid": "Deposit",
+        "nerd": "Selected resource deposit"
+      },
+      "noDeposit": {
+        "kid": "Click a gem cluster to inspect it.",
+        "nerd": "Select a deposit to inspect mineral type, depth, remaining material, and placement cost."
+      },
+      "placeMiner": {
+        "kid": "Place miner",
+        "nerd": "Install extraction rig"
+      },
+      "removeMiner": {
+        "kid": "Move miner",
+        "nerd": "Remove extraction rig"
+      },
+      "depleted": {
+        "kid": "Depleted",
+        "nerd": "Deposit exhausted"
+      },
+      "producing": {
+        "kid": "Mining",
+        "nerd": "Extraction active"
+      },
+      "depth": {
+        "kid": "Depth",
+        "nerd": "Stratum depth"
+      },
+      "remaining": {
+        "kid": "Left",
+        "nerd": "Remaining material"
+      },
+      "cost": {
+        "kid": "Cost",
+        "nerd": "Placement cost"
+      },
+      "quizTitle": {
+        "kid": "Field Check",
+        "nerd": "Chapter 1 Concept Check"
+      },
+      "correct": {
+        "kid": "Correct",
+        "nerd": "Correct answer"
+      },
+      "tryAgain": {
+        "kid": "Try another answer",
+        "nerd": "Review and answer again"
+      },
+      "chapterComplete": {
+        "kid": "Mine Complete",
+        "nerd": "Chapter 1 complete"
+      },
+      "nextChapter": {
+        "kid": "Next: The Refinery",
+        "nerd": "Continue to Chapter 2: Refinery"
+      },
+      "stats": {
+        "kid": "Mine stats",
+        "nerd": "Chapter telemetry"
+      },
+      "menu": {
+        "kid": "Menu",
+        "nerd": "Return to menu"
+      },
+      "toggleMode": {
+        "kid": "Nerd Mode",
+        "nerd": "Kid Mode"
+      }
+    },
+    "messages": {
+      "insufficientResources": {
+        "kid": "Not enough credits for that miner yet.",
+        "nerd": "Placement rejected: operating budget is below miner cost."
+      },
+      "slotLimit": {
+        "kid": "All 4 miner slots are full.",
+        "nerd": "Placement rejected: the active extraction slot cap has been reached."
+      },
+      "alreadyMined": {
+        "kid": "That deposit already has a miner.",
+        "nerd": "Placement rejected: this deposit is already assigned."
+      },
+      "depositDepleted": {
+        "kid": "That cluster is empty.",
+        "nerd": "Placement rejected: the selected deposit has no remaining material."
+      },
+      "depositNotFound": {
+        "kid": "That deposit could not be found.",
+        "nerd": "Placement rejected: deposit id is not present in chapter state."
+      }
+    },
+    "depositNames": {
+      "quartz": {
+        "kid": "Quartz",
+        "nerd": "Quartz silicon source"
+      },
+      "copper": {
+        "kid": "Copper",
+        "nerd": "Copper conductor feedstock"
+      },
+      "lithium": {
+        "kid": "Lithium",
+        "nerd": "Lithium battery material"
+      },
+      "cobalt": {
+        "kid": "Cobalt",
+        "nerd": "Cobalt supply-chain risk metal"
+      },
+      "rareEarths": {
+        "kid": "Rare earths",
+        "nerd": "Rare-earth element group"
+      }
+    },
+    "intro": [
+      {
+        "id": "sam-mine-start",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam, player guide"
+        },
+        "portraitColor": "#f8d45c",
+        "text": {
+          "kid": "Every chip starts with stuff from the ground. Today, you run the mine.",
+          "nerd": "The semiconductor chain begins upstream, with mineral inputs that later become wafers, conductors, batteries, and specialty components."
+        }
+      },
+      {
+        "id": "vega-five-minerals",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega, systems mentor"
+        },
+        "portraitColor": "#60d394",
+        "text": {
+          "kid": "Click a gem cluster to place a miner. You only have four slots, so choose carefully.",
+          "nerd": "Each extraction rig consumes capital and a slot. Deeper deposits can be richer, but they add energy load."
+        }
+      },
+      {
+        "id": "sam-goal-basket",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam, player guide"
+        },
+        "portraitColor": "#f8d45c",
+        "text": {
+          "kid": "Fill the goal basket before the deposits run dry.",
+          "nerd": "The checklist is the Chapter 1 production target. Resources carry into the refinery."
+        }
+      },
+      {
+        "id": "vega-fact-cards",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega, systems mentor"
+        },
+        "portraitColor": "#60d394",
+        "text": {
+          "kid": "When you mine a new mineral, I will show you why it matters in the real world.",
+          "nerd": "First extraction of each mineral unlocks a dual-register fact card tied to actual supply-chain context."
+        }
+      }
+    ],
+    "facts": {
+      "quartz": {
+        "id": "ch1-quartz",
+        "title": {
+          "kid": "Quartz Can Become Silicon",
+          "nerd": "Quartz Starts the Silicon Path"
+        },
+        "imageGlyph": "Si",
+        "imageAlt": {
+          "kid": "A white quartz gem turning into a silicon chip",
+          "nerd": "Quartz represented as an upstream silicon input"
+        },
+        "summary": {
+          "kid": "Quartz is a common rock with silicon inside it. After many cleaning steps, silicon can become the wafer where circuits are printed.",
+          "nerd": "USGS describes silicon metal as a material that can be processed into ultra-high-purity polysilicon for semiconductor and solar grades."
+        },
+        "deeper": {
+          "kid": "The chip is not carved from a rock. The rock starts a long cleaning and shaping journey.",
+          "nerd": "The important lesson is transformation: mined silicon-bearing material must be refined into high-purity feedstock before crystal growth and wafer slicing."
+        }
+      },
+      "copper": {
+        "id": "ch1-copper",
+        "title": {
+          "kid": "Copper Carries Electricity",
+          "nerd": "Copper Is a Conductive Workhorse"
+        },
+        "imageGlyph": "Cu",
+        "imageAlt": {
+          "kid": "An orange copper gem with tiny wires",
+          "nerd": "Copper represented as conductor feedstock"
+        },
+        "summary": {
+          "kid": "Copper is great at carrying electricity. Electronics use copper because signals need clear paths to move.",
+          "nerd": "USGS copper summaries track electrical and electronic products as a major copper end use, alongside construction and transportation."
+        },
+        "deeper": {
+          "kid": "A chip needs tiny paths for electricity, and copper is one metal that helps make paths.",
+          "nerd": "Copper's supply chain matters because conductors, interconnects, wiring, motors, and power systems all depend on reliable copper availability."
+        }
+      },
+      "lithium": {
+        "id": "ch1-lithium",
+        "title": {
+          "kid": "Lithium Stores Power",
+          "nerd": "Lithium Links Chips to Batteries"
+        },
+        "imageGlyph": "Li",
+        "imageAlt": {
+          "kid": "A pink lithium gem beside a battery",
+          "nerd": "Lithium represented as battery material"
+        },
+        "summary": {
+          "kid": "Lithium helps make rechargeable batteries. Chips need power, and many devices carry that power in batteries.",
+          "nerd": "USGS estimated that global lithium production rose sharply in 2025 in response to lithium-ion battery demand and added production capacity."
+        },
+        "deeper": {
+          "kid": "Lithium is not the chip, but it helps phones, laptops, and electric cars use chips away from a wall plug.",
+          "nerd": "Lithium shows why the semiconductor story is also an energy-storage story: mobile compute depends on both logic chips and battery chemistry."
+        }
+      },
+      "cobalt": {
+        "id": "ch1-cobalt",
+        "title": {
+          "kid": "Cobalt Has a Supply Risk",
+          "nerd": "Cobalt Supply Is Highly Concentrated"
+        },
+        "imageGlyph": "Co",
+        "imageAlt": {
+          "kid": "A blue cobalt gem on a world map",
+          "nerd": "Cobalt represented with geographic supply concentration"
+        },
+        "summary": {
+          "kid": "Most mined cobalt comes from Congo. When one place supplies so much, companies have to watch the supply chain carefully.",
+          "nerd": "USGS 2026 data says Congo (Kinshasa) accounted for an estimated 73 percent of world mined cobalt output."
+        },
+        "deeper": {
+          "kid": "A tiny chip can depend on choices made far away from the factory.",
+          "nerd": "Cobalt teaches geographic concentration: material risk can come from production geography, refining geography, policy, labor issues, and logistics."
+        }
+      },
+      "rareEarths": {
+        "id": "ch1-rare-earths",
+        "title": {
+          "kid": "Rare Earths Are Special Helpers",
+          "nerd": "Rare Earths Create Strategic Dependencies"
+        },
+        "imageGlyph": "RE",
+        "imageAlt": {
+          "kid": "A purple rare-earth gem with a magnet",
+          "nerd": "Rare earths represented as magnet and specialty-material inputs"
+        },
+        "summary": {
+          "kid": "Rare earths help make strong magnets, screens, and special parts. They are not always rare, but they are hard to separate.",
+          "nerd": "USGS 2026 rare-earth summaries describe export controls and processing concerns, showing why separation capacity matters as much as mining."
+        },
+        "deeper": {
+          "kid": "Finding the rock is only step one. Separating the useful pieces can be the hard part.",
+          "nerd": "Rare earths are a supply-chain lesson in processing bottlenecks: ore, separation, oxides, metals, and magnets can each sit in different jurisdictions."
+        }
+      }
+    },
+    "completion": {
+      "title": {
+        "kid": "The Basket Is Full",
+        "nerd": "Chapter 1 Target Basket Complete"
+      },
+      "body": {
+        "kid": "You mined the first ingredients for a chip supply chain. Next, the refinery will clean and upgrade them.",
+        "nerd": "Chapter 1 has produced the upstream mineral inventory. Chapter 2 converts raw input into higher-purity materials under energy and water constraints."
+      }
+    }
+  },
+  "ch2": {
+    "title": {
+      "kid": "Chapter 2: The Refinery",
+      "nerd": "Chapter 2: Purification and Waste Management"
+    },
+    "subtitle": {
+      "kid": "Build a clean path from rough minerals to pure material.",
+      "nerd": "Route raw inputs through staged processing while managing energy, water, and waste."
+    },
+    "labels": {
+      "purity": {
+        "kid": "Purity",
+        "nerd": "Silicon purity"
+      },
+      "nines": {
+        "kid": "nines",
+        "nerd": "purity nines"
+      },
+      "modulePalette": {
+        "kid": "Machines",
+        "nerd": "Processing modules"
+      },
+      "rawSilos": {
+        "kid": "Raw silos",
+        "nerd": "Unrefined input inventory"
+      },
+      "targets": {
+        "kid": "Targets",
+        "nerd": "Refined output targets"
+      },
+      "slag": {
+        "kid": "Slag",
+        "nerd": "Processing waste"
+      },
+      "recycleSlag": {
+        "kid": "Recycle slag",
+        "nerd": "Recover value from slag"
+      },
+      "storeSlag": {
+        "kid": "Store safely",
+        "nerd": "Move slag to compliant storage"
+      },
+      "selectedModule": {
+        "kid": "Selected machine",
+        "nerd": "Selected module"
+      },
+      "buildModule": {
+        "kid": "Build",
+        "nerd": "Install module"
+      },
+      "menu": {
+        "kid": "Menu",
+        "nerd": "Return to menu"
+      },
+      "toggleMode": {
+        "kid": "Nerd Mode",
+        "nerd": "Kid Mode"
+      },
+      "quizTitle": {
+        "kid": "Field Check",
+        "nerd": "Chapter 2 Concept Check"
+      },
+      "nextChapter": {
+        "kid": "Next: Grow and Slice",
+        "nerd": "Continue to Chapter 3: Crystal Growth"
+      },
+      "stats": {
+        "kid": "Refinery stats",
+        "nerd": "Chapter telemetry"
+      }
+    },
+    "moduleNames": {
+      "crusher": {
+        "kid": "Crusher",
+        "nerd": "Mechanical crusher"
+      },
+      "furnace": {
+        "kid": "Furnace",
+        "nerd": "High-temperature furnace"
+      },
+      "chemicalBath": {
+        "kid": "Chemical bath",
+        "nerd": "Chemical purification bath"
+      },
+      "zoneRefiner": {
+        "kid": "Zone refiner",
+        "nerd": "Zone refining column"
+      }
+    },
+    "laneNames": {
+      "silicon": {
+        "kid": "Silicon",
+        "nerd": "Quartz-to-silicon lane"
+      },
+      "copper": {
+        "kid": "Copper",
+        "nerd": "Copper conductor lane"
+      },
+      "lithium": {
+        "kid": "Lithium",
+        "nerd": "Lithium material lane"
+      },
+      "cobalt": {
+        "kid": "Cobalt",
+        "nerd": "Cobalt material lane"
+      }
+    },
+    "messages": {
+      "laneNotFound": {
+        "kid": "That lane is not connected.",
+        "nerd": "Placement rejected: refinery lane id was not found."
+      },
+      "columnOutOfBounds": {
+        "kid": "That spot is outside the grid.",
+        "nerd": "Placement rejected: column is outside the configured grid."
+      },
+      "cellOccupied": {
+        "kid": "That spot already has a machine.",
+        "nerd": "Placement rejected: selected cell is already occupied."
+      },
+      "insufficientResources": {
+        "kid": "Not enough credits for that machine.",
+        "nerd": "Placement rejected: budget is below module cost."
+      },
+      "insufficientEnergyWater": {
+        "kid": "The line needs more energy or water.",
+        "nerd": "Tick blocked: energy or water is below refinery demand."
+      },
+      "insufficientMinerals": {
+        "kid": "A silo is running low.",
+        "nerd": "Tick blocked: the active lane lacks enough raw mineral input."
+      },
+      "slagCapacity": {
+        "kid": "The slag pile is too full. Recycle or store some.",
+        "nerd": "Tick blocked: slag would exceed configured waste capacity."
+      }
+    },
+    "intro": [
+      {
+        "id": "sam-refinery-start",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam, player guide"
+        },
+        "portraitColor": "#f8d45c",
+        "text": {
+          "kid": "The rocks are here, but they are still messy. Chips need cleaner stuff.",
+          "nerd": "Mined feedstocks are not ready for semiconductor use. Refining converts rough inputs into controlled materials."
+        }
+      },
+      {
+        "id": "vega-refinery-chain",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega, systems mentor"
+        },
+        "portraitColor": "#2dd4bf",
+        "text": {
+          "kid": "Place machines in the right order. A clean chain makes the purity meter climb.",
+          "nerd": "Build ordered processing chains. A lane runs only when the required modules are connected in sequence."
+        }
+      },
+      {
+        "id": "sam-refinery-waste",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam, player guide"
+        },
+        "portraitColor": "#f8d45c",
+        "text": {
+          "kid": "The machines use energy and water, and they leave waste behind.",
+          "nerd": "Purification is constrained by utility inputs and waste handling. Slag management is part of the system."
+        }
+      },
+      {
+        "id": "vega-nine-nines",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega, systems mentor"
+        },
+        "portraitColor": "#2dd4bf",
+        "text": {
+          "kid": "Your big goal is nine nines. That means almost perfectly pure silicon.",
+          "nerd": "The silicon target is 9N purity, shorthand for 99.9999999 percent pure material."
+        }
+      }
+    ],
+    "facts": {
+      "nineNines": {
+        "id": "ch2-nine-nines",
+        "title": {
+          "kid": "Nine Nines Means Super Clean",
+          "nerd": "9N Purity Is Extreme Material Control"
+        },
+        "imageGlyph": "9N",
+        "imageAlt": {
+          "kid": "A purity meter climbing toward nine nines",
+          "nerd": "A 9N purity meter representing semiconductor-grade feedstock"
+        },
+        "summary": {
+          "kid": "Nine nines means the silicon is almost all silicon. Tiny wrong bits can mess up tiny chip parts.",
+          "nerd": "9N is shorthand for 99.9999999 percent purity. Semiconductor manufacturing depends on highly controlled impurities, not random contamination."
+        },
+        "deeper": {
+          "kid": "Clean material helps the next chapter grow a smooth crystal.",
+          "nerd": "Purification prepares feedstock for crystal growth, where uncontrolled contaminants can affect electrical behavior and later wafer yield."
+        }
+      },
+      "energyHungry": {
+        "id": "ch2-energy-hungry",
+        "title": {
+          "kid": "Refining Uses Lots of Power",
+          "nerd": "Purification Is Utility-Intensive"
+        },
+        "imageGlyph": "E",
+        "imageAlt": {
+          "kid": "A furnace connected to an energy meter",
+          "nerd": "A refining line consuming electricity and water"
+        },
+        "summary": {
+          "kid": "Hot machines and chemical baths need power and water. If either runs low, the line slows down.",
+          "nerd": "Refining economics are shaped by energy prices, water access, reliability, and environmental compliance."
+        },
+        "deeper": {
+          "kid": "This is why the place where refining happens matters.",
+          "nerd": "Processing capacity often clusters where electricity, water, infrastructure, and permits make large-scale purification feasible."
+        }
+      },
+      "recycling": {
+        "id": "ch2-recycling-ewaste",
+        "title": {
+          "kid": "Waste Can Still Have Value",
+          "nerd": "Waste Handling and Recycling Reduce Loss"
+        },
+        "imageGlyph": "R",
+        "imageAlt": {
+          "kid": "A recycling arrow over a slag pile",
+          "nerd": "Slag management represented as recycling and storage choices"
+        },
+        "summary": {
+          "kid": "The refinery leaves slag behind. Recycling can earn credits, but safe storage also matters.",
+          "nerd": "Processing waste can contain recoverable value, but unmanaged waste creates environmental and compliance risk."
+        },
+        "deeper": {
+          "kid": "A clean supply chain is not only about making useful stuff. It is also about handling leftovers.",
+          "nerd": "Recycling and storage decisions show the hidden material flows behind high-tech manufacturing."
+        }
+      }
+    },
+    "completion": {
+      "title": {
+        "kid": "The Silicon Is Clean",
+        "nerd": "9N Feedstock Ready"
+      },
+      "body": {
+        "kid": "You cleaned the raw minerals and reached nine nines purity. Next, you will grow a crystal and slice wafers.",
+        "nerd": "Chapter 2 produced purified feedstock and managed waste constraints. Chapter 3 turns that material into a crystal ingot and wafers."
+      }
+    }
+  },
+  "ch3": {
+    "title": {
+      "kid": "Chapter 3: Grow and Slice",
+      "nerd": "Chapter 3: Crystal Growth and Wafering"
+    },
+    "subtitle": {
+      "kid": "Grow one clean silicon crystal, then slice it into wafers.",
+      "nerd": "Convert purified feedstock into a single-crystal ingot and wafer output for fabrication."
+    },
+    "labels": {
+      "stage": {
+        "kid": "Stage",
+        "nerd": "Process stage"
+      },
+      "quality": {
+        "kid": "Crystal quality",
+        "nerd": "Ingot quality score"
+      },
+      "temperature": {
+        "kid": "Heat",
+        "nerd": "Temperature control"
+      },
+      "pullProgress": {
+        "kid": "Ingot",
+        "nerd": "Pull progress"
+      },
+      "wafers": {
+        "kid": "Wafers",
+        "nerd": "Good wafer output"
+      },
+      "retryPull": {
+        "kid": "Retry pull",
+        "nerd": "Restart crystal pull"
+      },
+      "holdToPull": {
+        "kid": "Hold to pull",
+        "nerd": "Hold pointer to pull seed crystal"
+      },
+      "releaseToCool": {
+        "kid": "Release to cool",
+        "nerd": "Release pointer to cool and stabilize"
+      },
+      "sliceNow": {
+        "kid": "Tap guide lines",
+        "nerd": "Select wafer slice guides"
+      },
+      "quizTitle": {
+        "kid": "Field Check",
+        "nerd": "Chapter 3 Knowledge Check"
+      },
+      "nextChapter": {
+        "kid": "Next: Print Circuits",
+        "nerd": "Continue to Chapter 4: Fabrication"
+      },
+      "stats": {
+        "kid": "Crystal stats",
+        "nerd": "Crystal growth output"
+      },
+      "menu": {
+        "kid": "Menu",
+        "nerd": "Return to menu"
+      },
+      "toggleMode": {
+        "kid": "Nerd Mode",
+        "nerd": "Kid Mode"
+      }
+    },
+    "messages": {
+      "pullHint": {
+        "kid": "Hold to pull the seed. Release when the heat gets too high.",
+        "nerd": "Pull while temperature stays near the green band; release to cool and reduce defects."
+      },
+      "sliceHint": {
+        "kid": "Tap the guide marks. Clean slices become wafers.",
+        "nerd": "Select slice-guide centers. Flawed ingot sections are discarded."
+      },
+      "flawedDiscard": {
+        "kid": "That slice hit a wobbly section, so it was discarded.",
+        "nerd": "The selected ingot section was below the flaw threshold and produced no usable wafer."
+      },
+      "missedGuide": {
+        "kid": "Too far from the guide line. Try the bright marks.",
+        "nerd": "Slice attempt was outside guide tolerance."
+      },
+      "alreadyCut": {
+        "kid": "That spot is already cut. Try a fresh guide mark.",
+        "nerd": "This slice guide was already used. Select an uncut segment."
+      },
+      "insufficientEnergyWater": {
+        "kid": "The pull needs energy and cooling water.",
+        "nerd": "Crystal growth tick blocked by insufficient energy or water."
+      }
+    },
+    "stageNames": {
+      "pull": {
+        "kid": "Grow",
+        "nerd": "Czochralski pull"
+      },
+      "slice": {
+        "kid": "Slice",
+        "nerd": "Wafer slicing"
+      },
+      "complete": {
+        "kid": "Done",
+        "nerd": "Wafer lot complete"
+      }
+    },
+    "intro": [
+      {
+        "id": "sam-crystal-start",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#38bdf8",
+        "text": {
+          "kid": "The refinery made clean silicon. Now it has to become one smooth crystal.",
+          "nerd": "Purified feedstock is melted and recrystallized so the wafer has a controlled atomic structure."
+        }
+      },
+      {
+        "id": "vega-crucible",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega"
+        },
+        "portraitColor": "#a78bfa",
+        "text": {
+          "kid": "Hold to pull the seed from the glowing melt. Keep the heat in the green zone.",
+          "nerd": "The Czochralski method pulls a seed crystal from molten silicon while thermal stability controls crystal quality."
+        }
+      },
+      {
+        "id": "sam-slice",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#38bdf8",
+        "text": {
+          "kid": "Then we slice the crystal like a shiny log?",
+          "nerd": "The cylindrical ingot is wafered into thin disks for later fabrication."
+        }
+      }
+    ],
+    "facts": {
+      "czochralski": {
+        "id": "ch3-czochralski",
+        "title": {
+          "kid": "A Crystal Accident",
+          "nerd": "Czochralski Crystal Growth"
+        },
+        "imageGlyph": "C",
+        "imageAlt": {
+          "kid": "A seed crystal being pulled from a glowing cup",
+          "nerd": "Seed crystal pulled from molten silicon"
+        },
+        "summary": {
+          "kid": "A scientist named Jan Czochralski found a way to pull crystals from melted material.",
+          "nerd": "The Czochralski process grows a single crystal by drawing a seed from a melt under controlled temperature and rotation."
+        },
+        "deeper": {
+          "kid": "One smooth crystal helps the next machines print tiny circuits.",
+          "nerd": "Single-crystal silicon gives chipmakers a consistent lattice for later oxidation, lithography, etching, and doping steps."
+        }
+      },
+      "roundWafers": {
+        "id": "ch3-round-wafers",
+        "title": {
+          "kid": "Why Wafers Are Round",
+          "nerd": "Wafer Shape Comes From the Ingot"
+        },
+        "imageGlyph": "O",
+        "imageAlt": {
+          "kid": "Round wafer slices from a cylinder",
+          "nerd": "Circular wafers cut from a cylindrical ingot"
+        },
+        "summary": {
+          "kid": "The crystal grows like a cylinder, so slicing it makes round wafers.",
+          "nerd": "Modern wafers are circular because they are sliced from cylindrical single-crystal ingots."
+        },
+        "deeper": {
+          "kid": "Later, the chip patterns are square, but they start on a round slice.",
+          "nerd": "Rectangular dies are patterned across the circular wafer, leaving partial edge dies that usually cannot be sold."
+        }
+      },
+      "diamondWire": {
+        "id": "ch3-diamond-wire",
+        "title": {
+          "kid": "Diamond Wire Saw",
+          "nerd": "Wafering and Kerf Loss"
+        },
+        "imageGlyph": "D",
+        "imageAlt": {
+          "kid": "A wire saw slicing a crystal",
+          "nerd": "Diamond wire saw cutting silicon wafers"
+        },
+        "summary": {
+          "kid": "Tiny diamond bits help saw the crystal into thin wafers.",
+          "nerd": "Diamond wire saws cut hard silicon ingots into wafers, but every cut wastes some material as kerf."
+        },
+        "deeper": {
+          "kid": "Careful slicing means more useful wafers from the same crystal.",
+          "nerd": "Wafering trades throughput, thickness, breakage, and material loss; better slicing raises usable wafer output."
+        }
+      }
+    },
+    "completion": {
+      "title": {
+        "kid": "Wafers Ready",
+        "nerd": "Wafer Lot Ready for Fabrication"
+      },
+      "body": {
+        "kid": "You grew a silicon crystal and sliced it into wafers. Next, you will print tiny circuits on them.",
+        "nerd": "Chapter 3 produced wafer substrates with a carried quality score. Chapter 4 will turn wafer quality into fabrication yield."
+      }
+    }
+  },
+  "ch4": {
+    "title": {
+      "kid": "Chapter 4: The Fab",
+      "nerd": "Chapter 4: Semiconductor Fabrication"
+    },
+    "subtitle": {
+      "kid": "Print tiny circuits on wafers and keep the good dies.",
+      "nerd": "Pattern, etch, and dope wafers while managing process yield across smaller nodes."
+    },
+    "labels": {
+      "stage": {
+        "kid": "Station",
+        "nerd": "Process station"
+      },
+      "wafer": {
+        "kid": "Wafer",
+        "nerd": "Wafer index"
+      },
+      "node": {
+        "kid": "Node",
+        "nerd": "Process node"
+      },
+      "yield": {
+        "kid": "Yield",
+        "nerd": "Estimated die yield"
+      },
+      "chips": {
+        "kid": "Chips",
+        "nerd": "Good dies"
+      },
+      "coat": {
+        "kid": "Coat",
+        "nerd": "Photoresist coat"
+      },
+      "expose": {
+        "kid": "Expose",
+        "nerd": "Mask exposure"
+      },
+      "etch": {
+        "kid": "Etch",
+        "nerd": "Etch dwell"
+      },
+      "dope": {
+        "kid": "Dope",
+        "nerd": "Ion implant"
+      },
+      "flash": {
+        "kid": "Flash UV",
+        "nerd": "Expose pattern"
+      },
+      "nextStation": {
+        "kid": "Next station",
+        "nerd": "Advance process station"
+      },
+      "nextWafer": {
+        "kid": "Next wafer",
+        "nerd": "Process next wafer"
+      },
+      "quizTitle": {
+        "kid": "Field Check",
+        "nerd": "Chapter 4 Knowledge Check"
+      },
+      "nextChapter": {
+        "kid": "Next: Package Chips",
+        "nerd": "Continue to Chapter 5: Packaging and Binning"
+      },
+      "stats": {
+        "kid": "Fab stats",
+        "nerd": "Fabrication telemetry"
+      },
+      "menu": {
+        "kid": "Menu",
+        "nerd": "Return to menu"
+      },
+      "toggleMode": {
+        "kid": "Nerd Mode",
+        "nerd": "Kid Mode"
+      }
+    },
+    "messages": {
+      "coatHint": {
+        "kid": "Drag across the wafer to spread the blue coat evenly.",
+        "nerd": "Drag over the wafer to maximize photoresist coverage and coating evenness."
+      },
+      "exposeHint": {
+        "kid": "Line up the glowing mask, then flash it.",
+        "nerd": "Align the mask near the target crosshair before UV exposure."
+      },
+      "etchHint": {
+        "kid": "Hold in the bath. Release near the target time.",
+        "nerd": "Hold etch dwell close to the process target to avoid under- or over-etch."
+      },
+      "dopeHint": {
+        "kid": "Tap the color zones in the requested order.",
+        "nerd": "Select implant zones that match the requested dopant sequence."
+      },
+      "reviewHint": {
+        "kid": "Green dies passed. Red dies get tossed.",
+        "nerd": "The die map marks saleable dies versus defects from process variation."
+      },
+      "needAction": {
+        "kid": "Finish this station before moving on.",
+        "nerd": "Current station score is not locked yet."
+      },
+      "dustPenalty": {
+        "kid": "Dust hurt this wafer's yield.",
+        "nerd": "Particle contamination applied a yield penalty to this wafer."
+      },
+      "calibrationPenalty": {
+        "kid": "Tool drift made stations harder.",
+        "nerd": "Calibration drift applied a station score penalty."
+      }
+    },
+    "stageNames": {
+      "coat": {
+        "kid": "Coat",
+        "nerd": "Photoresist coat"
+      },
+      "expose": {
+        "kid": "Expose",
+        "nerd": "Lithography expose"
+      },
+      "etch": {
+        "kid": "Etch",
+        "nerd": "Plasma etch"
+      },
+      "dope": {
+        "kid": "Dope",
+        "nerd": "Ion implant"
+      },
+      "review": {
+        "kid": "Review",
+        "nerd": "Yield map review"
+      },
+      "complete": {
+        "kid": "Done",
+        "nerd": "Fab lot complete"
+      }
+    },
+    "intro": [
+      {
+        "id": "sam-fab-start",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#7dd3fc",
+        "text": {
+          "kid": "The wafers are ready. Now the fab prints tiny circuit patterns on them.",
+          "nerd": "Fabrication turns blank wafers into patterned dies through coating, lithography, etching, and doping."
+        }
+      },
+      {
+        "id": "vega-cleanroom",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega"
+        },
+        "portraitColor": "#f0abfc",
+        "text": {
+          "kid": "Keep the wafer clean and line up each step. Tiny mistakes can break tiny circuits.",
+          "nerd": "Yield depends on process control: particle limits, alignment, dwell timing, and implant accuracy."
+        }
+      },
+      {
+        "id": "sam-nodes",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#7dd3fc",
+        "text": {
+          "kid": "Each wafer uses a tougher node label: 90 nm, then 28 nm, then 7 nm.",
+          "nerd": "Node names are generation labels, not exact transistor measurements; smaller labels still tighten process control in this game."
+        }
+      }
+    ],
+    "facts": {
+      "bunnySuits": {
+        "id": "ch4-bunny-suits",
+        "title": {
+          "kid": "Why Bunny Suits?",
+          "nerd": "Cleanroom Garments Protect Wafers"
+        },
+        "imageGlyph": "Suit",
+        "imageAlt": {
+          "kid": "A cleanroom suit beside a wafer",
+          "nerd": "Cleanroom garment used to control particles"
+        },
+        "summary": {
+          "kid": "The suit keeps skin flakes, hair, and dust away from the wafer.",
+          "nerd": "Cleanroom garments reduce particles from people, one of the largest contamination sources in wafer fabs."
+        },
+        "deeper": {
+          "kid": "The suit protects the chip more than the worker.",
+          "nerd": "Fabrication tools and rooms control airflow, filtration, garments, and protocols because tiny particles can ruin patterned features."
+        }
+      },
+      "dustSpeck": {
+        "id": "ch4-dust-speck",
+        "title": {
+          "kid": "Dust Is Huge Here",
+          "nerd": "Particle Size Versus Transistors"
+        },
+        "imageGlyph": "Dust",
+        "imageAlt": {
+          "kid": "A dust speck looming over tiny circuits",
+          "nerd": "Particle shown larger than nanoscale features"
+        },
+        "summary": {
+          "kid": "A dust speck is enormous compared with tiny chip parts.",
+          "nerd": "Modern chip features are so small that ordinary particles can cover or distort many device structures."
+        },
+        "deeper": {
+          "kid": "That is why the cleanroom matters so much.",
+          "nerd": "Yield engineering tracks defects per area because larger wafers and denser patterns create many opportunities for a tiny flaw to kill a die."
+        }
+      },
+      "euvAsml": {
+        "id": "ch4-euv-asml",
+        "title": {
+          "kid": "The Giant Light Machine",
+          "nerd": "EUV Lithography and ASML"
+        },
+        "imageGlyph": "EUV",
+        "imageAlt": {
+          "kid": "A huge machine shining light through a mask",
+          "nerd": "EUV scanner representing advanced lithography"
+        },
+        "summary": {
+          "kid": "The most advanced fabs use giant machines to print the smallest patterns.",
+          "nerd": "Advanced nodes rely on extreme ultraviolet lithography scanners, a highly specialized tool category dominated by ASML."
+        },
+        "deeper": {
+          "kid": "Smaller patterns can make faster chips, but the machines are harder to build.",
+          "nerd": "EUV systems combine precision optics, vacuum, light generation, stages, masks, and process control, which is why leading-edge fabrication is so capital intensive."
+        }
+      }
+    },
+    "completion": {
+      "title": {
+        "kid": "Fab Complete",
+        "nerd": "Fabrication Lot Complete"
+      },
+      "body": {
+        "kid": "You printed circuits onto wafers and kept the good dies. Next, you will package and test chips.",
+        "nerd": "Chapter 4 converted wafer quality and process scores into die yield. Chapter 5 packages and bins those chips."
+      }
+    }
+  },
+  "ch5": {
+    "title": {
+      "kid": "Chapter 5: Package and Choose",
+      "nerd": "Chapter 5: Packaging, Test, and Binning"
+    },
+    "subtitle": {
+      "kid": "Cut dies apart, test them, then meet the chip team.",
+      "nerd": "Dice fabricated wafers, bin dies by test results, and assemble the chip lineup for the data center."
+    },
+    "labels": {
+      "stage": {
+        "kid": "Stage",
+        "nerd": "Packaging stage"
+      },
+      "sorted": {
+        "kid": "Sorted",
+        "nerd": "Dies sorted"
+      },
+      "activeDie": {
+        "kid": "Test die",
+        "nerd": "Active test die"
+      },
+      "perfect": {
+        "kid": "Perfect",
+        "nerd": "Top bin"
+      },
+      "good": {
+        "kid": "Good",
+        "nerd": "Functional bin"
+      },
+      "salvage": {
+        "kid": "Salvage",
+        "nerd": "Low-bin salvage"
+      },
+      "score": {
+        "kid": "Score",
+        "nerd": "Test score"
+      },
+      "node": {
+        "kid": "Node",
+        "nerd": "Process node"
+      },
+      "cutWafer": {
+        "kid": "Dice wafer",
+        "nerd": "Start wafer dicing"
+      },
+      "startSort": {
+        "kid": "Start sorting",
+        "nerd": "Begin binning test"
+      },
+      "sortPerfect": {
+        "kid": "Perfect bin",
+        "nerd": "Route to top bin"
+      },
+      "sortGood": {
+        "kid": "Good bin",
+        "nerd": "Route to functional bin"
+      },
+      "sortSalvage": {
+        "kid": "Salvage bin",
+        "nerd": "Route to low-bin salvage"
+      },
+      "buildChip": {
+        "kid": "Build chip",
+        "nerd": "Assemble selected chip"
+      },
+      "nextChapter": {
+        "kid": "Next: Build the Data Center",
+        "nerd": "Continue to Chapter 6: Rack Up"
+      },
+      "quizTitle": {
+        "kid": "Field Check",
+        "nerd": "Chapter 5 Knowledge Check"
+      },
+      "stats": {
+        "kid": "Package stats",
+        "nerd": "Packaging telemetry"
+      },
+      "menu": {
+        "kid": "Menu",
+        "nerd": "Return to menu"
+      },
+      "toggleMode": {
+        "kid": "Nerd Mode",
+        "nerd": "Kid Mode"
+      }
+    },
+    "stageNames": {
+      "dice": {
+        "kid": "Dice",
+        "nerd": "Wafer dicing"
+      },
+      "sort": {
+        "kid": "Sort",
+        "nerd": "Electrical test and binning"
+      },
+      "roster": {
+        "kid": "Roster",
+        "nerd": "Chip lineup assembly"
+      },
+      "complete": {
+        "kid": "Done",
+        "nerd": "Packaging complete"
+      }
+    },
+    "messages": {
+      "diceHint": {
+        "kid": "Cut the wafer into tiny chip pieces called dies.",
+        "nerd": "Dice the processed wafer into individual dies before packaging and electrical test."
+      },
+      "sortHint": {
+        "kid": "Watch the test meter, then send each die to the right bin.",
+        "nerd": "Use the electrical test score to route each die into top, functional, or salvage bins."
+      },
+      "correctSort": {
+        "kid": "Good sort. That die landed in the right bin.",
+        "nerd": "Correct bin assignment preserved the die's tested value."
+      },
+      "wrongSort": {
+        "kid": "Close, but that die got downgraded one bin.",
+        "nerd": "Incorrect binning downgraded the die to the next lower commercial bin."
+      },
+      "rosterHint": {
+        "kid": "Spend binned dies to build up to four chip friends.",
+        "nerd": "Allocate tested dies into a limited chip lineup that will matter in the data center."
+      },
+      "maxChoices": {
+        "kid": "Your lineup is full.",
+        "nerd": "The Chapter 5 roster choice limit has been reached."
+      },
+      "cantAfford": {
+        "kid": "Not enough binned dies for that chip.",
+        "nerd": "Current bin inventory cannot pay this chip's package cost."
+      },
+      "novaLocked": {
+        "kid": "Nova needs a perfect leading-edge die and unlocks later.",
+        "nerd": "Nova is reserved for the finale and requires a top-bin leading-edge die."
+      },
+      "probePenalty": {
+        "kid": "Noisy testing made the next few scores rougher.",
+        "nerd": "Probe drift reduced test confidence and can downgrade binning outcomes."
+      },
+      "substratePenalty": {
+        "kid": "Cheaper package parts made perfect builds harder.",
+        "nerd": "Lower-grade package stock constrained high-bin chip assembly."
+      }
+    },
+    "intro": [
+      {
+        "id": "sam-package-start",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#7dd3fc",
+        "text": {
+          "kid": "The wafer has lots of tiny chips on it. Are they ready now?",
+          "nerd": "The wafer holds many fabricated dies. Are they shippable after fabrication?"
+        }
+      },
+      {
+        "id": "vega-package-test",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega"
+        },
+        "portraitColor": "#f0abfc",
+        "text": {
+          "kid": "Not yet. We cut them apart, package them, and test how fast each one can run.",
+          "nerd": "Next comes dicing, packaging, electrical test, and binning by performance and power behavior."
+        }
+      },
+      {
+        "id": "sam-chip-friends",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#7dd3fc",
+        "text": {
+          "kid": "So the same wafer can make different chip friends?",
+          "nerd": "So one wafer can produce dies sold into different product bins and chip roles?"
+        }
+      }
+    ],
+    "facts": {
+      "packaging": {
+        "id": "ch5-packaging",
+        "title": {
+          "kid": "The Chip Gets Armor",
+          "nerd": "Packaging Connects the Bare Die"
+        },
+        "imageGlyph": "Pkg",
+        "imageAlt": {
+          "kid": "A tiny die inside a protective chip package",
+          "nerd": "Semiconductor die connected inside a package"
+        },
+        "summary": {
+          "kid": "A bare die is tiny and fragile. The package protects it and gives it pins to talk to the board.",
+          "nerd": "Packaging protects the die, carries heat away, and provides electrical connections to the larger system."
+        },
+        "deeper": {
+          "kid": "The black square you see in a gadget is usually the package, not the bare die.",
+          "nerd": "Modern packages can include substrates, interposers, solder balls, heat spreaders, and multiple dies depending on product design."
+        }
+      },
+      "binning": {
+        "id": "ch5-binning",
+        "title": {
+          "kid": "Fast, Slow, Still Useful",
+          "nerd": "Binning Separates Tested Performance"
+        },
+        "imageGlyph": "Bins",
+        "imageAlt": {
+          "kid": "Three bins labeled perfect, good, and salvage",
+          "nerd": "Chip dies sorted by electrical test score"
+        },
+        "summary": {
+          "kid": "Some chips are super fast. Some are slower but still useful, so they sell for different jobs.",
+          "nerd": "Binning classifies dies by tested speed, power, and functional blocks so more of the wafer can become sellable products."
+        },
+        "deeper": {
+          "kid": "That is why two chips from the same wafer can have different prices.",
+          "nerd": "Product segmentation often uses test results to decide which frequency, voltage, or enabled-feature tier a die can support."
+        }
+      },
+      "chipRoster": {
+        "id": "ch5-chip-roster",
+        "title": {
+          "kid": "Meet the Chip Team",
+          "nerd": "Different Chips Do Different Jobs"
+        },
+        "imageGlyph": "Team",
+        "imageAlt": {
+          "kid": "Several chip characters standing together",
+          "nerd": "CPU, GPU, memory, storage, networking, and power chips as a lineup"
+        },
+        "summary": {
+          "kid": "A computer is not one magic chip. It is a team of chips with different jobs.",
+          "nerd": "Systems combine compute, memory, storage, networking, and power-management silicon rather than relying on a single chip type."
+        },
+        "deeper": {
+          "kid": "The next chapter shows why the team matters inside a data center.",
+          "nerd": "Data-center performance depends on how specialized chips, power, cooling, storage, and networking work together."
+        }
+      }
+    },
+    "completion": {
+      "title": {
+        "kid": "Package Complete",
+        "nerd": "Packaging and Binning Complete"
+      },
+      "body": {
+        "kid": "You tested your dies and picked a chip team. Now those chips need racks, power, cooling, and a network.",
+        "nerd": "Chapter 5 converted fabricated dies into a selected chip lineup. Chapter 6 installs that lineup into a data center."
+      }
+    }
+  },
+  "ch6": {
+    "title": {
+      "kid": "Rack Up",
+      "nerd": "Chapter 6: Data Center Integration"
+    },
+    "subtitle": {
+      "kid": "Put your chips to work.",
+      "nerd": "Install packaged chips into powered, cooled, networked racks."
+    },
+    "labels": {
+      "stage": {
+        "kid": "Stage",
+        "nerd": "Operational phase"
+      },
+      "credits": {
+        "kid": "Credits",
+        "nerd": "Operating budget"
+      },
+      "heat": {
+        "kid": "Heat",
+        "nerd": "Thermal load"
+      },
+      "power": {
+        "kid": "Power",
+        "nerd": "Power load/capacity"
+      },
+      "cooling": {
+        "kid": "Cooling",
+        "nerd": "Cooling capacity"
+      },
+      "network": {
+        "kid": "Network",
+        "nerd": "Network links"
+      },
+      "battery": {
+        "kid": "Battery",
+        "nerd": "Backup energy"
+      },
+      "compute": {
+        "kid": "Compute",
+        "nerd": "Effective compute"
+      },
+      "contracts": {
+        "kid": "Jobs",
+        "nerd": "Contracts"
+      },
+      "cityLights": {
+        "kid": "City lights",
+        "nerd": "Service coverage"
+      },
+      "buildRack": {
+        "kid": "Rack",
+        "nerd": "Build rack"
+      },
+      "buildPower": {
+        "kid": "Power",
+        "nerd": "Build substation"
+      },
+      "buildCooling": {
+        "kid": "Cooling",
+        "nerd": "Build cooling unit"
+      },
+      "buildNetwork": {
+        "kid": "Network",
+        "nerd": "Build network spine"
+      },
+      "buildBattery": {
+        "kid": "Battery",
+        "nerd": "Build backup battery"
+      },
+      "installChip": {
+        "kid": "Install chip",
+        "nerd": "Install selected chip"
+      },
+      "serveContract": {
+        "kid": "Serve job",
+        "nerd": "Serve selected contract"
+      },
+      "novaChallenge": {
+        "kid": "Build Nova",
+        "nerd": "Run Nova recap challenge"
+      },
+      "nextChapter": {
+        "kid": "Finish the Run",
+        "nerd": "Complete Rock to Rack"
+      },
+      "quizTitle": {
+        "kid": "Field Check",
+        "nerd": "Chapter 6 Knowledge Check"
+      },
+      "stats": {
+        "kid": "Run stats",
+        "nerd": "Final run telemetry"
+      },
+      "menu": {
+        "kid": "Menu",
+        "nerd": "Return to menu"
+      },
+      "toggleMode": {
+        "kid": "Nerd Mode",
+        "nerd": "Kid Mode"
+      }
+    },
+    "stageNames": {
+      "build": {
+        "kid": "Build the Lot",
+        "nerd": "Infrastructure buildout"
+      },
+      "contracts": {
+        "kid": "Serve Jobs",
+        "nerd": "Contract service"
+      },
+      "crisis": {
+        "kid": "Crisis",
+        "nerd": "Resilience event chain"
+      },
+      "nova": {
+        "kid": "Nova Finale",
+        "nerd": "Accelerator final workload"
+      },
+      "victory": {
+        "kid": "City Online",
+        "nerd": "Run complete"
+      }
+    },
+    "messages": {
+      "buildHint": {
+        "kid": "Build racks, power, cooling, network, and battery before taking big jobs.",
+        "nerd": "Balance rack capacity against power capacity, cooling headroom, network links, and backup energy."
+      },
+      "selectRack": {
+        "kid": "Pick a rack, then install a chip.",
+        "nerd": "Select a rack with open slots before installing available packaged chips."
+      },
+      "contractReady": {
+        "kid": "This job is ready.",
+        "nerd": "Current installed chips and infrastructure satisfy this contract."
+      },
+      "contractBlocked": {
+        "kid": "This job needs more chips or infrastructure.",
+        "nerd": "Requirements are not met. Check chips, compute, power, cooling, and network links."
+      },
+      "heatWarning": {
+        "kid": "The racks are getting hot.",
+        "nerd": "Thermal load is approaching the throttle threshold."
+      },
+      "powerWarning": {
+        "kid": "Power is overloaded.",
+        "nerd": "Power load exceeds capacity; effective compute is throttled."
+      },
+      "novaLocked": {
+        "kid": "Nova needs one perfect leading-edge die.",
+        "nerd": "The accelerator recap requires one top-bin leading-edge die from Chapter 5."
+      },
+      "victoryReady": {
+        "kid": "The city is online.",
+        "nerd": "The final workload is served; the supply chain has become useful compute."
+      }
+    },
+    "intro": [
+      {
+        "id": "sam-rack-start",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#7dd3fc",
+        "text": {
+          "kid": "We made chips. Why do we need a whole building now?",
+          "nerd": "We have packaged chips. Why does compute require so much facility infrastructure?"
+        }
+      },
+      {
+        "id": "vega-rack-team",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega"
+        },
+        "portraitColor": "#f0abfc",
+        "text": {
+          "kid": "A chip is powerful, but a data center is a team: racks, power, cooling, and network.",
+          "nerd": "Compute only becomes a service when chips are integrated with power delivery, thermal control, networking, and redundancy."
+        }
+      },
+      {
+        "id": "sam-rack-alive",
+        "speakerName": {
+          "kid": "Sam",
+          "nerd": "Sam"
+        },
+        "portraitColor": "#7dd3fc",
+        "text": {
+          "kid": "So the last step is keeping the team alive?",
+          "nerd": "So the final constraint is system integration, not just transistor performance?"
+        }
+      },
+      {
+        "id": "vega-rack-build",
+        "speakerName": {
+          "kid": "Dr. Vega",
+          "nerd": "Dr. Vega"
+        },
+        "portraitColor": "#f0abfc",
+        "text": {
+          "kid": "Exactly. Build the lot, serve real jobs, and bring the city online.",
+          "nerd": "Exactly. Meet workload requirements while staying inside power and thermal envelopes."
+        }
+      }
+    ],
+    "facts": {
+      "datacenterAnatomy": {
+        "id": "ch6-datacenter-anatomy",
+        "title": {
+          "kid": "A Data Center Is a Team",
+          "nerd": "Data Center System Integration"
+        },
+        "imageGlyph": "Rack",
+        "imageAlt": {
+          "kid": "A rack connected to power, cooling, and network lines",
+          "nerd": "A compute rack integrated with data-center support systems"
+        },
+        "summary": {
+          "kid": "Racks hold many computers. Power feeds them. Cooling carries heat away. Networks let them work together.",
+          "nerd": "Modern data centers combine compute racks, power distribution, thermal systems, storage, networking, backup power, and monitoring."
+        },
+        "deeper": {
+          "kid": "The chips are essential, but the building turns them into useful services.",
+          "nerd": "The chips are essential, but the facility turns chips into reliable compute by keeping them powered, cooled, connected, and resilient."
+        }
+      },
+      "cooling": {
+        "id": "ch6-cooling",
+        "title": {
+          "kid": "Chips Make Heat",
+          "nerd": "Thermal Management"
+        },
+        "imageGlyph": "Cool",
+        "imageAlt": {
+          "kid": "Blue cooling fans beside warm racks",
+          "nerd": "Cooling infrastructure removing heat from dense compute racks"
+        },
+        "summary": {
+          "kid": "Busy chips get hot. If they get too hot, they slow down to protect themselves.",
+          "nerd": "High utilization converts electrical energy into heat. Servers throttle or shut down when cooling cannot maintain safe operating temperatures."
+        },
+        "deeper": {
+          "kid": "Cooling is why data centers have fans, chillers, water loops, or other ways to move heat away.",
+          "nerd": "Thermal design affects uptime, performance, power use, and where facilities can be built economically."
+        }
+      },
+      "network": {
+        "id": "ch6-network",
+        "title": {
+          "kid": "The Messenger Connects Racks",
+          "nerd": "Data Center Networking"
+        },
+        "imageGlyph": "Net",
+        "imageAlt": {
+          "kid": "Green network lines linking several racks",
+          "nerd": "Network spine connecting compute racks"
+        },
+        "summary": {
+          "kid": "One rack is useful. Connected racks can act like one bigger computer.",
+          "nerd": "Low-latency networking lets workloads span machines, storage, and accelerators."
+        },
+        "deeper": {
+          "kid": "That is why The Messenger matters. Racks need to talk fast.",
+          "nerd": "Network bottlenecks can limit useful compute even when chips are available, especially for distributed AI and storage-heavy services."
+        }
+      }
+    },
+    "completion": {
+      "title": {
+        "kid": "Rock to Rack Complete",
+        "nerd": "Supply Chain Complete"
+      },
+      "body": {
+        "kid": "You turned rocks into chips, chips into racks, and racks into a city service. Sam's tablet turns on.",
+        "nerd": "The run connected mineral extraction, refining, crystal growth, fabrication, packaging, and data-center integration into delivered compute."
+      },
+      "tablet": {
+        "kid": "Powered by YOUR chip",
+        "nerd": "Powered by your completed semiconductor supply chain"
+      },
+      "epilogue": [
+        {
+          "title": {
+            "kid": "Mine",
+            "nerd": "Critical-mineral extraction"
+          },
+          "caption": {
+            "kid": "The journey started underground.",
+            "nerd": "Mineral supply constrains the semiconductor stack before any wafer exists."
+          }
+        },
+        {
+          "title": {
+            "kid": "Refinery",
+            "nerd": "Purification"
+          },
+          "caption": {
+            "kid": "Raw rocks became clean materials.",
+            "nerd": "Purity, energy, and waste determine usable inputs."
+          }
+        },
+        {
+          "title": {
+            "kid": "Wafer",
+            "nerd": "Crystal and wafer production"
+          },
+          "caption": {
+            "kid": "A crystal became shiny wafers.",
+            "nerd": "Wafer quality sets up the fab yield curve."
+          }
+        },
+        {
+          "title": {
+            "kid": "Fab",
+            "nerd": "Lithography and yield"
+          },
+          "caption": {
+            "kid": "Tiny circuits were printed.",
+            "nerd": "Process control determines how many good dies survive."
+          }
+        },
+        {
+          "title": {
+            "kid": "Data Center",
+            "nerd": "Compute service delivery"
+          },
+          "caption": {
+            "kid": "The city finally used the chips.",
+            "nerd": "Power, cooling, networking, and software turn chips into delivered services."
+          }
+        }
+      ]
+    }
+  },
+  "menu": {
+    "eyebrow": {
+      "kid": "A chip-making adventure",
+      "nerd": "An interactive supply-chain simulation"
+    },
+    "subtitle": {
+      "kid": "Build a chip from minerals to a working data center.",
+      "nerd": "A semiconductor supply-chain strategy game with dual-register learning."
+    },
+    "steps": [
+      {
+        "kid": "Mine",
+        "nerd": "Extraction"
+      },
+      {
+        "kid": "Refine",
+        "nerd": "Refining"
+      },
+      {
+        "kid": "Grow",
+        "nerd": "Crystal growth"
+      },
+      {
+        "kid": "Fab",
+        "nerd": "Fabrication"
+      },
+      {
+        "kid": "Package",
+        "nerd": "Packaging"
+      },
+      {
+        "kid": "Power",
+        "nerd": "Data center"
+      }
+    ]
+  },
+  "journey": {
+    "benchmarkLabel": {
+      "kid": "Real world",
+      "nerd": "Real-world benchmark"
+    },
+    "stages": {
+      "ch1": {
+        "fromGlyph": "ROCK",
+        "fromLabel": {
+          "kid": "Raw rock",
+          "nerd": "Mined rock"
+        },
+        "toGlyph": "ORE",
+        "toLabel": {
+          "kid": "Sorted minerals",
+          "nerd": "Mineral concentrate"
+        },
+        "benchmark": {
+          "kid": "In real mines, copper ore is less than 1% copper. Almost everything you dig up is plain rock.",
+          "nerd": "Typical copper ore grades run below 1% Cu — and a single smartphone draws on roughly 30 mined elements."
+        },
+        "handoff": {
+          "kid": "Your minerals ride the rail to the refinery.",
+          "nerd": "Concentrate ships to the refinery for smelting and purification."
+        }
+      },
+      "ch2": {
+        "fromGlyph": "ORE",
+        "fromLabel": {
+          "kid": "Sorted minerals",
+          "nerd": "Mineral concentrate"
+        },
+        "toGlyph": "SI",
+        "toLabel": {
+          "kid": "Super-pure silicon",
+          "nerd": "Electronic-grade silicon"
+        },
+        "benchmark": {
+          "kid": "Real chip silicon is 99.9999999% pure — nine nines. One wrong atom in a billion is too many.",
+          "nerd": "Electronic-grade polysilicon reaches 9N purity (99.9999999%) — about one impurity atom per billion."
+        },
+        "handoff": {
+          "kid": "Your pure silicon heads to the crystal plant.",
+          "nerd": "Polysilicon charges ship to the crystal-growth facility."
+        }
+      },
+      "ch3": {
+        "fromGlyph": "SI",
+        "fromLabel": {
+          "kid": "Super-pure silicon",
+          "nerd": "Electronic-grade silicon"
+        },
+        "toGlyph": "WFR",
+        "toLabel": {
+          "kid": "Polished wafers",
+          "nerd": "Prime wafers"
+        },
+        "benchmark": {
+          "kid": "Real crystal pullers grow one giant single crystal, then wire saws slice it into wafers less than 1 mm thick.",
+          "nerd": "Industrial Czochralski pullers grow large single-crystal silicon ingots under controlled heat and rotation; 300 mm wafers are often specified around 775 micrometers thick."
+        },
+        "handoff": {
+          "kid": "Your wafers roll into the fab.",
+          "nerd": "Wafers enter the fab's front-end process line."
+        }
+      },
+      "ch4": {
+        "fromGlyph": "WFR",
+        "fromLabel": {
+          "kid": "Polished wafers",
+          "nerd": "Prime wafers"
+        },
+        "toGlyph": "DIE",
+        "toLabel": {
+          "kid": "Printed chips",
+          "nerd": "Known-good dies"
+        },
+        "benchmark": {
+          "kid": "A real chip factory works on one wafer for about 3 months — over 1,000 tiny steps, day and night.",
+          "nerd": "Leading-edge wafers undergo 1,000+ process steps across ~12 weeks in fabs that never stop running."
+        },
+        "handoff": {
+          "kid": "Your good chips go to packaging.",
+          "nerd": "Known-good dies move to assembly, packaging, and test."
+        }
+      },
+      "ch5": {
+        "fromGlyph": "DIE",
+        "fromLabel": {
+          "kid": "Printed chips",
+          "nerd": "Known-good dies"
+        },
+        "toGlyph": "CHIP",
+        "toLabel": {
+          "kid": "Finished chips",
+          "nerd": "Packaged parts"
+        },
+        "benchmark": {
+          "kid": "Inside one package, chips can be stacked like pancakes, joined by bumps thinner than a hair.",
+          "nerd": "Advanced packages stack chiplets on interposers with micro-bump pitches under 50 µm."
+        },
+        "handoff": {
+          "kid": "Your chip lineup ships to the data center.",
+          "nerd": "Finished parts ship to system integrators and data centers."
+        }
+      },
+      "ch6": {
+        "fromGlyph": "CHIP",
+        "fromLabel": {
+          "kid": "Finished chips",
+          "nerd": "Packaged parts"
+        },
+        "toGlyph": "CITY",
+        "toLabel": {
+          "kid": "A powered city",
+          "nerd": "Live compute at scale"
+        },
+        "benchmark": {
+          "kid": "The biggest data centers use as much electricity as a whole city of homes.",
+          "nerd": "Hyperscale data centers draw 100+ MW — on the order of tens of thousands of homes."
+        },
+        "handoff": {
+          "kid": "From rock to rack: you built the whole chain that lights the modern world.",
+          "nerd": "From extraction to compute: the chain you just ran underpins effectively all modern infrastructure."
+        }
+      }
+    }
+  }
+}

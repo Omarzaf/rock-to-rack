@@ -1,0 +1,17 @@
+{
+  "name": "Rock to Rack",
+  "short_name": "Rock to Rack",
+  "description": "A browser game about the semiconductor supply chain.",
+  "start_url": "/#menu",
+  "display": "standalone",
+  "background_color": "#08131f",
+  "theme_color": "#14213d",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,440 @@
+{
+  "resources": {
+    "caps": {
+      "minerals": {
+        "quartz": 80,
+        "copper": 60,
+        "lithium": 45,
+        "cobalt": 36,
+        "rareEarths": 30
+      },
+      "wafers": 24,
+      "chips": 160,
+      "energy": 100,
+      "water": 100,
+      "credits": 1000
+    }
+  },
+  "pace": {
+    "catchUp": {
+      "behindThreshold": 0.2,
+      "passiveMultiplier": 1.25
+    }
+  },
+  "sandbox": {
+    "hudDemoDelta": {
+      "minerals": {
+        "quartz": 5,
+        "copper": 3,
+        "lithium": 2,
+        "cobalt": 1,
+        "rareEarths": 1
+      },
+      "wafers": 1,
+      "chips": 2,
+      "energy": -6,
+      "water": -4,
+      "credits": 55
+    }
+  },
+  "ch1": {
+    "minerSlots": 4,
+    "minerCost": {
+      "credits": 35
+    },
+    "minerRefund": {
+      "credits": 35
+    },
+    "extractionPerSecond": {
+      "quartz": 0.07,
+      "copper": 0.056,
+      "lithium": 0.046,
+      "cobalt": 0.039,
+      "rareEarths": 0.032
+    },
+    "energyUpkeepPerDepthSecond": 0.004,
+    "targetBasket": {
+      "quartz": 10,
+      "copper": 8,
+      "lithium": 6,
+      "cobalt": 4,
+      "rareEarths": 3
+    },
+    "pacingTargetSeconds": {
+      "min": 40,
+      "max": 50
+    },
+    "tickSeconds": 1,
+    "eventTriggers": {
+      "mineFloodAtSeconds": 8,
+      "copperSpikeAtCopper": 1
+    },
+    "deposits": [
+      {
+        "id": "quartz-surface",
+        "mineral": "quartz",
+        "x": 330,
+        "y": 314,
+        "depth": 1,
+        "richness": 1.15,
+        "remaining": 34
+      },
+      {
+        "id": "copper-mid",
+        "mineral": "copper",
+        "x": 500,
+        "y": 414,
+        "depth": 2,
+        "richness": 1.12,
+        "remaining": 26
+      },
+      {
+        "id": "lithium-mid",
+        "mineral": "lithium",
+        "x": 670,
+        "y": 454,
+        "depth": 2,
+        "richness": 1.14,
+        "remaining": 22
+      },
+      {
+        "id": "cobalt-deep",
+        "mineral": "cobalt",
+        "x": 840,
+        "y": 548,
+        "depth": 3,
+        "richness": 1.15,
+        "remaining": 18
+      },
+      {
+        "id": "rare-earths-deep",
+        "mineral": "rareEarths",
+        "x": 1010,
+        "y": 580,
+        "depth": 3,
+        "richness": 1.1,
+        "remaining": 14
+      }
+    ]
+  },
+  "ch2": {
+    "grid": {
+      "columns": 5,
+      "rows": 4
+    },
+    "moduleCost": {
+      "credits": 25
+    },
+    "tickSeconds": 1,
+    "slagCap": 30,
+    "recycleSlag": {
+      "slag": 4,
+      "credits": 18
+    },
+    "storeSlag": {
+      "slag": 6,
+      "credits": -10
+    },
+    "pacingTargetSeconds": {
+      "min": 55,
+      "max": 65
+    },
+    "eventTriggers": {
+      "energySpikeAtSeconds": 14,
+      "inspectionAtSlag": 8
+    },
+    "parallelTargets": {
+      "copper": 6,
+      "lithium": 4,
+      "cobalt": 3
+    },
+    "lanes": [
+      {
+        "id": "silicon",
+        "mineral": "quartz",
+        "row": 0,
+        "requiredModules": ["crusher", "furnace", "chemicalBath", "zoneRefiner"],
+        "mineralInputPerSecond": 0.018,
+        "energyPerSecond": 0.045,
+        "waterPerSecond": 0.035,
+        "slagPerSecond": 0.018,
+        "progressPerSecond": 0.015,
+        "target": 4
+      },
+      {
+        "id": "copper",
+        "mineral": "copper",
+        "row": 1,
+        "requiredModules": ["crusher", "furnace"],
+        "mineralInputPerSecond": 0.012,
+        "energyPerSecond": 0.025,
+        "waterPerSecond": 0.012,
+        "slagPerSecond": 0.01,
+        "progressPerSecond": 0.02,
+        "target": 3
+      },
+      {
+        "id": "lithium",
+        "mineral": "lithium",
+        "row": 2,
+        "requiredModules": ["crusher", "chemicalBath"],
+        "mineralInputPerSecond": 0.01,
+        "energyPerSecond": 0.018,
+        "waterPerSecond": 0.028,
+        "slagPerSecond": 0.012,
+        "progressPerSecond": 0.017,
+        "target": 2
+      },
+      {
+        "id": "cobalt",
+        "mineral": "cobalt",
+        "row": 3,
+        "requiredModules": ["crusher", "furnace", "chemicalBath"],
+        "mineralInputPerSecond": 0.008,
+        "energyPerSecond": 0.024,
+        "waterPerSecond": 0.018,
+        "slagPerSecond": 0.014,
+        "progressPerSecond": 0.016,
+        "target": 2
+      }
+    ]
+  },
+  "ch3": {
+    "tickSeconds": 0.25,
+    "targetPullSeconds": 38,
+    "targetIngotHeight": 100,
+    "greenZone": {
+      "min": 43,
+      "max": 57
+    },
+    "temperature": {
+      "start": 50,
+      "min": 0,
+      "max": 100,
+      "pullDriftPerSecond": 4,
+      "restDriftPerSecond": -2.8,
+      "noisePerSecond": 0.6
+    },
+    "resourceUsePerSecond": {
+      "energy": 0.035,
+      "water": 0.018
+    },
+    "retryLimit": 1,
+    "vibrationPenalty": {
+      "stability": 0.16,
+      "temperature": 8,
+      "timePenaltySeconds": 30
+    },
+    "slicing": {
+      "guideCount": 5,
+      "tolerance": 5,
+      "flawedThreshold": 0.45,
+      "waferQualityScale": 100
+    },
+    "pacingTargetSeconds": {
+      "min": 70,
+      "max": 80
+    },
+    "eventTriggers": {
+      "vibrationAtHeight": 35
+    }
+  },
+  "ch4": {
+    "tickSeconds": 0.25,
+    "wafersRequired": 2,
+    "dieGrid": {
+      "columns": 6,
+      "rows": 4
+    },
+    "chipsPerGoodDie": 1,
+    "baseWaferQuality": 75,
+    "stations": {
+      "coat": {
+        "targetCoverage": 0.92,
+        "evennessWeight": 0.35
+      },
+      "expose": {
+        "perfectDistance": 0,
+        "maxDistance": 90
+      },
+      "etch": {
+        "targetSeconds": 3.2,
+        "toleranceSeconds": 0.45,
+        "maxPenaltySeconds": 2.5
+      },
+      "dope": {
+        "zonesRequired": 3
+      }
+    },
+    "nodes": [
+      {
+        "id": "90nm",
+        "label": "90nm",
+        "toleranceMultiplier": 1,
+        "chipValue": 1
+      },
+      {
+        "id": "28nm",
+        "label": "28nm",
+        "toleranceMultiplier": 0.82,
+        "chipValue": 1.4
+      },
+      {
+        "id": "7nm",
+        "label": "7nm",
+        "toleranceMultiplier": 0.62,
+        "chipValue": 2.2
+      }
+    ],
+    "eventPenalties": {
+      "dustYieldPenalty": 14,
+      "calibrationScorePenalty": 8
+    },
+    "pacingTargetSeconds": {
+      "min": 85,
+      "max": 95
+    },
+    "eventTriggers": {
+      "dustAtWaferIndex": 1,
+      "calibrationAtWaferIndex": 2
+    }
+  },
+  "ch5": {
+    "tickSeconds": 0.25,
+    "sortSampleSize": 10,
+    "maxBuildChoices": 4,
+    "binThresholds": {
+      "perfect": 88,
+      "good": 58
+    },
+    "testScoreByNode": {
+      "90nm": {
+        "base": 72,
+        "step": 7
+      },
+      "28nm": {
+        "base": 78,
+        "step": 6
+      },
+      "7nm": {
+        "base": 84,
+        "step": 5
+      }
+    },
+    "wrongSortDowngrade": true,
+    "fallbackNodeYields": [
+      { "node": "90nm", "yieldPercent": 72, "goodDies": 18, "defectiveDies": 6 },
+      { "node": "28nm", "yieldPercent": 66, "goodDies": 14, "defectiveDies": 10 },
+      { "node": "7nm", "yieldPercent": 58, "goodDies": 10, "defectiveDies": 14 }
+    ],
+    "pacingTargetSeconds": {
+      "min": 70,
+      "max": 80
+    },
+    "eventTriggers": {
+      "probeDriftAtSortedCount": 6,
+      "substrateShortageAtBuiltCount": 2
+    }
+  },
+  "ch6": {
+    "tickSeconds": 0.5,
+    "grid": {
+      "columns": 8,
+      "rows": 5
+    },
+    "rackChipSlots": 4,
+    "contractsToUnlockNova": 2,
+    "heatWarning": 65,
+    "heatThrottle": 85,
+    "maxHeat": 100,
+    "startingPowerCapacity": 20,
+    "startingCooling": 12,
+    "startingNetworkLinks": 0,
+    "startingBatteryCharge": 0,
+    "buildingCosts": {
+      "rack": {
+        "credits": 90
+      },
+      "power": {
+        "credits": 120
+      },
+      "cooling": {
+        "credits": 85,
+        "water": 4
+      },
+      "network": {
+        "credits": 75
+      },
+      "battery": {
+        "credits": 80,
+        "minerals": {
+          "lithium": 3,
+          "cobalt": 2
+        }
+      }
+    },
+    "buildingStats": {
+      "rack": {
+        "powerLoad": 14,
+        "heatRate": 10,
+        "compute": 18
+      },
+      "power": {
+        "powerCapacity": 34
+      },
+      "cooling": {
+        "cooling": 24,
+        "waterLoad": 2
+      },
+      "network": {
+        "networkLinks": 2
+      },
+      "battery": {
+        "batteryCharge": 35
+      }
+    },
+    "chipEffects": {
+      "cpu": {
+        "computeMultiplier": 1.1
+      },
+      "gpu": {
+        "aiEnabled": true,
+        "computeBonus": 18,
+        "powerLoad": 6,
+        "heatRate": 8
+      },
+      "dram": {
+        "rewardMultiplier": 1.2,
+        "powerLoad": 3,
+        "heatRate": 3
+      },
+      "nand": {
+        "blackoutProtection": 40,
+        "powerLoad": 2,
+        "heatRate": 2
+      },
+      "nic": {
+        "networkMultiplier": 1.25,
+        "powerLoad": 3,
+        "heatRate": 2
+      },
+      "pmic": {
+        "powerMultiplier": 0.7
+      },
+      "nova": {
+        "aiEnabled": true,
+        "computeBonus": 42,
+        "powerLoad": 8,
+        "heatRate": 9
+      }
+    },
+    "novaChallenge": {
+      "requiredAverageScore": 82,
+      "perfectDieCost": 1
+    },
+    "pacingTargetSeconds": {
+      "min": 155,
+      "max": 175
+    }
+  }
+}

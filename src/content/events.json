@@ -1,0 +1,486 @@
+{
+  "sandboxPowerSurge": {
+    "id": "sandbox-power-surge",
+    "title": {
+      "kid": "Power Surge",
+      "nerd": "Grid Instability"
+    },
+    "scenario": {
+      "kid": "The lab lights flicker. You can buy backup batteries or wait for the power to settle.",
+      "nerd": "A short grid instability event interrupts operations. Choose whether to absorb cost for resilience or delay work."
+    },
+    "choices": [
+      {
+        "id": "buy-backup",
+        "label": {
+          "kid": "Buy backup batteries",
+          "nerd": "Procure backup power"
+        },
+        "effects": {
+          "credits": -25,
+          "energy": 15
+        }
+      },
+      {
+        "id": "wait-it-out",
+        "label": {
+          "kid": "Wait it out",
+          "nerd": "Delay operations"
+        },
+        "effects": {
+          "water": -20,
+          "credits": 10
+        }
+      }
+    ]
+  },
+  "ch1MineFlood": {
+    "id": "ch1-mine-flood",
+    "title": {
+      "kid": "Mine Flood",
+      "nerd": "Water Intrusion Event"
+    },
+    "scenario": {
+      "kid": "Water rushes into a tunnel. You can pump it out now or wait while the crew dries the mine.",
+      "nerd": "Unexpected groundwater interrupts extraction. Paying for pumps protects schedule, while waiting preserves cash but burns time and water."
+    },
+    "choices": [
+      {
+        "id": "pump-now",
+        "label": {
+          "kid": "Pay for pumps",
+          "nerd": "Rent emergency pumps"
+        },
+        "effects": {
+          "credits": -40,
+          "water": -6
+        }
+      },
+      {
+        "id": "wait-for-drainage",
+        "label": {
+          "kid": "Wait it out",
+          "nerd": "Accept schedule delay"
+        },
+        "timePenaltySeconds": 45,
+        "effects": {
+          "water": -14,
+          "energy": -8
+        }
+      }
+    ]
+  },
+  "ch1CopperSpike": {
+    "id": "ch1-copper-spike",
+    "title": {
+      "kid": "Copper Price Spike",
+      "nerd": "Short-Term Copper Premium"
+    },
+    "scenario": {
+      "kid": "A nearby buyer needs copper fast. Sell a little surplus now or keep it for the chapter goal.",
+      "nerd": "A temporary copper premium appears. Monetizing a small amount of inventory improves budget but can delay the target basket."
+    },
+    "choices": [
+      {
+        "id": "sell-surplus",
+        "label": {
+          "kid": "Sell 1 copper",
+          "nerd": "Sell surplus copper"
+        },
+        "effects": {
+          "minerals": {
+            "copper": -1
+          },
+          "credits": 80
+        }
+      },
+      {
+        "id": "hold-inventory",
+        "label": {
+          "kid": "Keep copper",
+          "nerd": "Protect chapter inventory"
+        },
+        "effects": {
+          "credits": 15
+        }
+      }
+    ]
+  },
+  "ch2EnergySpike": {
+    "id": "ch2-energy-spike",
+    "title": {
+      "kid": "Energy Price Spike",
+      "nerd": "Refining Power Cost Shock"
+    },
+    "scenario": {
+      "kid": "Electricity gets expensive right when the furnaces are hot. Slow down or buy cleaner power.",
+      "nerd": "Refining is energy intensive, so electricity price and grid reliability shape where purification capacity is built."
+    },
+    "choices": [
+      {
+        "id": "buy-clean-power",
+        "label": {
+          "kid": "Buy cleaner power",
+          "nerd": "Procure low-carbon power"
+        },
+        "effects": {
+          "credits": -70,
+          "energy": 20
+        }
+      },
+      {
+        "id": "slow-the-line",
+        "label": {
+          "kid": "Slow the line",
+          "nerd": "Throttle refinery throughput"
+        },
+        "timePenaltySeconds": 40,
+        "effects": {
+          "energy": 8
+        }
+      }
+    ]
+  },
+  "ch2Inspection": {
+    "id": "ch2-environmental-inspection",
+    "title": {
+      "kid": "Inspection Day",
+      "nerd": "Waste Handling Audit"
+    },
+    "scenario": {
+      "kid": "Inspectors check the slag pile. Recycle it or pay to store it safely.",
+      "nerd": "Processing waste must be managed. Recycling recovers value, while storage reduces immediate risk at a budget cost."
+    },
+    "choices": [
+      {
+        "id": "recycle-slag",
+        "label": {
+          "kid": "Recycle slag",
+          "nerd": "Recover value from waste"
+        },
+        "effects": {
+          "credits": 45
+        }
+      },
+      {
+        "id": "store-safely",
+        "label": {
+          "kid": "Store safely",
+          "nerd": "Pay for compliant storage"
+        },
+        "effects": {
+          "credits": -35,
+          "water": 8
+        }
+      }
+    ]
+  },
+  "ch3TruckVibration": {
+    "id": "ch3-truck-vibration",
+    "title": {
+      "kid": "Truck Rumble",
+      "nerd": "Mechanical Vibration Event"
+    },
+    "scenario": {
+      "kid": "A heavy truck shakes the floor while the crystal is growing. Pause to steady the pull, or keep going and risk wobble.",
+      "nerd": "Single-crystal growth is sensitive to thermal and mechanical stability. Vibration can narrow or flaw the ingot."
+    },
+    "choices": [
+      {
+        "id": "pause-and-center",
+        "label": {
+          "kid": "Pause and steady it",
+          "nerd": "Pause and re-center the pull"
+        },
+        "timePenaltySeconds": 30,
+        "effects": {
+          "energy": -3,
+          "water": -1
+        }
+      },
+      {
+        "id": "keep-pulling",
+        "label": {
+          "kid": "Keep pulling",
+          "nerd": "Continue through vibration"
+        },
+        "effects": {
+          "credits": 10
+        }
+      }
+    ]
+  },
+  "ch4DustContamination": {
+    "id": "ch4-dust-contamination",
+    "title": {
+      "kid": "Dust Speck!",
+      "nerd": "Cleanroom Particle Excursion"
+    },
+    "scenario": {
+      "kid": "A tiny dust speck lands near the wafer. Rework the wafer, or keep going and risk bad dies.",
+      "nerd": "Particles can ruin microscopic circuit patterns. Rework protects yield at schedule and resource cost."
+    },
+    "choices": [
+      {
+        "id": "rework-wafer",
+        "label": {
+          "kid": "Rework it",
+          "nerd": "Run particle rework"
+        },
+        "timePenaltySeconds": 35,
+        "effects": {
+          "energy": -4,
+          "water": -3,
+          "credits": -35
+        }
+      },
+      {
+        "id": "risk-the-run",
+        "label": {
+          "kid": "Risk it",
+          "nerd": "Continue with yield risk"
+        },
+        "effects": {
+          "credits": 15
+        }
+      }
+    ]
+  },
+  "ch4ToolCalibration": {
+    "id": "ch4-tool-calibration",
+    "title": {
+      "kid": "Tool Drift",
+      "nerd": "Lithography Calibration Drift"
+    },
+    "scenario": {
+      "kid": "The pattern tool drifts a little. Stop to calibrate, or accept harder station scoring.",
+      "nerd": "Mask alignment and process control drift can reduce yield, especially at smaller nodes."
+    },
+    "choices": [
+      {
+        "id": "calibrate-now",
+        "label": {
+          "kid": "Calibrate",
+          "nerd": "Calibrate tool"
+        },
+        "timePenaltySeconds": 30,
+        "effects": {
+          "credits": -45,
+          "energy": -2
+        }
+      },
+      {
+        "id": "push-through",
+        "label": {
+          "kid": "Push through",
+          "nerd": "Accept score penalty"
+        },
+        "effects": {
+          "credits": 20
+        }
+      }
+    ]
+  },
+  "ch5ProbeDrift": {
+    "id": "ch5-probe-drift",
+    "title": {
+      "kid": "Tester Drift",
+      "nerd": "Probe-Card Calibration Drift"
+    },
+    "scenario": {
+      "kid": "The test needle starts reading a little wrong. Recalibrate it or keep sorting through noisy scores.",
+      "nerd": "Electrical test probes can drift or wear. Recalibration protects bin accuracy but costs time and money."
+    },
+    "choices": [
+      {
+        "id": "recalibrate-probe",
+        "label": {
+          "kid": "Recalibrate",
+          "nerd": "Recalibrate probe card"
+        },
+        "timePenaltySeconds": 25,
+        "effects": {
+          "credits": -35,
+          "energy": -2
+        }
+      },
+      {
+        "id": "sort-through-noise",
+        "label": {
+          "kid": "Keep sorting",
+          "nerd": "Accept noisy test data"
+        },
+        "effects": {
+          "credits": 15
+        }
+      }
+    ]
+  },
+  "ch5SubstrateShortage": {
+    "id": "ch5-substrate-shortage",
+    "title": {
+      "kid": "Package Parts Shortage",
+      "nerd": "Advanced Substrate Shortage"
+    },
+    "scenario": {
+      "kid": "Package bases are running low. Buy better parts, or save cash with slower chips.",
+      "nerd": "Substrate supply is tight. Qualified parts protect high-bin output; cheaper stock preserves cash."
+    },
+    "choices": [
+      {
+        "id": "buy-substrates",
+        "label": {
+          "kid": "Buy better parts",
+          "nerd": "Procure qualified substrates"
+        },
+        "effects": {
+          "credits": -60
+        }
+      },
+      {
+        "id": "use-salvage-package",
+        "label": {
+          "kid": "Use cheaper parts",
+          "nerd": "Use lower-grade package stock"
+        },
+        "effects": {
+          "credits": 20
+        }
+      }
+    ]
+  },
+  "ch6Contracts": [
+    {
+      "id": "cartoonStream",
+      "title": {
+        "kid": "Cartoon Stream",
+        "nerd": "Low-latency media service"
+      },
+      "description": {
+        "kid": "Stream cartoons to 10,000 kids after school.",
+        "nerd": "A media workload needs general compute and durable storage to serve many users reliably."
+      },
+      "requiredChipIds": ["cpu", "nand"],
+      "requiredCompute": 24,
+      "requiredNetworkLinks": 0,
+      "rewardCredits": 120,
+      "cityLights": 25
+    },
+    {
+      "id": "weatherAi",
+      "title": {
+        "kid": "Weather AI",
+        "nerd": "Parallel forecast training job"
+      },
+      "description": {
+        "kid": "Train a weather AI before the next storm.",
+        "nerd": "Model training benefits from GPUs and fast memory because many math operations run in parallel."
+      },
+      "requiredChipIds": ["gpu", "dram"],
+      "requiredCompute": 42,
+      "requiredNetworkLinks": 0,
+      "rewardCredits": 175,
+      "cityLights": 25
+    },
+    {
+      "id": "cityBackup",
+      "title": {
+        "kid": "City Backup",
+        "nerd": "Resilient municipal services"
+      },
+      "description": {
+        "kid": "Keep city services online during a storm warning.",
+        "nerd": "Reliability workloads need power management, networking, and backup energy."
+      },
+      "requiredChipIds": ["cpu", "nic", "pmic"],
+      "requiredCompute": 38,
+      "requiredNetworkLinks": 2,
+      "rewardCredits": 160,
+      "cityLights": 25
+    },
+    {
+      "id": "hospitalNova",
+      "title": {
+        "kid": "Hospital Nova",
+        "nerd": "Urgent medical imaging inference"
+      },
+      "description": {
+        "kid": "A hospital needs help reading X-rays overnight.",
+        "nerd": "Medical imaging inference needs specialized acceleration, high throughput, and reliable infrastructure."
+      },
+      "requiredChipIds": ["nova", "gpu", "dram"],
+      "requiredCompute": 70,
+      "requiredNetworkLinks": 2,
+      "rewardCredits": 260,
+      "cityLights": 25
+    }
+  ],
+  "ch6Heatwave": {
+    "id": "ch6-heatwave",
+    "title": {
+      "kid": "Heatwave",
+      "nerd": "Ambient-temperature excursion"
+    },
+    "scenario": {
+      "kid": "The city is hot and your racks are hotter. Add cooling or slow the jobs down.",
+      "nerd": "Higher ambient temperatures reduce cooling headroom and can force throttling unless cooling capacity rises."
+    },
+    "choices": [
+      {
+        "id": "add-cooling",
+        "label": {
+          "kid": "Add cooling",
+          "nerd": "Increase cooling capacity"
+        },
+        "effects": {
+          "credits": -70,
+          "water": -4
+        }
+      },
+      {
+        "id": "throttle-racks",
+        "label": {
+          "kid": "Slow racks",
+          "nerd": "Throttle workloads"
+        },
+        "timePenaltySeconds": 30,
+        "effects": {
+          "credits": -20
+        }
+      }
+    ]
+  },
+  "ch6Brownout": {
+    "id": "ch6-brownout",
+    "title": {
+      "kid": "Grid Brownout",
+      "nerd": "Utility voltage sag"
+    },
+    "scenario": {
+      "kid": "The power grid dips. Use batteries or buy emergency power.",
+      "nerd": "Data centers use backup power systems to ride through grid instability without dropping workloads."
+    },
+    "choices": [
+      {
+        "id": "use-battery",
+        "label": {
+          "kid": "Use battery",
+          "nerd": "Discharge backup battery"
+        },
+        "effects": {
+          "credits": -10
+        }
+      },
+      {
+        "id": "buy-emergency-power",
+        "label": {
+          "kid": "Buy power",
+          "nerd": "Purchase emergency power"
+        },
+        "effects": {
+          "credits": -80
+        }
+      }
+    ]
+  }
+}

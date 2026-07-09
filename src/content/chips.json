@@ -1,0 +1,254 @@
+[
+  {
+    "id": "cpu",
+    "name": {
+      "kid": "CPU",
+      "nerd": "Central Processing Unit"
+    },
+    "nickname": {
+      "kid": "The Captain",
+      "nerd": "The Captain"
+    },
+    "persona": {
+      "kid": "Calm all-rounder",
+      "nerd": "General-purpose control processor"
+    },
+    "cost": {
+      "perfect": 1,
+      "good": 4,
+      "salvage": 0
+    },
+    "requiresPerfect7nm": false,
+    "locked": false,
+    "effectKey": "generalBoost",
+    "cardColor": "#38bdf8",
+    "superpower": {
+      "kid": "Every building works a little better.",
+      "nerd": "Improves general-purpose coordination across racks and services."
+    },
+    "lesson": {
+      "kid": "A CPU is the computer captain.",
+      "nerd": "CPUs handle flexible control flow and many different instruction types."
+    },
+    "ch6Hint": {
+      "kid": "Good for almost any rack.",
+      "nerd": "Useful for baseline control, storage, and service orchestration workloads."
+    }
+  },
+  {
+    "id": "gpu",
+    "name": {
+      "kid": "GPU",
+      "nerd": "Graphics Processing Unit"
+    },
+    "nickname": {
+      "kid": "The Swarm",
+      "nerd": "The Swarm"
+    },
+    "persona": {
+      "kid": "Thousands of tiny workers",
+      "nerd": "Massively parallel processor"
+    },
+    "cost": {
+      "perfect": 3,
+      "good": 5,
+      "salvage": 0
+    },
+    "requiresPerfect7nm": false,
+    "locked": false,
+    "effectKey": "aiContracts",
+    "cardColor": "#a78bfa",
+    "superpower": {
+      "kid": "Unlocks big AI jobs.",
+      "nerd": "Accelerates graphics, matrix math, and parallel AI workloads."
+    },
+    "lesson": {
+      "kid": "A GPU is great when many workers can do math at the same time.",
+      "nerd": "GPUs are valuable because many cores run parallel operations efficiently."
+    },
+    "ch6Hint": {
+      "kid": "AI contracts will want this.",
+      "nerd": "Required for AI-heavy contracts in the data center finale."
+    }
+  },
+  {
+    "id": "dram",
+    "name": {
+      "kid": "DRAM",
+      "nerd": "Dynamic Random Access Memory"
+    },
+    "nickname": {
+      "kid": "The Whiteboard",
+      "nerd": "The Whiteboard"
+    },
+    "persona": {
+      "kid": "Fast but forgetful",
+      "nerd": "Fast volatile working memory"
+    },
+    "cost": {
+      "perfect": 1,
+      "good": 3,
+      "salvage": 1
+    },
+    "requiresPerfect7nm": false,
+    "locked": false,
+    "effectKey": "jobSpeed",
+    "cardColor": "#f8d45c",
+    "superpower": {
+      "kid": "Jobs move faster, but power must stay on.",
+      "nerd": "Boosts active job throughput while remaining dependent on refresh power."
+    },
+    "lesson": {
+      "kid": "DRAM remembers quickly, but only while it has power.",
+      "nerd": "DRAM is volatile memory used for fast working data."
+    },
+    "ch6Hint": {
+      "kid": "Good for busy jobs.",
+      "nerd": "Pairs well with CPU and GPU racks that need fast working memory."
+    }
+  },
+  {
+    "id": "nand",
+    "name": {
+      "kid": "NAND",
+      "nerd": "NAND Flash"
+    },
+    "nickname": {
+      "kid": "The Vault",
+      "nerd": "The Vault"
+    },
+    "persona": {
+      "kid": "Slow and steady keeper",
+      "nerd": "Persistent storage chip"
+    },
+    "cost": {
+      "perfect": 0,
+      "good": 4,
+      "salvage": 3
+    },
+    "requiresPerfect7nm": false,
+    "locked": false,
+    "effectKey": "persistentStorage",
+    "cardColor": "#60d394",
+    "superpower": {
+      "kid": "Keeps earnings safe during outages.",
+      "nerd": "Protects stored data and completed work through blackout events."
+    },
+    "lesson": {
+      "kid": "NAND keeps remembering after power turns off.",
+      "nerd": "NAND flash is non-volatile storage used in SSDs and many devices."
+    },
+    "ch6Hint": {
+      "kid": "Useful when power gets messy.",
+      "nerd": "Adds storage resilience to racks and contract payouts."
+    }
+  },
+  {
+    "id": "nic",
+    "name": {
+      "kid": "NIC",
+      "nerd": "Network ASIC"
+    },
+    "nickname": {
+      "kid": "The Messenger",
+      "nerd": "The Messenger"
+    },
+    "persona": {
+      "kid": "Hyperactive courier",
+      "nerd": "Specialized network processor"
+    },
+    "cost": {
+      "perfect": 2,
+      "good": 3,
+      "salvage": 1
+    },
+    "requiresPerfect7nm": false,
+    "locked": false,
+    "effectKey": "rackNetwork",
+    "cardColor": "#fb7185",
+    "superpower": {
+      "kid": "Lets racks share work faster.",
+      "nerd": "Improves rack-to-rack communication and aggregate throughput."
+    },
+    "lesson": {
+      "kid": "A data center is stronger when machines can talk fast.",
+      "nerd": "Networking chips help many servers act like one larger system."
+    },
+    "ch6Hint": {
+      "kid": "Helps groups of racks work together.",
+      "nerd": "Useful for linked rack bonuses and distributed jobs."
+    }
+  },
+  {
+    "id": "pmic",
+    "name": {
+      "kid": "PMIC",
+      "nerd": "Power Management IC"
+    },
+    "nickname": {
+      "kid": "The Guardian",
+      "nerd": "The Guardian"
+    },
+    "persona": {
+      "kid": "Frugal energy keeper",
+      "nerd": "Power regulation specialist"
+    },
+    "cost": {
+      "perfect": 1,
+      "good": 2,
+      "salvage": 3
+    },
+    "requiresPerfect7nm": false,
+    "locked": false,
+    "effectKey": "energySavings",
+    "cardColor": "#f97316",
+    "superpower": {
+      "kid": "Cuts energy cost.",
+      "nerd": "Improves power delivery efficiency and reduces operating energy draw."
+    },
+    "lesson": {
+      "kid": "Power chips help every other chip use electricity safely.",
+      "nerd": "PMICs regulate voltage rails and power sequencing for electronic systems."
+    },
+    "ch6Hint": {
+      "kid": "Good when energy is tight.",
+      "nerd": "Reduces power pressure in dense rack builds."
+    }
+  },
+  {
+    "id": "nova",
+    "name": {
+      "kid": "Nova",
+      "nerd": "AI Accelerator"
+    },
+    "nickname": {
+      "kid": "Nova",
+      "nerd": "Nova"
+    },
+    "persona": {
+      "kid": "Mysterious prodigy",
+      "nerd": "Leading-edge AI accelerator"
+    },
+    "cost": {
+      "perfect": 1,
+      "good": 0,
+      "salvage": 0
+    },
+    "requiresPerfect7nm": true,
+    "locked": true,
+    "effectKey": "finalAiContract",
+    "cardColor": "#22d3ee",
+    "superpower": {
+      "kid": "Wins the final AI contract.",
+      "nerd": "Unlocks the finale workload after a perfect leading-edge die is available."
+    },
+    "lesson": {
+      "kid": "The hardest chips need the best tiny circuits.",
+      "nerd": "Advanced accelerators depend on high-yield leading-edge process technology."
+    },
+    "ch6Hint": {
+      "kid": "Locked until the final challenge.",
+      "nerd": "Requires a perfect leading-edge die and the Chapter 6 finale."
+    }
+  }
+]

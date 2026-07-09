@@ -1,0 +1,275 @@
+{
+  "ch1FieldCheck": {
+    "id": "ch1-field-check",
+    "question": {
+      "kid": "Which mineral becomes the chip itself?",
+      "nerd": "Which mined input is refined into the silicon base of most integrated circuits?"
+    },
+    "answers": [
+      {
+        "id": "quartz",
+        "label": {
+          "kid": "Quartz",
+          "nerd": "Quartz, refined into silicon"
+        },
+        "correct": true,
+        "explanation": {
+          "kid": "Yes. Quartz can become silicon, and silicon is the main material chips are built on.",
+          "nerd": "Correct. Silicon metal can be processed into ultra-high-purity polysilicon and wafers for semiconductors."
+        }
+      },
+      {
+        "id": "copper",
+        "label": {
+          "kid": "Copper",
+          "nerd": "Copper"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "Copper helps carry electricity, but it is not the chip's main base.",
+          "nerd": "Copper is critical for conductive paths and electronics, but the wafer substrate is silicon."
+        }
+      },
+      {
+        "id": "cobalt",
+        "label": {
+          "kid": "Cobalt",
+          "nerd": "Cobalt"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "Cobalt matters for some batteries and tools, but not the chip's main body.",
+          "nerd": "Cobalt is strategically important in batteries and some industrial uses, but not the silicon wafer substrate."
+        }
+      }
+    ]
+  },
+  "ch2FieldCheck": {
+    "id": "ch2-field-check",
+    "question": {
+      "kid": "Why does chip silicon need to be SO pure?",
+      "nerd": "Why do semiconductor wafers require extremely high-purity silicon?"
+    },
+    "answers": [
+      {
+        "id": "tiny-circuits-break",
+        "label": {
+          "kid": "Tiny dirt can break tiny circuits",
+          "nerd": "Trace impurities can disrupt transistor behavior"
+        },
+        "correct": true,
+        "explanation": {
+          "kid": "Yes. Chip parts are so tiny that a small bit of the wrong stuff can cause problems.",
+          "nerd": "Correct. Semiconductor devices depend on controlled electrical behavior, so uncontrolled impurities can create defects and leakage."
+        }
+      },
+      {
+        "id": "make-it-shiny",
+        "label": {
+          "kid": "To make it shiny",
+          "nerd": "To improve reflectivity"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "Shiny is fun, but purity is about making circuits work.",
+          "nerd": "Reflectivity is not the core reason. The key issue is electrical control at microscopic scales."
+        }
+      },
+      {
+        "id": "make-it-heavier",
+        "label": {
+          "kid": "To make it heavier",
+          "nerd": "To increase material density"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "No. The goal is not weight. The goal is clean material for tiny circuits.",
+          "nerd": "Density is not the design target. High purity reduces unwanted electrical behavior."
+        }
+      }
+    ]
+  },
+  "ch3FieldCheck": {
+    "id": "ch3-field-check",
+    "question": {
+      "kid": "Why are chip wafers round?",
+      "nerd": "Why are semiconductor wafers circular instead of rectangular?"
+    },
+    "answers": [
+      {
+        "id": "round-ingot-slices",
+        "label": {
+          "kid": "They are sliced from a round crystal",
+          "nerd": "They are sliced from a cylindrical single-crystal ingot"
+        },
+        "correct": true,
+        "explanation": {
+          "kid": "Yes. The crystal grows like a round shiny log, so each slice is round.",
+          "nerd": "Correct. Czochralski growth produces a cylindrical ingot, and wafering slices that cylinder into circular disks."
+        }
+      },
+      {
+        "id": "rectangles-illegal",
+        "label": {
+          "kid": "Rectangles are not allowed",
+          "nerd": "Rectangular wafers are prohibited by standards"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "No. It is not a rule about shapes. It comes from how the crystal is grown.",
+          "nerd": "Standards matter, but the circular wafer shape comes from slicing a cylindrical crystal ingot."
+        }
+      },
+      {
+        "id": "less-electricity",
+        "label": {
+          "kid": "Round wafers use less electricity",
+          "nerd": "Circular wafers reduce process energy"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "No. Energy matters in chipmaking, but it is not why wafers are round.",
+          "nerd": "Process energy is important, but wafer geometry is mainly inherited from the ingot shape."
+        }
+      }
+    ]
+  },
+  "ch4FieldCheck": {
+    "id": "ch4-field-check",
+    "question": {
+      "kid": "Why do chipmakers throw away some chips from every wafer?",
+      "nerd": "Why are some dies discarded from every fabricated wafer?"
+    },
+    "answers": [
+      {
+        "id": "some-dies-defective",
+        "label": {
+          "kid": "Some tiny circuits come out broken",
+          "nerd": "Some dies fail electrical or pattern tests"
+        },
+        "correct": true,
+        "explanation": {
+          "kid": "Yes. The patterns are so tiny that a few chips on a wafer can have defects.",
+          "nerd": "Correct. Yield is the share of dies that meet spec after process variation, particles, and patterning errors."
+        }
+      },
+      {
+        "id": "too-round",
+        "label": {
+          "kid": "The wafer is too round",
+          "nerd": "Circular wafers cannot make rectangular chips"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "No. Round wafers still hold many rectangular chip patterns.",
+          "nerd": "The round edge reduces usable area, but most discarded dies fail because of defects or process variation."
+        }
+      },
+      {
+        "id": "chips-expire",
+        "label": {
+          "kid": "Chips expire right away",
+          "nerd": "Freshly etched dies expire immediately"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "No. Good chips do not expire right away. Bad ones fail tests.",
+          "nerd": "Die discard is about yield and test results, not immediate expiration."
+        }
+      }
+    ]
+  },
+  "ch5FieldCheck": {
+    "id": "ch5-field-check",
+    "question": {
+      "kid": "Which chip would a video game need most?",
+      "nerd": "Which chip type is especially important for rendering game graphics and parallel visual workloads?"
+    },
+    "answers": [
+      {
+        "id": "gpu-parallel",
+        "chipId": "gpu",
+        "label": {
+          "kid": "GPU / The Swarm",
+          "nerd": "GPU, because parallel processors are well suited to graphics and AI math"
+        },
+        "correct": true,
+        "explanation": {
+          "kid": "Yes. A GPU has many tiny workers that help draw game worlds fast.",
+          "nerd": "Correct. GPUs use many parallel cores to accelerate graphics rendering and other parallel math workloads."
+        }
+      },
+      {
+        "id": "nand-storage",
+        "chipId": "nand",
+        "label": {
+          "kid": "NAND / The Vault",
+          "nerd": "NAND flash storage"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "NAND stores games, but the GPU helps draw the game while you play.",
+          "nerd": "NAND is persistent storage. It matters for loading and saving, but rendering leans heavily on the GPU."
+        }
+      },
+      {
+        "id": "pmic-power",
+        "chipId": "pmic",
+        "label": {
+          "kid": "PMIC / The Guardian",
+          "nerd": "Power management IC"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "Power chips help everything stay safe, but the GPU does the big drawing job.",
+          "nerd": "PMICs regulate power. They are essential support chips, not the main graphics processor."
+        }
+      }
+    ]
+  },
+  "ch6FieldCheck": {
+    "id": "ch6-field-check",
+    "question": {
+      "kid": "Why does a data center need cooling?",
+      "nerd": "Why do dense compute racks need active cooling infrastructure?"
+    },
+    "answers": [
+      {
+        "id": "cooling-stops-throttle",
+        "label": {
+          "kid": "Hot chips slow down",
+          "nerd": "Heat forces throttling and can damage equipment"
+        },
+        "correct": true,
+        "explanation": {
+          "kid": "Yes. Chips make heat when they work. Cooling keeps them fast and safe.",
+          "nerd": "Correct. Dense compute produces heat; without cooling, equipment throttles, fails, or requires shutdown."
+        }
+      },
+      {
+        "id": "cooling-makes-data",
+        "label": {
+          "kid": "Cold air makes data",
+          "nerd": "Cooling creates compute directly"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "Cooling does not make data. It helps the chips keep working.",
+          "nerd": "Cooling is support infrastructure. It preserves usable compute by keeping hardware inside thermal limits."
+        }
+      },
+      {
+        "id": "cooling-replaces-power",
+        "label": {
+          "kid": "Cooling replaces electricity",
+          "nerd": "Cooling eliminates power demand"
+        },
+        "correct": false,
+        "explanation": {
+          "kid": "Cooling uses power too. The racks still need electricity.",
+          "nerd": "Cooling systems consume additional power; they manage thermals rather than replacing electrical supply."
+        }
+      }
+    ]
+  }
+}

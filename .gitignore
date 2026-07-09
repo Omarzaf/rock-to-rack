@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vite/
+coverage/
+.DS_Store
+.vercel
+.playwright-mcp/
+.env*
+docs/audits/*/screenshots/
+.claude/settings.local.json

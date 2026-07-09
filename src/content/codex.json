@@ -1,0 +1,597 @@
+[
+  {
+    "id": "mineral-quartz",
+    "chapter": 1,
+    "icon": "Si",
+    "title": {
+      "kid": "Quartz",
+      "nerd": "Quartz as Silicon Feedstock"
+    },
+    "kidText": [
+      "Quartz is a common mineral that can become silicon.",
+      "Silicon is the flat base where chip patterns are printed.",
+      "A chip starts with rocks, not with magic."
+    ],
+    "nerdText": "Quartz is mostly silicon dioxide. Semiconductor manufacturing turns silicon-bearing feedstock into very pure silicon, then into crystal ingots and wafers for circuit fabrication.",
+    "realStat": "Silicon is one of Earth's most abundant crustal elements, but chipmaking needs it in an extremely purified and controlled form.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 1,
+      "factId": "ch1-quartz"
+    },
+    "lockedHint": {
+      "kid": "Mine quartz to unlock this entry.",
+      "nerd": "Unlocks after the Chapter 1 quartz fact card."
+    }
+  },
+  {
+    "id": "mineral-copper",
+    "chapter": 1,
+    "icon": "Cu",
+    "title": {
+      "kid": "Copper",
+      "nerd": "Copper Conductors"
+    },
+    "kidText": [
+      "Copper helps electricity move.",
+      "Chips and circuit boards both depend on good conductors.",
+      "Fast machines still need tiny metal paths."
+    ],
+    "nerdText": "Copper is a key conductive material in electronics. In chip systems it appears across wiring, boards, cables, and power delivery, connecting computation to the rest of the machine.",
+    "realStat": "Modern electronics supply chains track copper closely because it is used across power, interconnect, and infrastructure layers.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 1,
+      "factId": "ch1-copper"
+    },
+    "lockedHint": {
+      "kid": "Mine copper to unlock this entry.",
+      "nerd": "Unlocks after the Chapter 1 copper fact card."
+    }
+  },
+  {
+    "id": "mineral-lithium",
+    "chapter": 1,
+    "icon": "Li",
+    "title": {
+      "kid": "Lithium",
+      "nerd": "Lithium and Backup Power"
+    },
+    "kidText": [
+      "Lithium helps batteries store energy.",
+      "Data centers need backup power when the grid has trouble.",
+      "The chip journey also needs energy storage."
+    ],
+    "nerdText": "Lithium is best known in this game as a battery material. It connects semiconductor supply chains to energy resilience, backup systems, and mobile devices that chips power.",
+    "realStat": "Lithium-ion batteries are widely used because they store high energy for their weight compared with many older battery chemistries.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 1,
+      "factId": "ch1-lithium"
+    },
+    "lockedHint": {
+      "kid": "Mine lithium to unlock this entry.",
+      "nerd": "Unlocks after the Chapter 1 lithium fact card."
+    }
+  },
+  {
+    "id": "mineral-cobalt",
+    "chapter": 1,
+    "icon": "Co",
+    "title": {
+      "kid": "Cobalt",
+      "nerd": "Cobalt Supply Chains"
+    },
+    "kidText": [
+      "Cobalt can help some batteries work well.",
+      "Where minerals come from matters.",
+      "Supply chains connect technology to real places."
+    ],
+    "nerdText": "Cobalt is a strategic mineral in parts of the battery supply chain and an example of why technology manufacturing is tied to labor, trade, environmental, and geopolitical questions.",
+    "realStat": "Cobalt sourcing is often discussed alongside battery chemistry, mining conditions, and supply-chain due diligence.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 1,
+      "factId": "ch1-cobalt"
+    },
+    "lockedHint": {
+      "kid": "Mine cobalt to unlock this entry.",
+      "nerd": "Unlocks after the Chapter 1 cobalt fact card."
+    }
+  },
+  {
+    "id": "mineral-rare-earths",
+    "chapter": 1,
+    "icon": "RE",
+    "title": {
+      "kid": "Rare Earths",
+      "nerd": "Rare-Earth Elements"
+    },
+    "kidText": [
+      "Rare earths are a family of special elements.",
+      "They help make magnets, screens, motors, and tools.",
+      "Some tiny parts need unusual materials."
+    ],
+    "nerdText": "Rare-earth elements are not always rare in the ground, but separating and refining them can be difficult. They matter across electronics, magnets, optics, and manufacturing equipment.",
+    "realStat": "Rare-earth supply chains are usually discussed by separation and refining capacity, not only by what is mined.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 1,
+      "factId": "ch1-rare-earths"
+    },
+    "lockedHint": {
+      "kid": "Mine rare earths to unlock this entry.",
+      "nerd": "Unlocks after the Chapter 1 rare-earths fact card."
+    }
+  },
+  {
+    "id": "purity-nine-nines",
+    "chapter": 2,
+    "icon": "9N",
+    "title": {
+      "kid": "Nine Nines",
+      "nerd": "Ultra-High Purity"
+    },
+    "kidText": [
+      "Chip silicon has to be very clean.",
+      "A tiny wrong atom can cause a tiny circuit problem.",
+      "Purity is why refining takes so much care."
+    ],
+    "nerdText": "Semiconductor-grade silicon is purified far beyond ordinary industrial material. The goal is not merely cleanliness, but controlled electrical behavior with impurities introduced only where they are intended.",
+    "realStat": "9N means 99.9999999 percent purity, a shorthand used to explain extremely pure materials.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 2,
+      "factId": "ch2-nine-nines"
+    },
+    "lockedHint": {
+      "kid": "Reach the purity lesson in Chapter 2.",
+      "nerd": "Unlocks after the nine-nines fact card."
+    }
+  },
+  {
+    "id": "energy-water",
+    "chapter": 2,
+    "icon": "EW",
+    "title": {
+      "kid": "Energy and Water",
+      "nerd": "Process Inputs"
+    },
+    "kidText": [
+      "Factories need more than rocks.",
+      "Refining and fabs use energy and water.",
+      "Resource limits shape where technology gets made."
+    ],
+    "nerdText": "Semiconductor supply chains are also energy and water systems. Power prices, water availability, treatment, reuse, and infrastructure reliability can shape where capacity is built.",
+    "realStat": "Large semiconductor facilities often report water reuse, power sourcing, and efficiency because these inputs affect operations.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 2,
+      "factId": "ch2-energy-hungry"
+    },
+    "lockedHint": {
+      "kid": "Run the refinery to learn about energy and water.",
+      "nerd": "Unlocks after the Chapter 2 energy fact card."
+    }
+  },
+  {
+    "id": "czochralski",
+    "chapter": 3,
+    "icon": "CZ",
+    "title": {
+      "kid": "Crystal Growing",
+      "nerd": "Czochralski Growth"
+    },
+    "kidText": [
+      "A seed crystal can grow a shiny silicon ingot.",
+      "Pulling steadily makes a better crystal.",
+      "The round crystal becomes round wafers."
+    ],
+    "nerdText": "The Czochralski process grows a single-crystal silicon ingot by pulling a seed from molten silicon under controlled thermal and rotational conditions.",
+    "realStat": "The method is named for Jan Czochralski, whose early twentieth-century work led to a major crystal-growth technique.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 3,
+      "factId": "ch3-czochralski"
+    },
+    "lockedHint": {
+      "kid": "Grow an ingot in Chapter 3.",
+      "nerd": "Unlocks after the Czochralski fact card."
+    }
+  },
+  {
+    "id": "round-wafers",
+    "chapter": 3,
+    "icon": "O",
+    "title": {
+      "kid": "Round Wafers",
+      "nerd": "Wafer Geometry"
+    },
+    "kidText": [
+      "Wafers are round because the crystal is round.",
+      "A wafer is a thin slice from the ingot.",
+      "Tiny rectangular chips are printed on the round slice."
+    ],
+    "nerdText": "Semiconductor wafers inherit their circular shape from cylindrical ingots. The circular wafer is then patterned with many rectangular dies, with edge area less usable than the center.",
+    "realStat": "Mainstream silicon wafer diameters have grown over time so more dies can be processed together.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 3,
+      "factId": "ch3-round-wafers"
+    },
+    "lockedHint": {
+      "kid": "Slice wafers in Chapter 3.",
+      "nerd": "Unlocks after the round wafers fact card."
+    }
+  },
+  {
+    "id": "cleanroom",
+    "chapter": 4,
+    "icon": "CR",
+    "title": {
+      "kid": "Cleanrooms",
+      "nerd": "Particle Control"
+    },
+    "kidText": [
+      "Fab workers wear suits to keep dust away.",
+      "Dust can be huge compared with chip features.",
+      "Cleanrooms protect the patterns."
+    ],
+    "nerdText": "Cleanrooms control particles, airflow, clothing, chemicals, and procedures because nanoscale patterning can be damaged by contamination that would be invisible in ordinary rooms.",
+    "realStat": "Cleanroom classifications count particles in air; chipmaking needs far tighter control than normal indoor spaces.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 4,
+      "factId": "ch4-bunny-suits"
+    },
+    "lockedHint": {
+      "kid": "Enter the fab in Chapter 4.",
+      "nerd": "Unlocks after the cleanroom fact card."
+    }
+  },
+  {
+    "id": "lithography",
+    "chapter": 4,
+    "icon": "UV",
+    "title": {
+      "kid": "Lithography",
+      "nerd": "Pattern Printing"
+    },
+    "kidText": [
+      "Lithography prints tiny patterns with light.",
+      "The pattern tells the chip where circuits go.",
+      "Better alignment means better chips."
+    ],
+    "nerdText": "Photolithography transfers circuit patterns onto a wafer by using light-sensitive material, masks or reticles, exposure tools, and tightly controlled alignment.",
+    "realStat": "A modern chip is built from many patterned layers, not from one single print.",
+    "unlock": {
+      "kind": "chapter_unlocked",
+      "chapter": 4
+    },
+    "lockedHint": {
+      "kid": "Reach Chapter 4 to unlock lithography.",
+      "nerd": "Unlocks when the fab chapter is available."
+    }
+  },
+  {
+    "id": "euv-asml",
+    "chapter": 4,
+    "icon": "EUV",
+    "title": {
+      "kid": "EUV Tools",
+      "nerd": "Extreme Ultraviolet Lithography"
+    },
+    "kidText": [
+      "The tiniest patterns need very special light.",
+      "EUV machines are some of the most complex tools in factories.",
+      "One tool can shape a whole supply chain."
+    ],
+    "nerdText": "EUV lithography uses extremely short-wavelength light to pattern advanced chips. The ecosystem for these tools is highly specialized and concentrated.",
+    "realStat": "Public industry reporting commonly describes leading-edge EUV scanners as among the most expensive and complex manufacturing tools.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 4,
+      "factId": "ch4-euv-asml"
+    },
+    "lockedHint": {
+      "kid": "Find the EUV fact in Chapter 4.",
+      "nerd": "Unlocks after the EUV and ASML fact card."
+    }
+  },
+  {
+    "id": "doping",
+    "chapter": 4,
+    "icon": "D+",
+    "title": {
+      "kid": "Doping",
+      "nerd": "Controlled Impurities"
+    },
+    "kidText": [
+      "Sometimes chipmakers add tiny amounts of other atoms.",
+      "Those atoms help control electricity.",
+      "The trick is adding the right amount in the right place."
+    ],
+    "nerdText": "Doping deliberately introduces selected atoms into semiconductor regions to tune electrical behavior. This is different from random contamination, which can harm devices.",
+    "realStat": "Semiconductor devices depend on controlled regions with different electrical properties, including doped regions.",
+    "unlock": {
+      "kind": "chapter_unlocked",
+      "chapter": 4
+    },
+    "lockedHint": {
+      "kid": "Reach the fab chapter to unlock doping.",
+      "nerd": "Unlocks when Chapter 4 is available."
+    }
+  },
+  {
+    "id": "yield",
+    "chapter": 4,
+    "icon": "Y%",
+    "title": {
+      "kid": "Yield",
+      "nerd": "Good Dies Per Wafer"
+    },
+    "kidText": [
+      "Yield means how many chips work.",
+      "Some dies on a wafer can fail tests.",
+      "Better process control makes more good chips."
+    ],
+    "nerdText": "Yield is the share of manufactured dies that meet requirements. It depends on design, process maturity, defects, wafer quality, and test criteria.",
+    "realStat": "Yield is central to chip economics because every wafer costs money even when some dies fail.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 4,
+      "factId": "ch4-dust-speck"
+    },
+    "lockedHint": {
+      "kid": "Print a wafer in Chapter 4.",
+      "nerd": "Unlocks after the defect and dust fact card."
+    }
+  },
+  {
+    "id": "binning",
+    "chapter": 5,
+    "icon": "BIN",
+    "title": {
+      "kid": "Binning",
+      "nerd": "Test and Sort"
+    },
+    "kidText": [
+      "Not every good chip is equally fast.",
+      "Testing sorts chips into bins.",
+      "A slower chip can still be useful."
+    ],
+    "nerdText": "Binning sorts tested dies or packaged chips by performance, power, and defect behavior. It lets manufacturers sell usable parts at different grades instead of treating every imperfection as total waste.",
+    "realStat": "Binning is common in processors, memory, and many electronic parts where tested performance varies.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 5,
+      "factId": "ch5-binning"
+    },
+    "lockedHint": {
+      "kid": "Sort dies in Chapter 5.",
+      "nerd": "Unlocks after the binning fact card."
+    }
+  },
+  {
+    "id": "chip-cpu",
+    "chapter": 5,
+    "icon": "CPU",
+    "title": {
+      "kid": "CPU: The Captain",
+      "nerd": "Central Processing Unit"
+    },
+    "kidText": [
+      "The CPU is a flexible leader.",
+      "It handles many kinds of instructions.",
+      "Most computers need one."
+    ],
+    "nerdText": "A CPU is built for general-purpose computation and control flow. In the game it improves whole-building coordination because CPUs organize many different tasks.",
+    "realStat": "CPUs appear in phones, laptops, servers, cars, appliances, and embedded systems.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 5,
+      "factId": "ch5-chip-roster"
+    },
+    "lockedHint": {
+      "kid": "Meet the chip roster in Chapter 5.",
+      "nerd": "Unlocks after the chip roster fact card."
+    }
+  },
+  {
+    "id": "chip-gpu",
+    "chapter": 5,
+    "icon": "GPU",
+    "title": {
+      "kid": "GPU: The Swarm",
+      "nerd": "Graphics Processing Unit"
+    },
+    "kidText": [
+      "The GPU has many tiny workers.",
+      "It is good at jobs that split into lots of pieces.",
+      "Graphics and AI can both use that power."
+    ],
+    "nerdText": "GPUs are parallel processors designed to run many operations at once. That makes them useful for graphics, matrix math, simulation, and many AI workloads.",
+    "realStat": "The AI boom has made accelerator and GPU supply a central data-center planning issue.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 5,
+      "factId": "ch5-chip-roster"
+    },
+    "lockedHint": {
+      "kid": "Meet the chip roster in Chapter 5.",
+      "nerd": "Unlocks after the chip roster fact card."
+    }
+  },
+  {
+    "id": "chip-dram",
+    "chapter": 5,
+    "icon": "DRAM",
+    "title": {
+      "kid": "DRAM: The Whiteboard",
+      "nerd": "Dynamic Random Access Memory"
+    },
+    "kidText": [
+      "DRAM remembers things quickly.",
+      "It forgets when power is gone.",
+      "Fast work needs fast memory."
+    ],
+    "nerdText": "DRAM is volatile working memory. It is fast enough for active computation, but it needs refresh power and loses stored data when power is removed.",
+    "realStat": "Servers use large amounts of DRAM so processors can reach active data quickly.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 5,
+      "factId": "ch5-chip-roster"
+    },
+    "lockedHint": {
+      "kid": "Meet the chip roster in Chapter 5.",
+      "nerd": "Unlocks after the chip roster fact card."
+    }
+  },
+  {
+    "id": "chip-nand",
+    "chapter": 5,
+    "icon": "NAND",
+    "title": {
+      "kid": "NAND: The Vault",
+      "nerd": "NAND Flash Storage"
+    },
+    "kidText": [
+      "NAND keeps data after power turns off.",
+      "It is storage, not working memory.",
+      "A vault remembers slowly but safely."
+    ],
+    "nerdText": "NAND flash is non-volatile memory. It stores data in SSDs, phones, cameras, and many embedded systems even when devices are powered down.",
+    "realStat": "NAND flash is a core technology behind solid-state drives and many portable devices.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 5,
+      "factId": "ch5-chip-roster"
+    },
+    "lockedHint": {
+      "kid": "Meet the chip roster in Chapter 5.",
+      "nerd": "Unlocks after the chip roster fact card."
+    }
+  },
+  {
+    "id": "chip-nic",
+    "chapter": 5,
+    "icon": "NIC",
+    "title": {
+      "kid": "NIC: The Messenger",
+      "nerd": "Network ASIC"
+    },
+    "kidText": [
+      "The NIC helps machines talk.",
+      "A data center needs fast messages between racks.",
+      "Many computers can act like one big system."
+    ],
+    "nerdText": "Network interface controllers and specialized network chips move data between machines. In data centers, fast networking is part of compute performance.",
+    "realStat": "Large data centers depend on high-speed network fabrics as much as on individual processors.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 5,
+      "factId": "ch5-chip-roster"
+    },
+    "lockedHint": {
+      "kid": "Meet the chip roster in Chapter 5.",
+      "nerd": "Unlocks after the chip roster fact card."
+    }
+  },
+  {
+    "id": "chip-pmic",
+    "chapter": 5,
+    "icon": "PMIC",
+    "title": {
+      "kid": "PMIC: The Guardian",
+      "nerd": "Power Management IC"
+    },
+    "kidText": [
+      "The PMIC helps control power.",
+      "Chips need the right voltage at the right time.",
+      "Saving energy can save the whole system."
+    ],
+    "nerdText": "Power management ICs regulate voltage, sequencing, conversion, and delivery. They make electronic systems more reliable and efficient.",
+    "realStat": "Power delivery is a major design constraint from phones to servers.",
+    "unlock": {
+      "kind": "fact_seen",
+      "chapter": 5,
+      "factId": "ch5-chip-roster"
+    },
+    "lockedHint": {
+      "kid": "Meet the chip roster in Chapter 5.",
+      "nerd": "Unlocks after the chip roster fact card."
+    }
+  },
+  {
+    "id": "chip-nova",
+    "chapter": 6,
+    "icon": "NOVA",
+    "title": {
+      "kid": "Nova",
+      "nerd": "AI Accelerator"
+    },
+    "kidText": [
+      "Nova is the endgame chip.",
+      "It needs a very good die.",
+      "Hard chips need the best process control."
+    ],
+    "nerdText": "Nova represents specialized accelerators built for demanding AI workloads. In the game, it requires a high-quality leading-edge die because advanced nodes are harder to manufacture well.",
+    "realStat": "Specialized accelerators are often designed around workload needs such as matrix math, memory bandwidth, and power limits.",
+    "unlock": {
+      "kind": "chapter_unlocked",
+      "chapter": 6
+    },
+    "lockedHint": {
+      "kid": "Reach the data center finale.",
+      "nerd": "Unlocks when Chapter 6 is available."
+    }
+  },
+  {
+    "id": "datacenter-anatomy",
+    "chapter": 6,
+    "icon": "DC",
+    "title": {
+      "kid": "Data Center Anatomy",
+      "nerd": "Racks, Power, Cooling, Network"
+    },
+    "kidText": [
+      "A data center is more than chips.",
+      "Racks need power, cooling, and network links.",
+      "The whole building turns chips into services."
+    ],
+    "nerdText": "Data centers combine servers, racks, power distribution, cooling, storage, networking, controls, and operations. Individual chips matter most when the system around them can support their work.",
+    "realStat": "Data-center planning commonly tracks power capacity, cooling capacity, utilization, and network throughput together.",
+    "unlock": {
+      "kind": "chapter_completed",
+      "chapter": 6
+    },
+    "lockedHint": {
+      "kid": "Finish Chapter 6 to unlock this entry.",
+      "nerd": "Unlocks after completing the data-center finale."
+    }
+  },
+  {
+    "id": "global-supply-chain",
+    "chapter": 6,
+    "icon": "MAP",
+    "title": {
+      "kid": "The Whole Supply Chain",
+      "nerd": "Rock-to-Rack System"
+    },
+    "kidText": [
+      "The chip journey crosses many steps.",
+      "Mining, refining, fabs, packaging, and data centers all connect.",
+      "Your final service depends on the whole chain."
+    ],
+    "nerdText": "The complete semiconductor system links mineral extraction, chemical refining, crystal growth, wafer fabrication, packaging, test, logistics, power infrastructure, and data-center operations.",
+    "realStat": "A finished chip reflects many specialized industries and international supply-chain dependencies before it reaches a working system.",
+    "unlock": {
+      "kind": "game_completed",
+      "chapter": 6
+    },
+    "lockedHint": {
+      "kid": "Complete the game to unlock the full map.",
+      "nerd": "Unlocks when the Chapter 6 victory is complete."
+    }
+  }
+]
