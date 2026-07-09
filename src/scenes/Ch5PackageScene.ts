@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import chipsJson from '../content/chips.json';
 import eventsJson from '../content/events.json';
@@ -583,12 +584,14 @@ export class Ch5PackageScene extends Phaser.Scene {
 
     const result = buildChip(this.chapter, chip, BALANCE.ch5.maxBuildChoices);
     if (!result.ok) {
+      playUiCue('warning');
       this.lastMessage = buildFailureMessage(result.reason, STRINGS.ch5.messages);
       this.refreshOverlay();
       return;
     }
 
     this.chapter = result.chapter;
+    playUiCue('package');
     this.lastMessage = null;
     this.persistChapterProgress(false);
     this.redrawWorld();

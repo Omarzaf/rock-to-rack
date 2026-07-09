@@ -1338,7 +1338,7 @@
         "nerd": "Incorrect binning downgraded the die to the next lower commercial bin."
       },
       "rosterHint": {
-        "kid": "Spend binned dies to build up to six chip friends.",
+        "kid": "Spend binned dies to build up to four chip friends.",
         "nerd": "Allocate tested dies into a limited chip lineup that will matter in the data center."
       },
       "maxChoices": {

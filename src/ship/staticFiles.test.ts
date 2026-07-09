@@ -34,6 +34,15 @@ describe('ship static files', () => {
     expect(read('public/404.html')).toContain('window.location.replace');
   });
 
+  it('ships transformation and victory audio cues', () => {
+    for (const cue of ['ore', 'refine', 'crystal', 'fab', 'package', 'rack', 'victory', 'warning']) {
+      const file = readBytes(`public/audio/${cue}.wav`);
+      expect(file.subarray(0, 4).toString('ascii')).toBe('RIFF');
+      expect(file.subarray(8, 12).toString('ascii')).toBe('WAVE');
+      expect(file.length).toBeGreaterThan(1_000);
+    }
+  });
+
   it('declares Vercel fallback routing to the game shell', () => {
     const config = JSON.parse(read('vercel.json'));
 

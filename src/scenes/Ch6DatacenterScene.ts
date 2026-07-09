@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import chipsJson from '../content/chips.json';
 import eventsJson from '../content/events.json';
@@ -281,6 +282,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
 
     const result = placeDatacenterBuilding(this.chapter, this.resources, this.selectedBuildType, { column, row }, BALANCE.ch6);
     if (!result.ok) {
+      playUiCue('warning');
       this.lastMessage = STRINGS.ch6.messages.buildHint;
       this.refreshOverlay();
       return;
@@ -290,6 +292,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       ...result.chapter,
       stage: result.chapter.stage === 'build' ? 'contracts' : result.chapter.stage
     }, 0, BALANCE.ch6);
+    playUiCue('rack');
     this.replaceResources(result.resources);
     this.queueFact('ch6-datacenter-anatomy');
     this.lastMessage = this.selectedBuildType === 'rack' ? STRINGS.ch6.messages.selectRack : STRINGS.ch6.messages.buildHint;
@@ -335,12 +338,14 @@ export class Ch6DatacenterScene extends Phaser.Scene {
 
     const result = installChip(this.chapter, buildingId, this.selectedChipId, BALANCE.ch6);
     if (!result.ok) {
+      playUiCue('warning');
       this.lastMessage = STRINGS.ch6.messages.selectRack;
       this.refreshOverlay();
       return;
     }
 
     this.chapter = tickDatacenter(result.chapter, 0, BALANCE.ch6);
+    playUiCue('rack');
     this.selectedChipId = this.firstAvailableChipId();
     this.lastMessage = STRINGS.ch6.messages.contractBlocked;
     this.refreshAfterMutation(true);
@@ -376,6 +381,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
       caps: BALANCE.resources.caps
     });
     if (!result.ok) {
+      playUiCue('warning');
       this.lastMessage = result.reason === 'nova locked' ? STRINGS.ch6.messages.novaLocked : STRINGS.ch6.messages.contractBlocked;
       this.refreshOverlay();
       return;
@@ -384,6 +390,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
     const servedHospitalNova = result.chapter.servedContracts.includes('hospitalNova');
     this.chapter = tickDatacenter(servedHospitalNova ? pendingQuizChapter(result.chapter) : result.chapter, 0, BALANCE.ch6);
     this.replaceResources(result.resources);
+    playUiCue(servedHospitalNova ? 'victory' : 'success');
     this.lastMessage = this.chapter.stage === 'victory' ? STRINGS.ch6.messages.victoryReady : STRINGS.ch6.messages.contractReady;
     this.refreshAfterMutation(true);
 
@@ -400,12 +407,14 @@ export class Ch6DatacenterScene extends Phaser.Scene {
   private runNovaChallenge(): void {
     const result = completeNovaChallenge(this.chapter, { mask: 86, etch: 84, cooling: 83 }, BALANCE.ch6);
     if (!result.ok) {
+      playUiCue('warning');
       this.lastMessage = STRINGS.ch6.messages.novaLocked;
       this.refreshOverlay();
       return;
     }
 
     this.chapter = tickDatacenter(result.chapter, 0, BALANCE.ch6);
+    playUiCue('victory');
     this.selectedChipId = 'nova';
     this.lastMessage = STRINGS.ch6.messages.selectRack;
     this.refreshAfterMutation(true);

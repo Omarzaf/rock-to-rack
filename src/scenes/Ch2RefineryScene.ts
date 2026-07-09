@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import eventsJson from '../content/events.json';
 import { jensenGuideLines } from '../content/guide';
@@ -344,6 +345,7 @@ export class Ch2RefineryScene extends Phaser.Scene {
 
     this.syncChapterProgressFromStore();
     const beforePurity = this.chapter.siliconPurityNines;
+    const beforeOutputCount = refinedOutputCount(this.chapter.refinedOutputs);
     const beforeSlag = this.chapter.slag;
     const multiplier = debugCatchUpMultiplier(
       2,
@@ -356,6 +358,7 @@ export class Ch2RefineryScene extends Phaser.Scene {
     });
 
     if (result.blockedReason) {
+      playUiCue('warning');
       this.lastMessage = messageForBlocked(result.blockedReason, STRINGS.ch2.messages);
       if (result.blockedReason === 'insufficient-energy-water') {
         this.queueFact('ch2-energy-hungry');
@@ -371,6 +374,9 @@ export class Ch2RefineryScene extends Phaser.Scene {
 
     if (this.chapter.siliconPurityNines > beforePurity) {
       this.queueFact('ch2-nine-nines');
+    }
+    if (this.chapter.siliconPurityNines > beforePurity || refinedOutputCount(this.chapter.refinedOutputs) > beforeOutputCount) {
+      playUiCue('refine');
     }
     if (this.chapter.slag > beforeSlag) {
       this.queueFact('ch2-energy-hungry');
@@ -900,6 +906,10 @@ function messageForBlocked(
     return messages.insufficientMinerals;
   }
   return messages.slagCapacity;
+}
+
+function refinedOutputCount(outputs: Partial<Record<Exclude<RefineryLaneId, 'silicon'>, number>>): number {
+  return Object.values(outputs).reduce((sum, value) => sum + (value ?? 0), 0);
 }
 
 function documentRoot(): HTMLElement {

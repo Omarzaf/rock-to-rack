@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import eventsJson from '../content/events.json';
 import { jensenGuideLines } from '../content/guide';
@@ -251,6 +252,7 @@ export class Ch3CrystalScene extends Phaser.Scene {
       growthMultiplier: multiplier
     });
     if (result.blockedReason) {
+      playUiCue('warning');
       this.lastMessage = STRINGS.ch3.messages.insufficientEnergyWater;
       this.refreshOverlay();
       return;
@@ -266,6 +268,7 @@ export class Ch3CrystalScene extends Phaser.Scene {
     }
 
     if (wasPullStage && this.chapter.stage === 'slice') {
+      playUiCue('crystal');
       this.pulling = false;
       this.lastMessage = STRINGS.ch3.messages.sliceHint;
       this.queueFact('ch3-round-wafers');
@@ -317,6 +320,7 @@ export class Ch3CrystalScene extends Phaser.Scene {
       const completed = completeSliceStage(this.chapter, this.resources, BALANCE.ch3, BALANCE.resources.caps);
       this.chapter = completed.chapter;
       this.replaceResources(completed.resources);
+      playUiCue('crystal');
       this.persistChapterProgress(false);
       this.refreshOverlay();
       this.showQuiz();

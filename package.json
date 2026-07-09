@@ -6,6 +6,7 @@
   "packageManager": "pnpm@11.10.0",
   "scripts": {
     "dev": "vite",
+    "audio:generate": "node tools/generate-audio-assets.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "simulate": "vitest run src/sim/playthroughSimulator.test.ts --reporter=verbose",
@@ -14,6 +15,7 @@
     "smoke:m10": "node tools/m10-browser-smoke.mjs",
     "smoke:m11": "node tools/m11-browser-smoke.mjs",
     "smoke:m12": "node tools/m12-replay-smoke.mjs",
+    "smoke:m13": "node tools/m13-ch4-keyboard-smoke.mjs",
     "perf:m10": "node tools/m10-performance-smoke.mjs"
   },
   "dependencies": {

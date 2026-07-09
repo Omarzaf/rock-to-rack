@@ -48,6 +48,27 @@ describe('sound design cues', () => {
     expect(calls).toContain('stop');
   });
 
+  it('prefers shipped samples when the browser can play them', () => {
+    const calls: string[] = [];
+    vi.stubGlobal('window', {
+      Audio: fakeAudio(calls),
+      AudioContext: fakeAudioContext(calls)
+    });
+    gameStore.replaceState({
+      ...createInitialGameState(),
+      preferences: {
+        ...createInitialGameState().preferences,
+        muted: false
+      }
+    });
+
+    playUiCue('rack');
+
+    expect(calls).toContain('sample:/audio/rack.wav');
+    expect(calls).toContain('sample-play');
+    expect(calls).not.toContain('createOscillator');
+  });
+
   it('plays layered transformation cues for the supply-chain chain', () => {
     const calls: string[] = [];
     vi.stubGlobal('window', {
@@ -69,6 +90,21 @@ describe('sound design cues', () => {
     expect(calls).toContain('type:sine');
   });
 });
+
+function fakeAudio(calls: string[]) {
+  return class FakeAudio {
+    volume = 1;
+
+    constructor(src?: string) {
+      calls.push(`sample:${src ?? ''}`);
+    }
+
+    play() {
+      calls.push('sample-play');
+      return Promise.resolve();
+    }
+  };
+}
 
 function fakeAudioContext(calls: string[]) {
   return class FakeAudioContext {

@@ -69,9 +69,26 @@ const CUES: Record<UiSoundCue, ToneShape[]> = {
   ]
 };
 
+const SAMPLE_CUE_PATHS: Record<UiSoundCue, string> = {
+  navigate: '/audio/navigate.wav',
+  guide: '/audio/guide.wav',
+  fact: '/audio/fact.wav',
+  success: '/audio/success.wav',
+  place: '/audio/place.wav',
+  ore: '/audio/ore.wav',
+  refine: '/audio/refine.wav',
+  crystal: '/audio/crystal.wav',
+  fab: '/audio/fab.wav',
+  package: '/audio/package.wav',
+  rack: '/audio/rack.wav',
+  victory: '/audio/victory.wav',
+  warning: '/audio/warning.wav'
+};
+
 let audioContext: AudioContext | undefined;
 
 type AudioWindow = Window & typeof globalThis & {
+  Audio?: new (src?: string) => HTMLAudioElement;
   webkitAudioContext?: typeof AudioContext;
 };
 
@@ -81,6 +98,33 @@ export function playUiCue(cue: UiSoundCue): void {
   }
 
   const audioWindow = window as AudioWindow;
+  if (playSampleCue(audioWindow, cue)) {
+    return;
+  }
+
+  playOscillatorCue(audioWindow, cue);
+}
+
+function playSampleCue(audioWindow: AudioWindow, cue: UiSoundCue): boolean {
+  const AudioConstructor = audioWindow.Audio;
+  if (!AudioConstructor) {
+    return false;
+  }
+
+  try {
+    const sample = new AudioConstructor(SAMPLE_CUE_PATHS[cue]);
+    sample.volume = cue === 'warning' ? 0.42 : 0.36;
+    const playResult = sample.play();
+    if (playResult && typeof playResult.catch === 'function') {
+      void playResult.catch(() => playOscillatorCue(audioWindow, cue));
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function playOscillatorCue(audioWindow: AudioWindow, cue: UiSoundCue): void {
   const AudioContextConstructor = audioWindow.AudioContext ?? audioWindow.webkitAudioContext;
   if (!AudioContextConstructor) {
     return;

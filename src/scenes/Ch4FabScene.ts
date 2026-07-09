@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import eventsJson from '../content/events.json';
 import { jensenGuideLines } from '../content/guide';
@@ -39,6 +40,7 @@ import { createGlobalPanelController, GLOBAL_TOOL_LABELS, type GlobalPanelContro
 import { mountPipelineHud, type MountedPipelineHud, type PipelineHudLabels } from '../ui/pipelineHud';
 import type { MountedModal, QuizDefinition } from '../ui/chapterOneOverlay';
 import type { TextModeText } from '../ui/text';
+import { cycleIndex, digitToIndex, isActivationKey, isInteractiveElementFocused, isReplayInterruptKey } from './chapterKeyboard';
 import { emitDebugProgress } from './debugProgress';
 import { moduleNavOptions } from './moduleNavigation';
 import { SceneKey } from './sceneKeys';
@@ -126,8 +128,11 @@ export class Ch4FabScene extends Phaser.Scene {
   private completion: MountedModal | undefined;
   private worldGraphics: Phaser.GameObjects.Graphics | undefined;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
+  private keyboardHandler: ((event: KeyboardEvent) => void) | undefined;
+  private keyboardKeyUpHandler: ((event: KeyboardEvent) => void) | undefined;
   private pendingFactIds: string[] = [];
   private pausedForOverlay = false;
+  private introInterruptible = false;
   private draggingCoat = false;
   private draggingExpose = false;
   private etching = false;
@@ -138,6 +143,7 @@ export class Ch4FabScene extends Phaser.Scene {
   private dopeMatches = 0;
   private dopeMisses = 0;
   private dopeAttempts = 0;
+  private keyboardDopeIndex = 0;
   private lastDieMap: FabDie[] = [];
   private lastMessage: TextModeText | null = STRINGS.ch4.messages.coatHint;
   private activeScore = 0;
@@ -153,6 +159,7 @@ export class Ch4FabScene extends Phaser.Scene {
     this.cursors = this.input.keyboard?.createCursorKeys();
     this.drawBackdrop();
     this.mountDom();
+    this.bindKeyboard();
     this.showIntroDialogue();
     this.enterCurrentStage();
     this.redrawFab();
@@ -385,6 +392,170 @@ export class Ch4FabScene extends Phaser.Scene {
     this.refreshOverlay();
   }
 
+  private bindKeyboard(): void {
+    this.keyboardHandler = (event: KeyboardEvent) => {
+      if (this.dialogue && this.introInterruptible && isReplayInterruptKey(event)) {
+        event.preventDefault();
+        this.dismissIntroDialogue();
+        return;
+      }
+
+      if (this.pausedForOverlay || this.quiz || this.completion || this.factCard || this.eventCard || this.dialogue) {
+        return;
+      }
+
+      if (isInteractiveElementFocused()) {
+        return;
+      }
+
+      const dopeIndex = digitToIndex(event.key, DOPE_ZONES.length);
+      if (this.chapter.stage === 'dope' && dopeIndex !== null) {
+        event.preventDefault();
+        this.keyboardDopeIndex = dopeIndex;
+        this.activateDopeKeyboardZone();
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        this.handleKeyboardArrow(-1, 0);
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        this.handleKeyboardArrow(1, 0);
+        return;
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.handleKeyboardArrow(0, -1);
+        return;
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.handleKeyboardArrow(0, 1);
+        return;
+      }
+
+      if (event.key === 'n' || event.key === 'N') {
+        event.preventDefault();
+        this.advanceKeyboardFlow();
+        return;
+      }
+
+      if (isActivationKey(event)) {
+        event.preventDefault();
+        this.activateKeyboardStage();
+      }
+    };
+
+    this.keyboardKeyUpHandler = (event: KeyboardEvent) => {
+      if (this.chapter.stage === 'etch' && this.etching && isActivationKey(event)) {
+        event.preventDefault();
+        this.handlePointerUp();
+      }
+    };
+
+    this.input.keyboard?.on('keydown', this.keyboardHandler);
+    this.input.keyboard?.on('keyup', this.keyboardKeyUpHandler);
+  }
+
+  private handleKeyboardArrow(deltaX: number, deltaY: number): void {
+    if (this.chapter.stage === 'expose' && !this.stationLocked) {
+      this.exposeOffset = {
+        x: clamp(this.exposeOffset.x + deltaX * 8, -92, 92),
+        y: clamp(this.exposeOffset.y + deltaY * 8, -92, 92)
+      };
+      this.activeScore = scoreExposeStation({ distance: exposeDistance(this.exposeOffset) }, BALANCE.ch4, this.currentNode());
+      this.currentYield = this.estimateYield();
+      this.redrawFab();
+      this.refreshOverlay();
+      return;
+    }
+
+    if (this.chapter.stage === 'dope' && !this.stationLocked) {
+      this.keyboardDopeIndex = cycleIndex(this.keyboardDopeIndex, deltaX + deltaY, DOPE_ZONES.length);
+      this.refreshOverlay();
+    }
+  }
+
+  private activateKeyboardStage(): void {
+    if (this.chapter.stage === 'coat') {
+      if (!this.canAdvanceStation()) {
+        this.markKeyboardCoatPattern();
+        return;
+      }
+      this.advanceStation();
+      return;
+    }
+
+    if (this.chapter.stage === 'expose') {
+      if (!this.stationLocked) {
+        this.onFlash();
+        return;
+      }
+      this.advanceStation();
+      return;
+    }
+
+    if (this.chapter.stage === 'etch') {
+      if (!this.stationLocked) {
+        this.etching = true;
+        return;
+      }
+      this.advanceStation();
+      return;
+    }
+
+    if (this.chapter.stage === 'dope') {
+      if (!this.stationLocked) {
+        this.activateDopeKeyboardZone();
+        return;
+      }
+      this.advanceStation();
+      return;
+    }
+
+    if (this.chapter.stage === 'review' || this.chapter.stage === 'complete') {
+      this.nextWafer();
+    }
+  }
+
+  private advanceKeyboardFlow(): void {
+    if (this.chapter.stage === 'review' || this.chapter.stage === 'complete') {
+      this.nextWafer();
+      return;
+    }
+
+    if (this.canAdvanceStation()) {
+      this.advanceStation();
+      return;
+    }
+
+    this.activateKeyboardStage();
+  }
+
+  private markKeyboardCoatPattern(): void {
+    for (let y = WAFER_Y - 72; y <= WAFER_Y + 72; y += 24) {
+      for (let x = WAFER_X - 72; x <= WAFER_X + 72; x += 24) {
+        this.markCoat(x, y);
+      }
+    }
+  }
+
+  private activateDopeKeyboardZone(): void {
+    const zone = DOPE_ZONES[this.keyboardDopeIndex];
+    if (!zone) {
+      return;
+    }
+
+    this.handleDopeClick(zone.x, zone.y);
+    this.keyboardDopeIndex = Math.min(this.dopeAttempts, DOPE_ZONES.length - 1);
+  }
+
   private onFlash(): void {
     if (this.chapter.stage !== 'expose' || this.stationLocked) {
       return;
@@ -432,6 +603,7 @@ export class Ch4FabScene extends Phaser.Scene {
       stage: result.chapter.stage === 'complete' ? 'complete' : 'review'
     };
     this.replaceResources(addResources(this.resources, { chips: result.chipsProduced }, BALANCE.resources.caps));
+    playUiCue('fab');
     this.currentYield = result.nodeYield.yieldPercent;
     this.activeScore = result.nodeYield.yieldPercent;
     this.lastMessage = STRINGS.ch4.messages.reviewHint;
@@ -513,6 +685,7 @@ export class Ch4FabScene extends Phaser.Scene {
       this.dopeMatches = 0;
       this.dopeMisses = 0;
       this.dopeAttempts = 0;
+      this.keyboardDopeIndex = 0;
       this.activeScore = 0;
       this.currentYield = this.estimateYield();
       this.lastMessage = STRINGS.ch4.messages.dopeHint;
@@ -567,6 +740,9 @@ export class Ch4FabScene extends Phaser.Scene {
           : penaltyType === 'calibration' && applyPenalty
             ? STRINGS.ch4.messages.calibrationPenalty
             : this.lastMessage;
+        if (applyPenalty) {
+          playUiCue('warning');
+        }
         this.persistChapterProgress(false);
         this.eventCard?.cleanup();
         this.eventCard = undefined;
@@ -747,6 +923,7 @@ export class Ch4FabScene extends Phaser.Scene {
 
   private showIntroDialogue(): void {
     this.pausedForOverlay = true;
+    this.introInterruptible = gameStore.getState().chapters.ch4.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
       lines: jensenGuideLines(STRINGS.ch4.intro, 4),
@@ -758,6 +935,18 @@ export class Ch4FabScene extends Phaser.Scene {
         this.showNextPendingFact();
       }
     });
+  }
+
+  private dismissIntroDialogue(): void {
+    if (!this.dialogue) {
+      return;
+    }
+
+    this.dialogue.cleanup();
+    this.dialogue = undefined;
+    this.pausedForOverlay = false;
+    this.introInterruptible = false;
+    this.showNextPendingFact();
   }
 
   private queueFact(factId: string): void {
@@ -967,6 +1156,14 @@ export class Ch4FabScene extends Phaser.Scene {
   }
 
   private cleanup(): void {
+    if (this.keyboardHandler) {
+      this.input.keyboard?.off('keydown', this.keyboardHandler);
+      this.keyboardHandler = undefined;
+    }
+    if (this.keyboardKeyUpHandler) {
+      this.input.keyboard?.off('keyup', this.keyboardKeyUpHandler);
+      this.keyboardKeyUpHandler = undefined;
+    }
     for (const cleanup of this.cleanupCallbacks.splice(0)) {
       cleanup();
     }

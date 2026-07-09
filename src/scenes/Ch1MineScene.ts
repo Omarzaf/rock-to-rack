@@ -430,6 +430,7 @@ export class Ch1MineScene extends Phaser.Scene {
 
     const newlyMined = this.chapter.firstMined.filter((mineral) => !beforeFirstMined.has(mineral));
     if (newlyMined.length > 0) {
+      playUiCue('ore');
       this.pendingFactMinerals.push(...newlyMined);
       this.showNextPendingFact();
       return;

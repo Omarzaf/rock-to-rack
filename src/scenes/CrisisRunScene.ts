@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import {
   createInitialDatacenterChapter,
@@ -120,6 +121,7 @@ export class CrisisRunScene extends Phaser.Scene {
 
     const result = placeDatacenterBuilding(this.chapter, this.resources, this.selectedBuildType, { column, row }, BALANCE.ch6);
     if (!result.ok) {
+      playUiCue('warning');
       this.mistakes += 1;
       this.refreshOverlay(buildFailureMessage(result.reason, this.selectedBuildType));
       return;
@@ -127,6 +129,7 @@ export class CrisisRunScene extends Phaser.Scene {
 
     this.chapter = tickDatacenter(result.chapter, 0, BALANCE.ch6);
     this.resources = result.resources;
+    playUiCue('rack');
     this.refreshOverlay();
     this.redrawWorld();
   }
@@ -137,12 +140,14 @@ export class CrisisRunScene extends Phaser.Scene {
     }
 
     if (!this.canComplete()) {
+      playUiCue('warning');
       this.mistakes += 1;
       this.refreshOverlay('Nova needs one rack, power, cooling, and network before the city lights can return.');
       return;
     }
 
     this.completed = true;
+    playUiCue('victory');
     const elapsedSeconds = elapsedWallClockSeconds(this.runStartedAtMs, performance.now());
     this.chapter = {
       ...this.chapter,
