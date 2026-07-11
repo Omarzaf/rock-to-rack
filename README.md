@@ -113,4 +113,4 @@ Build output lives in `dist/`. Vercel preview deploy is the default shipping tar
 
 ## License
 
-No open-source license has been selected yet. Public visibility does not grant reuse rights unless a license is added.
+All rights reserved. See `LICENSE`. The repository is publicly viewable, but no reuse, redistribution, or modification rights are granted.
