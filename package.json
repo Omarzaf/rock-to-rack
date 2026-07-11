@@ -1,7 +1,24 @@
 {
   "name": "rock-to-rack",
   "version": "0.0.0",
+  "description": "A browser game about the semiconductor supply chain from raw minerals to data-center racks.",
   "private": true,
+  "license": "UNLICENSED",
+  "homepage": "https://rock-to-rack.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Omarzaf/rock-to-rack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Omarzaf/rock-to-rack/issues"
+  },
+  "keywords": [
+    "game",
+    "semiconductors",
+    "supply-chain",
+    "phaser",
+    "vite"
+  ],
   "type": "module",
   "packageManager": "pnpm@11.10.0",
   "scripts": {

@@ -1,6 +1,30 @@
 # Rock to Rack
 
-Rock to Rack is an interactive browser game about the semiconductor supply chain: mine minerals, refine silicon, grow wafers, print circuits, package chips, and power a data center.
+Rock to Rack is a browser game about the semiconductor supply chain. Players mine minerals, refine silicon, grow wafers, print circuits, package chips, and power a data center while trying to bring a public-interest AI workload online.
+
+![Rock to Rack social cover](public/og-cover.svg)
+
+## Play
+
+- Live build: `https://rock-to-rack.vercel.app`
+- Fast challenge: `/` or `/?reset#crisis`
+- Guided campaign: `/#menu`
+
+The game is designed for a quick demo path and a fuller six-chapter learning path. It runs in a modern browser and saves progress locally.
+
+## Game Modes
+
+- Crisis Run: a timed rescue challenge where players balance racks, power, cooling, chips, and city lights.
+- Learn the Chain: a six-chapter campaign that follows the path from raw minerals to a running data center.
+- Kid and Nerd text modes: simplified or more technical wording for different audiences.
+
+## Supply Chain Covered
+
+```text
+Mine -> Refine -> Grow -> Fab -> Package -> Power
+```
+
+The chapters cover mining, refining, crystal growth and wafer slicing, fabrication, packaging/binning, and data-center deployment.
 
 ## Demo Routes
 
@@ -11,7 +35,7 @@ Rock to Rack is an interactive browser game about the semiconductor supply chain
 - Chapter 6 data-center finale: `/?reset#ch6`
 - Debug overlay: `/?reset&debug=1#ch6`
 
-## Development
+## Local Development
 
 ```bash
 corepack pnpm install
@@ -21,9 +45,13 @@ corepack pnpm simulate
 corepack pnpm build
 ```
 
-## User Manual
+## Documentation
 
-See `docs/USER_MANUAL.md` for player instructions, controls, chapter walkthroughs, troubleshooting, and the planning/methodology behind the game.
+- User manual: `docs/USER_MANUAL.md`
+- Agent context: `docs/agent-context.md`
+- Cold playtest script: `docs/playtests/2026-07-09-cold-playtest-script.md`
+- Cold playtest notes template: `docs/playtests/2026-07-09-cold-playtest-notes-template.md`
+- Award submission checklist: `docs/submission/2026-07-09-award-submission-checklist.md`
 
 ## Ship Checks
 
@@ -57,7 +85,7 @@ installed. When those binaries are missing, the scripts report them as
 unavailable instead of making installation a hidden prerequisite for the
 normal local ship path.
 
-## Pitch
+## Public Pitch
 
 10 minutes, kids to CTOs, browser tab. Players feel the tradeoffs behind chips: resource constraints, yield, binning, heat, power, and data-center demand.
 
@@ -82,3 +110,7 @@ Umar performs any production promotion or submission.
 ## Deployment
 
 Build output lives in `dist/`. Vercel preview deploy is the default shipping target. Production promotion requires explicit human approval.
+
+## License
+
+No open-source license has been selected yet. Public visibility does not grant reuse rights unless a license is added.
