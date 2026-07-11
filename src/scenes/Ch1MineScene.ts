@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import eventsJson from '../content/events.json';
-import { jensenGuideLines } from '../content/guide';
+import { vegaGuideLines } from '../content/guide';
 import quizJson from '../content/quiz.json';
 import stringsJson from '../content/strings.json';
 import { addResources } from '../sim/economy';
@@ -467,7 +467,7 @@ export class Ch1MineScene extends Phaser.Scene {
     this.introInterruptible = gameStore.getState().chapters.ch1.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
-      lines: jensenGuideLines(STRINGS.ch1.intro, 1),
+      lines: vegaGuideLines(STRINGS.ch1.intro, 1),
       textMode: this.textMode,
       labels: STRINGS.sandbox.dialogueLabels,
       onComplete: () => {

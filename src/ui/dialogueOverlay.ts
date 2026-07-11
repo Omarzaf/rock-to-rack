@@ -1,5 +1,4 @@
 import { playUiCue } from '../audio/soundDesign';
-import jensenPixelPortraitUrl from '../assets/jensen-huang-pixel.png';
 import type { TextMode } from '../state/types';
 import type { TextModeText } from './text';
 import { textForMode } from './text';
@@ -9,7 +8,6 @@ export interface DialogueLine {
   id: string;
   speakerName: TextModeText;
   portraitColor: string;
-  portraitKind?: 'initial' | 'jensen-pixel';
   portraitAlt?: TextModeText;
   text: TextModeText;
 }
@@ -168,9 +166,7 @@ export function mountDialogue(root: HTMLElement, options: DialogueOptions): Moun
 
 function portraitElement(line: DialogueLine, textMode: TextMode): HTMLElement {
   const portrait = document.createElement('div');
-  portrait.className = line.portraitKind === 'jensen-pixel'
-    ? 'dialogue-portrait dialogue-portrait-pixel-jensen'
-    : 'dialogue-portrait';
+  portrait.className = 'dialogue-portrait';
   portrait.style.setProperty('--portrait-color', line.portraitColor);
   portrait.setAttribute('role', 'img');
   portrait.setAttribute(
@@ -179,18 +175,6 @@ function portraitElement(line: DialogueLine, textMode: TextMode): HTMLElement {
       ? textForMode(line.portraitAlt, textMode)
       : textForMode(line.speakerName, textMode)
   );
-
-  if (line.portraitKind === 'jensen-pixel') {
-    const image = document.createElement('img');
-    image.className = 'dialogue-portrait-image';
-    image.src = jensenPixelPortraitUrl;
-    image.alt = '';
-    image.decoding = 'async';
-    image.draggable = false;
-    image.setAttribute('aria-hidden', 'true');
-    portrait.append(image);
-    return portrait;
-  }
 
   portrait.textContent = textForMode(line.speakerName, textMode).slice(0, 1);
   return portrait;

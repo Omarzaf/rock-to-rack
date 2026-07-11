@@ -53,12 +53,10 @@ M6 Packaging copy uses conservative educational summaries of semiconductor packa
 - `codex.json` summarizes concepts already introduced by the M2-M7 chapter copy and avoids new volatile numeric claims.
 - July 2026 accuracy pass reviewed all `realStat` fields against the sources listed above and kept them as conservative, non-volatile educational statements.
 
-## Jensen Guide Overlay
+## Dr. Vega Guide Overlay
 
-- `guide.ts` uses `nvidia-management` for Jensen Huang's role as NVIDIA founder, president, and CEO.
-  https://investor.nvidia.com/governance/management-team/default.aspx
-- `guide.ts` uses `nvidia-about` for NVIDIA's high-level framing of accelerated computing, AI factories, and data-center energy context.
+- `guide.ts` uses `nvidia-about` for industry framing of accelerated computing, AI factories, and data-center energy context, cited generically without naming or depicting any real individual.
   https://www.nvidia.com/en-us/about-nvidia/
 - `guide.ts` uses `sia-101` for classroom-safe semiconductor process framing.
   https://www.semiconductors.org/semiconductors-101/
-- The pixel guide portrait is a stylized educational avatar. It does not use NVIDIA logos, does not imply endorsement, and should not be described as official.
+- The guide lines are voiced by Dr. Vega, a fictional in-game character, not by any real person or company representative.

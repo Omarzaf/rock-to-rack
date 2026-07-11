@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { DialogueLine } from '../ui/dialogueOverlay';
-import { GUIDE_FACTS, jensenGuideLines } from './guide';
+import { GUIDE_FACTS, vegaGuideLines } from './guide';
 
 const baseLines: DialogueLine[] = [
   {
@@ -17,13 +17,13 @@ const baseLines: DialogueLine[] = [
   }
 ];
 
-describe('Jensen guide content', () => {
-  it('converts chapter instructions into sourced Jensen guide lines', () => {
-    const lines = jensenGuideLines(baseLines, 1);
+describe('Vega guide content', () => {
+  it('converts chapter instructions into sourced Vega guide lines', () => {
+    const lines = vegaGuideLines(baseLines, 1);
 
     expect(lines).toHaveLength(2);
-    expect(lines.every((line) => line.speakerName.kid.includes('Jensen Huang'))).toBe(true);
-    expect(lines.every((line) => line.portraitKind === 'jensen-pixel')).toBe(true);
+    expect(lines.every((line) => line.speakerName.kid.includes('Dr. Vega'))).toBe(true);
+    expect(lines.every((line) => line.portraitColor === '#60d394')).toBe(true);
     expect(lines[0].text.kid).toContain('Fun fact:');
     expect(lines[0].text.nerd).toContain('Source-backed note:');
   });

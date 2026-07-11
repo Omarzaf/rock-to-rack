@@ -3,7 +3,7 @@ import type { TextModeText } from '../ui/text';
 
 export interface GuideFact {
   text: TextModeText;
-  sourceId: 'nvidia-management' | 'nvidia-about' | 'sia-101';
+  sourceId: 'nvidia-about' | 'sia-101';
 }
 
 export const GUIDE_FACTS: Record<1 | 2 | 3 | 4 | 5 | 6, GuideFact[]> = {
@@ -57,13 +57,13 @@ export const GUIDE_FACTS: Record<1 | 2 | 3 | 4 | 5 | 6, GuideFact[]> = {
       sourceId: 'nvidia-about',
       text: {
         kid: 'AI factories need chips, power, cooling, and software working as one system.',
-        nerd: 'NVIDIA frames modern AI infrastructure as chips, systems, and software for AI factories.'
+        nerd: 'Industry framing describes modern AI infrastructure as chips, systems, and software for AI factories.'
       }
     }
   ]
 };
 
-export function jensenGuideLines(lines: DialogueLine[], chapter: 1 | 2 | 3 | 4 | 5 | 6): DialogueLine[] {
+export function vegaGuideLines(lines: DialogueLine[], chapter: 1 | 2 | 3 | 4 | 5 | 6): DialogueLine[] {
   const facts = GUIDE_FACTS[chapter];
 
   return lines.map((line, index) => {
@@ -71,15 +71,10 @@ export function jensenGuideLines(lines: DialogueLine[], chapter: 1 | 2 | 3 | 4 |
     return {
       ...line,
       speakerName: {
-        kid: 'Jensen Huang',
-        nerd: 'Jensen Huang, NVIDIA founder and CEO'
+        kid: 'Dr. Vega',
+        nerd: 'Dr. Vega, systems mentor'
       },
-      portraitColor: '#76b900',
-      portraitKind: 'jensen-pixel',
-      portraitAlt: {
-        kid: 'Pixel portrait of Jensen Huang',
-        nerd: 'Stylized pixel portrait of Jensen Huang as an educational guide'
-      },
+      portraitColor: '#60d394',
       text: {
         kid: `${line.text.kid} Fun fact: ${fact.text.kid}`,
         nerd: `${line.text.nerd} Source-backed note: ${fact.text.nerd}`

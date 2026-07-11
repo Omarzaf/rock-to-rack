@@ -3,7 +3,7 @@ import { playUiCue } from '../audio/soundDesign';
 import balanceJson from '../content/balance.json';
 import chipsJson from '../content/chips.json';
 import eventsJson from '../content/events.json';
-import { jensenGuideLines } from '../content/guide';
+import { vegaGuideLines } from '../content/guide';
 import quizJson from '../content/quiz.json';
 import stringsJson from '../content/strings.json';
 import {
@@ -441,7 +441,7 @@ export class Ch6DatacenterScene extends Phaser.Scene {
     this.introInterruptible = gameStore.getState().chapters.ch6.completed;
     this.dialogue?.cleanup();
     this.dialogue = mountDialogue(documentRoot(), {
-      lines: jensenGuideLines(STRINGS.ch6.intro, 6),
+      lines: vegaGuideLines(STRINGS.ch6.intro, 6),
       textMode: this.textMode,
       labels: STRINGS.sandbox.dialogueLabels,
       onComplete: () => {
