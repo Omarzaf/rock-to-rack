@@ -21,6 +21,10 @@ corepack pnpm simulate
 corepack pnpm build
 ```
 
+## User Manual
+
+See `docs/USER_MANUAL.md` for player instructions, controls, chapter walkthroughs, troubleshooting, and the planning/methodology behind the game.
+
 ## Ship Checks
 
 ```bash
