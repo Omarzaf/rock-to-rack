@@ -36,7 +36,7 @@
     "perf:m10": "node tools/m10-performance-smoke.mjs"
   },
   "dependencies": {
-    "phaser": "^3.90.0"
+    "phaser": "^4.2.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
