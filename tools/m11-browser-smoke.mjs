@@ -78,6 +78,20 @@ async function clickGame(page, gameX, gameY) {
   );
 }
 
+async function ensureChipSelected(page, chipLabel) {
+  const chipButton = page.getByRole('button', { name: chipLabel });
+  await chipButton.waitFor({ state: 'visible', timeout: 10_000 });
+  const selected = await chipButton.evaluate((button) => button.classList.contains('is-selected'));
+  if (!selected) {
+    await chipButton.click();
+  }
+  await page.waitForFunction((label) => {
+    return Array.from(document.querySelectorAll('.crisis-chips button')).some((button) => {
+      return button.textContent === label && button.classList.contains('is-selected');
+    });
+  }, chipLabel, { timeout: 10_000 });
+}
+
 async function runDesktopSmoke() {
   const issues = [];
   const browser = await launchChromium();
@@ -112,7 +126,7 @@ async function runDesktopSmoke() {
     const serveDisabledBeforeChip = await page.getByRole('button', { name: 'Serve Nova' }).evaluate((button) => button.disabled);
     assert(serveDisabledBeforeChip, 'Crisis Run allowed completion before installing a campaign chip');
     await clickGame(page, 430, 260);
-    await page.getByRole('button', { name: 'CPU' }).click();
+    await ensureChipSelected(page, 'CPU');
     await page.waitForFunction(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
       return buttons.some((button) => button.textContent === 'Install chip' && !button.disabled);
