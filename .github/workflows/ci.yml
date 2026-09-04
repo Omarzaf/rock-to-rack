@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.10.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run unit tests
+        run: pnpm test
+
+      - name: Verify static shipping files
+        run: pnpm verify:static
+
+      - name: Run simulator
+        run: pnpm simulate
+
+      - name: Install Chromium for browser smoke
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run browser smoke
+        run: |
+          pnpm exec vite preview --host 127.0.0.1 --strictPort --port 4173 > /tmp/rock-to-rack-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill $preview_pid 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then
+              pnpm smoke:m11
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/rock-to-rack-preview.log
+          exit 1
